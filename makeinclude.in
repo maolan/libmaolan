@@ -1,0 +1,4 @@
+CXX = c++
+CFLAGS += -isystem/usr/local/include
+LDFLAGS += -L/usr/local/lib
+VERSION = @MAOLAN_MAJOR_VERSION@.@MAOLAN_MINOR_VERSION@.@MAOLAN_PATCH_VERSION@
