@@ -1,6 +1,6 @@
-CFLAGS = -O2
+CFLAGS = $(CPPFLAGS) -O2
 CXXFLAGS = $(CFLAGS) -std=c++14
-LDFLAGS = -L/usr/local/lib -pthread -lsndfile
+LDFLAGS = -pthread -lsndfile
 CXXFILES = \
 	audiofile.cxx \
 	maolan.cxx \
@@ -13,10 +13,10 @@ OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 all: maolan
 
 maolan: $(OBJECTS)
-	c++ $(OBJECTS) $(LDFLAGS) -o maolan
+	$(CXX) $(OBJECTS) $(LDFLAGS) -o maolan
 
 %.o: %.cxx
-	$(CXX) $(CXXFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
 	rm -rf $(OBJECTS) maolan

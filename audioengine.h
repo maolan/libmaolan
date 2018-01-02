@@ -4,6 +4,8 @@
 class AudioEngine
 {
   public:
-    virtual int read() = 0;
-    virtual void write() = 0;
+    virtual void push() = 0;
+    virtual void pop() = 0;
+    virtual void produce() = 0;
+    virtual void consume() = 0;
 };

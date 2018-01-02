@@ -5,6 +5,8 @@
 class AudioOSSEngine : public AudioEngine
 {
   public:
-    int read() {return 0;}
-    void write() {}
+    void push() {}
+    void pop() {}
+    void consume() {}
+    void produce() {}
 };
