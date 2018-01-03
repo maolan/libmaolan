@@ -1,6 +1,13 @@
 #include "audioengine.h"
 
 
+AudioEngine::AudioEngine()
+{
+  inputMutexEmpty.lock();
+  outputMutexEmpty.lock();
+}
+
+
 void AudioEngine::waitInputForSpace()
 {
   while (input.size() >= 128)

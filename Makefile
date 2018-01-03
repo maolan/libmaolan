@@ -5,8 +5,7 @@ CXXFILES = \
 	audiofile.cxx \
 	audioengine.cxx \
 	audiooss.cxx \
-	maolan.cxx \
-	th.cxx
+	maolan.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include makeinclude
 

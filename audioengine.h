@@ -11,6 +11,7 @@ using namespace std;
 class AudioEngine
 {
   public:
+    AudioEngine();
     virtual void push(const Sample sample) = 0;
     virtual Sample & pop() = 0;
     virtual void produce() = 0;
@@ -24,12 +25,12 @@ class AudioEngine
     mutex inputMutex;
     mutex inputMutexEmpty;
     mutex inputMutexFull;
-    thread inputThread;
-    deque<Sample> input;
     mutex outputMutex;
     mutex outputMutexEmpty;
     mutex outputMutexFull;
     thread outputThread;
+    thread inputThread;
+    deque<Sample> input;
     deque<Sample> output;
     bool quit;
     size_t position;

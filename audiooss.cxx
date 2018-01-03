@@ -39,8 +39,6 @@ AudioOSSEngine::AudioOSSEngine()
     cerr << strerror(errno) << endl;
     exit(1);
   }
-  inputMutexEmpty.lock();
-  outputMutexEmpty.lock();
   inputThread = thread(&AudioOSSEngine::produce, this);
   outputThread = thread(&AudioOSSEngine::consume, this);
 }
@@ -58,6 +56,7 @@ void AudioOSSEngine::push(const Sample sample)
   outputMutex.lock();
   waitOutputForSpace();
   output.push_back(sample);
+  outputMutex.unlock();
 }
 
 
@@ -67,6 +66,7 @@ Sample & AudioOSSEngine::pop()
   waitInputEmpty();
   Sample &sample = input.front();
   input.pop_front();
+  inputMutex.unlock();
   return sample;
 }
 
@@ -78,6 +78,8 @@ void AudioOSSEngine::produce()
     if (quit) {return;}
     inputMutex.lock();
     waitInputForSpace();
+    cout << "Producing" << endl;
+    inputMutex.unlock();
   }
 }
 
@@ -88,5 +90,8 @@ void AudioOSSEngine::consume()
   {
     if (quit) {return;}
     ++position;
+    outputMutex.lock();
+    cout << "Consuming" << endl;
+    outputMutex.unlock();
   }
 }
