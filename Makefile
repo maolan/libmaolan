@@ -3,6 +3,8 @@ CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 CXXFILES = \
 	audiofile.cxx \
+	audioengine.cxx \
+	audiooss.cxx \
 	maolan.cxx \
 	th.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)

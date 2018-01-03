@@ -1,12 +1,18 @@
 #pragma once
 #include "audioengine.h"
+#include "sample.h"
 
 
 class AudioOSSEngine : public AudioEngine
 {
   public:
-    void push() {}
-    void pop() {}
-    void consume() {}
-    void produce() {}
+    AudioOSSEngine();
+    ~AudioOSSEngine();
+    void push(Sample &sample);
+    Sample pop();
+    void consume();
+    void produce();
+
+  protected:
+    int fd;
 };
