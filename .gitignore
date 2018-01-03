@@ -1,4 +1,5 @@
 *.o
+*.core
 maolan
 makeinclude
 autom4te.cache

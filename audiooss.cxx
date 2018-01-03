@@ -10,10 +10,10 @@
 AudioOSSEngine::AudioOSSEngine()
 {
   quit = false;
-  const string device = "/dev/dsp";
-  const int channels = 2;
-  const int format = AFMT_S32_NE;
-  const int samplerate = 44100;
+  device = "/dev/dsp";
+  channels = 2;
+  format = AFMT_S32_NE;
+  samplerate = 44100;
   if((fd = open(device.data(), O_WRONLY, 0)) == -1)
   {
     cerr << device << ' ' << strerror(errno) << endl;
@@ -41,11 +41,19 @@ AudioOSSEngine::AudioOSSEngine()
   }
   inputMutexEmpty.lock();
   outputMutexEmpty.lock();
+  inputThread = thread(&AudioOSSEngine::produce, this);
   outputThread = thread(&AudioOSSEngine::consume, this);
 }
 
+AudioOSSEngine::~AudioOSSEngine()
+{
+  quit = true;
+  inputThread.join();
+  outputThread.join();
+}
 
-void AudioOSSEngine::push(Sample &sample)
+
+void AudioOSSEngine::push(const Sample sample)
 {
   outputMutex.lock();
   waitOutputForSpace();
@@ -53,22 +61,32 @@ void AudioOSSEngine::push(Sample &sample)
 }
 
 
-Sample AudioOSSEngine::pop()
+Sample & AudioOSSEngine::pop()
 {
   inputMutex.lock();
   waitInputEmpty();
-  Sample sample = input[0];
-  input.erase(input.begin());
+  Sample &sample = input.front();
+  input.pop_front();
   return sample;
 }
 
 
 void AudioOSSEngine::produce()
 {
-  inputMutex.lock();
-  waitInputForSpace();
+  while (true)
+  {
+    if (quit) {return;}
+    inputMutex.lock();
+    waitInputForSpace();
+  }
 }
 
 
 void AudioOSSEngine::consume()
-{}
+{
+  while (true)
+  {
+    if (quit) {return;}
+    ++position;
+  }
+}
