@@ -9,10 +9,11 @@ class AudioOSSEngine : public AudioEngine
   public:
     AudioOSSEngine();
     ~AudioOSSEngine();
-    void push(Sample sample);
-    Sample & pop();
+    void push(const Sample sample);
+    Sample & pop(const int channel);
     void consume();
     void produce();
+    void sync();
 
   protected:
     int fd;

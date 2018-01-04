@@ -2,6 +2,7 @@
 
 
 AudioEngine::AudioEngine()
+  : position{0}
 {
   inputMutexEmpty.lock();
   outputMutexEmpty.lock();

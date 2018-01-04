@@ -1,7 +1,8 @@
 #pragma once
 #include <mutex>
-#include <deque>
+#include <map>
 #include <thread>
+#include <deque>
 #include "sample.h"
 
 
@@ -13,9 +14,10 @@ class AudioEngine
   public:
     AudioEngine();
     virtual void push(const Sample sample) = 0;
-    virtual Sample & pop() = 0;
+    virtual Sample & pop(const int channel) = 0;
     virtual void produce() = 0;
     virtual void consume() = 0;
+    virtual void sync() = 0;
     void waitInputForSpace();
     void waitInputEmpty();
     void waitOutputForSpace();
@@ -30,8 +32,8 @@ class AudioEngine
     mutex outputMutexFull;
     thread outputThread;
     thread inputThread;
-    deque<Sample> input;
-    deque<Sample> output;
+    map<int, deque<Sample>> input;
+    map<int, deque<Sample>> output;
     bool quit;
     size_t position;
 };

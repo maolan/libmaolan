@@ -14,7 +14,7 @@ AudioOSSEngine::AudioOSSEngine()
   channels = 2;
   format = AFMT_S32_NE;
   samplerate = 44100;
-  if((fd = open(device.data(), O_WRONLY, 0)) == -1)
+  if((fd = open(device.data(), O_RDWR, 0)) == -1)
   {
     cerr << device << ' ' << strerror(errno) << endl;
     exit(1);
@@ -39,8 +39,8 @@ AudioOSSEngine::AudioOSSEngine()
     cerr << strerror(errno) << endl;
     exit(1);
   }
-  inputThread = thread(&AudioOSSEngine::produce, this);
   outputThread = thread(&AudioOSSEngine::consume, this);
+  inputThread = thread(&AudioOSSEngine::produce, this);
 }
 
 AudioOSSEngine::~AudioOSSEngine()
@@ -55,17 +55,18 @@ void AudioOSSEngine::push(const Sample sample)
 {
   outputMutex.lock();
   waitOutputForSpace();
-  output.push_back(sample);
+  output[sample.channel].push_back(sample);
   outputMutex.unlock();
 }
 
 
-Sample & AudioOSSEngine::pop()
+Sample & AudioOSSEngine::pop(const int channel)
 {
   inputMutex.lock();
   waitInputEmpty();
-  Sample &sample = input.front();
-  input.pop_front();
+  auto &arr = input[channel];
+  Sample &sample = arr.front();
+  arr.pop_front();
   inputMutex.unlock();
   return sample;
 }
@@ -73,25 +74,62 @@ Sample & AudioOSSEngine::pop()
 
 void AudioOSSEngine::produce()
 {
-  while (true)
+  do
   {
     if (quit) {return;}
     inputMutex.lock();
     waitInputForSpace();
-    cout << "Producing" << endl;
+    // cout << "Producing sample " << position << endl;
     inputMutex.unlock();
   }
+  while (true);
 }
 
 
 void AudioOSSEngine::consume()
 {
-  while (true)
+  int bufferSize = 128;
+  int buffer[bufferSize];
+  int bytesWrote = bufferSize;
+  int offset = 0;
+  auto trig = PCM_ENABLE_INPUT | PCM_ENABLE_OUTPUT;
+  do
   {
     if (quit) {return;}
+    if (bytesWrote < bufferSize) {
+      offset = bytesWrote;
+    }
+    else
+    {
+      offset = 0;
+      outputMutex.lock();
+      auto &channel0 = output[0];
+      auto &channel1 = output[1];
+      const int size = max(channel0.size(), channel1.size());
+      if (size == 0)
+      {
+        offset = bufferSize;
+      }
+      else
+      {
+        for (int i = 0; i < size; ++i)
+        {
+          buffer[2*i] = channel0.front().data;
+          buffer[2*i+1] = channel1.front().data;
+          channel0.pop_front();
+          channel1.pop_front();
+        }
+      }
+      outputMutex.unlock();
+    }
+    bytesWrote = write(fd, buffer+offset, bufferSize-offset);
+    ioctl(fd, SNDCTL_DSP_SETTRIGGER, &trig);
     ++position;
-    outputMutex.lock();
-    cout << "Consuming" << endl;
-    outputMutex.unlock();
   }
+  while (bytesWrote != -1);
+}
+
+
+void AudioOSSEngine::sync()
+{
 }
