@@ -116,4 +116,6 @@ void AudioOSSEngine::consume()
 
 void AudioOSSEngine::sync()
 {
+
+  ioctl(fd, SNDCTL_DSP_SYNC, NULL);
 }
