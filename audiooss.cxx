@@ -52,21 +52,21 @@ AudioOSSEngine::~AudioOSSEngine()
 }
 
 
-void AudioOSSEngine::push(const Sample sample)
+void AudioOSSEngine::push(const int channel, const int sample)
 {
   outputMutex.lock();
   waitOutputForSpace();
-  output[sample.channel].push_back(sample);
+  output[channel].push_back(sample);
   outputMutex.unlock();
 }
 
 
-Sample & AudioOSSEngine::pop(const int channel)
+int AudioOSSEngine::pop(const int channel)
 {
   inputMutex.lock();
   waitInputEmpty();
   auto &arr = input[channel];
-  Sample &sample = arr.front();
+  int sample = arr.front();
   arr.pop_front();
   inputMutex.unlock();
   return sample;
@@ -98,11 +98,13 @@ void AudioOSSEngine::consume()
     auto &channel0 = output[0];
     auto &channel1 = output[1];
     vector<int> buffer;
+    if (channel0.empty()) {cout << "No left channel" << endl;}
+    if (channel1.empty()) {cout << "No right channel" << endl;}
     while (!channel0.empty() && !channel1.empty())
     {
-      buffer.push_back(channel0.front().data);
+      buffer.push_back(channel0.front());
       channel0.pop_front();
-      buffer.push_back(channel1.front().data);
+      buffer.push_back(channel1.front());
       channel1.pop_front();
     }
     outputMutex.unlock();

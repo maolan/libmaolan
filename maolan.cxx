@@ -17,12 +17,8 @@ int main()
   {
     for (int i = 0; i < bytesRead; ++i)
     {
-      Sample sample;
-      int remain = i % 2;
-      int arrayIndex = 2 * i + remain;
-      sample.data = arr[arrayIndex];
-      sample.channel = remain;
-      engine.push(sample);
+      int channel = i % 2;
+      engine.push(channel, arr[i]);
     }
   }
   engine.sync();

@@ -13,8 +13,8 @@ class AudioEngine
 {
   public:
     AudioEngine();
-    virtual void push(const Sample sample) = 0;
-    virtual Sample & pop(const int channel) = 0;
+    virtual void push(const int channel, const int sample) = 0;
+    virtual int pop(const int channel) = 0;
     virtual void produce() = 0;
     virtual void consume() = 0;
     virtual void sync() = 0;
@@ -32,8 +32,8 @@ class AudioEngine
     mutex outputMutexFull;
     thread outputThread;
     thread inputThread;
-    map<int, deque<Sample>> input;
-    map<int, deque<Sample>> output;
+    map<int, deque<int>> input;
+    map<int, deque<int>> output;
     bool quit;
     size_t position;
 };
