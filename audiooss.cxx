@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstring>
+#include <vector>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
@@ -88,41 +89,24 @@ void AudioOSSEngine::produce()
 
 void AudioOSSEngine::consume()
 {
-  int bufferSize = 128;
-  int buffer[bufferSize];
-  int bytesWrote = bufferSize;
-  int offset = 0;
   auto trig = PCM_ENABLE_INPUT | PCM_ENABLE_OUTPUT;
+  int bytesWrote;
   do
   {
     if (quit) {return;}
-    if (bytesWrote < bufferSize) {
-      offset = bytesWrote;
-    }
-    else
+    outputMutex.lock();
+    auto &channel0 = output[0];
+    auto &channel1 = output[1];
+    vector<int> buffer;
+    while (!channel0.empty() && !channel1.empty())
     {
-      offset = 0;
-      outputMutex.lock();
-      auto &channel0 = output[0];
-      auto &channel1 = output[1];
-      const int size = max(channel0.size(), channel1.size());
-      if (size == 0)
-      {
-        offset = bufferSize;
-      }
-      else
-      {
-        for (int i = 0; i < size; ++i)
-        {
-          buffer[2*i] = channel0.front().data;
-          buffer[2*i+1] = channel1.front().data;
-          channel0.pop_front();
-          channel1.pop_front();
-        }
-      }
-      outputMutex.unlock();
+      buffer.push_back(channel0.front().data);
+      channel0.pop_front();
+      buffer.push_back(channel1.front().data);
+      channel1.pop_front();
     }
-    bytesWrote = write(fd, buffer+offset, bufferSize-offset);
+    outputMutex.unlock();
+    bytesWrote = write(fd, buffer.data(), buffer.size());
     ioctl(fd, SNDCTL_DSP_SETTRIGGER, &trig);
     ++position;
   }

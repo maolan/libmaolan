@@ -23,7 +23,6 @@ int main()
       sample.data = arr[arrayIndex];
       sample.channel = remain;
       engine.push(sample);
-      cout << i << endl;
     }
   }
   engine.sync();
