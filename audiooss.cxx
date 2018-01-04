@@ -98,8 +98,6 @@ void AudioOSSEngine::consume()
     auto &channel0 = output[0];
     auto &channel1 = output[1];
     vector<int> buffer;
-    if (channel0.empty()) {cout << "No left channel" << endl;}
-    if (channel1.empty()) {cout << "No right channel" << endl;}
     while (!channel0.empty() && !channel1.empty())
     {
       buffer.push_back(channel0.front());
@@ -111,6 +109,7 @@ void AudioOSSEngine::consume()
     bytesWrote = write(fd, buffer.data(), buffer.size());
     ioctl(fd, SNDCTL_DSP_SETTRIGGER, &trig);
     ++position;
+    sync();
   }
   while (bytesWrote != -1);
 }
@@ -118,6 +117,5 @@ void AudioOSSEngine::consume()
 
 void AudioOSSEngine::sync()
 {
-
   ioctl(fd, SNDCTL_DSP_SYNC, NULL);
 }
