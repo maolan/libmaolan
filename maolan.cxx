@@ -1,15 +1,28 @@
 #include <sndfile.hh>
 #include <iostream>
+#include <fstream>
 #include <chrono>
 #include <thread>
 #include "audiooss.h"
 
 
-int main()
+int main(int argc, char **argv)
 {
-  const string file = "/usr/home/meka/Files/reporter44k1.wav";
+  if (argc < 2)
+  {
+    cerr << "Usage: " << argv[0] << " <wav file>" << endl;
+    return 1;
+  }
+  const string filePath = argv[1];
+  ifstream f(filePath);
+  if (!f.good())
+  {
+    cerr << "Could not open file " << filePath << endl;
+    return 1;
+  }
+  cout << filePath << endl;
   AudioOSSEngine engine;
-  SndfileHandle audioFile{file};
+  SndfileHandle audioFile{filePath};
   int bytesRead;
   int bufferSize = 128;
   int arr[bufferSize];
