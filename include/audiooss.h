@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include "audioengine.h"
-#include "sample.h"
 
 
 class AudioOSSEngine : public AudioEngine
@@ -9,7 +8,7 @@ class AudioOSSEngine : public AudioEngine
   public:
     AudioOSSEngine();
     ~AudioOSSEngine();
-    void push(const int channel, const int sample);
+    void push(const int channel);
     int pop(const int channel);
     void consume();
     void produce();

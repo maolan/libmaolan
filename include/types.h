@@ -12,7 +12,4 @@ typedef std::pair<Origin, Buffer> PackageData;
 typedef std::shared_ptr<PackageData> Package;
 
 
-Package const newPackage()
-{
-  return Package(new PackageData(new std::string, new BufferData));
-}
+Package const newPackage();

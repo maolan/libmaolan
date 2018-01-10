@@ -1,5 +1,5 @@
 #include <iostream>
-#include "types.h"
+#include "fileinput.h"
 
 
 using namespace std;
@@ -7,20 +7,10 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-  auto package = newPackage();
-
-  auto origin = package->first;
-  *origin = "Origin";
-
-  auto buffer = package->second;
-  buffer->push_back(0.5);
-  cout << *origin << ' ' << buffer->front() << ' ' << buffer->size() << endl;
-
-  cout << "Before " << package.use_count() << endl;
+  FileInput fileInput("/usr/home/meka/Files/reporter44k1.wav");
+  for (unsigned i = 0; i < 1024; ++i)
   {
-    auto other = package;
-    cout << "During " << package.use_count() << endl;
+    auto package = fileInput.pull();
   }
-  cout << "After " << package.use_count() << endl;
   return 0;
 }

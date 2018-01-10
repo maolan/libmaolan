@@ -3,7 +3,6 @@
 #include <map>
 #include <thread>
 #include <deque>
-#include "sample.h"
 
 
 using namespace std;
@@ -13,7 +12,7 @@ class AudioEngine
 {
   public:
     AudioEngine();
-    virtual void push(const int channel, const int sample) = 0;
+    virtual void push(const int channel) = 0;
     virtual int pop(const int channel) = 0;
     virtual void produce() = 0;
     virtual void consume() = 0;

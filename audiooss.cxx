@@ -52,12 +52,8 @@ AudioOSSEngine::~AudioOSSEngine()
 }
 
 
-void AudioOSSEngine::push(const int channel, const int sample)
+void AudioOSSEngine::push(const int channel)
 {
-  outputMutex.lock();
-  waitOutputForSpace();
-  output[channel].push_back(sample);
-  outputMutex.unlock();
 }
 
 
