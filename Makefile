@@ -1,4 +1,4 @@
-CFLAGS = $(CPPFLAGS) -O2
+CFLAGS =  -Iinclude $(CPPFLAGS) -O2
 CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 CXXFILES = \
@@ -13,11 +13,19 @@ OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 
 all: maolan
 
+-include makedepend
+
 maolan: $(OBJECTS)
 	$(CXX) $(OBJECTS) $(LDFLAGS) -o maolan
+
+clean:
+	rm -rf $(OBJECTS) maolan
 
 %.o: %.cxx
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-clean:
-	rm -rf $(OBJECTS) maolan
+distclean: clean
+	rm -rf configure autom4te.cache config.log config.status makeinclude
+
+gendep:
+	$(CXX) -MM -DMAKEDEPEND $(CXXFLAGS) $(CXXFILES) >makedepend
