@@ -1,4 +1,5 @@
 #include <iostream>
+#include <deque>
 #include <limits>
 #include "fileinput.h"
 
@@ -6,12 +7,17 @@
 using namespace std;
 
 
+size_t FileInput::size = 0;
+
+
 FileInput::FileInput(const string &path)
-  : position(0)
-  , audioFile(path)
+  : audioFile(path)
 {
-  size = 128 * audioFile.channels();
-  rawData = new float(size);
+  for (int i = 0; i < audioFile.channels(); ++i)
+  {
+    channels.emplace_back(new deque<float>);
+  }
+  rawData = new float[audioFile.channels() * size];
 }
 
 
@@ -23,31 +29,19 @@ FileInput::~FileInput()
 
 void FileInput::fetch()
 {
-  package = newPackage();
-  auto buffer = package->second;
-  int bytesRead = audioFile.read(rawData, size);
+  int bytesRead = audioFile.read(rawData, audioFile.channels() * size);
   for (int i = 0; i < bytesRead; ++i)
   {
-    buffer->push_back(rawData[i]);
+    channels[i % audioFile.channels()]->push_back(rawData[i]);
   }
-}
-
-
-Package FileInput::pull()
-{
-  return package;
-}
-
-
-vector<int> FileInput::data()
-{
-  vector<int> data;
-  Package package = pull();
-  auto buffer = package->second;
-  for (auto &element : *buffer)
+  for (int i = bytesRead; i < audioFile.channels() * size; ++i)
   {
-    int result = element * numeric_limits<int>::max();
-    data.push_back(result);
+    channels[i % audioFile.channels()]->push_back(0);
   }
-  return data;
+}
+
+
+Chunk FileInput::pull(const unsigned &channel)
+{
+  return channels[channel];
 }

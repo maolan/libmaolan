@@ -11,14 +11,16 @@ class FileInput
     FileInput(const std::string &path);
     ~FileInput();
 
+    static std::size_t size;
+
     void fetch();
-    Package pull();
-    std::vector<int> data();
+    Chunk pull(const unsigned &channel);
 
   protected:
-    float *rawData;
-    std::size_t size;
-    std::size_t position;
     SndfileHandle audioFile;
-    Package package;
+    std::vector<Chunk> channels;
+
+
+  private:
+    float *rawData;
 };

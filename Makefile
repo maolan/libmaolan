@@ -6,8 +6,7 @@ CXXFILES = \
 	audioengine.cxx \
 	audiooss.cxx \
 	fileinput.cxx \
-	maolan.cxx \
-	types.cxx
+	maolan.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include makeinclude
 

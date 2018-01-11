@@ -10,13 +10,12 @@
 using namespace std;
 
 
-int main(int argc, char **argv)
+int openAudioDevice(const string &path)
 {
-  FileInput fileInput("/usr/home/meka/Files/reporter44k1.wav");
   int fd, format = AFMT_S32_NE;
-  if((fd = open("/dev/dsp", O_WRONLY, 0)) == -1)
+  if((fd = open(path.data(), O_WRONLY, 0)) == -1)
   {
-    cerr << "/dev/dsp " << strerror(errno) << endl;
+    cerr << path << ' ' << strerror(errno) << endl;
     exit(1);
   }
   int tmp = format;
@@ -39,12 +38,29 @@ int main(int argc, char **argv)
     cerr << strerror(errno) << endl;
     exit(1);
   }
-  while (true)
+  return fd;
+}
+
+
+int main(int argc, char **argv)
+{
+  FileInput fileInput("/usr/home/meka/Files/reporter44k1.wav");
+  int fd = openAudioDevice("/dev/dsp");
+  size_t dataSize = 1;
+  vector<int> data;
+  while (dataSize > 0)
   {
     fileInput.fetch();
-    const auto &data = fileInput.data();
-    auto data_size = data.size() * sizeof(*data.data());
-    write(fd, data.data(), data_size);
+    Chunk chunkL = fileInput.pull(0);
+    Chunk chunkR = fileInput.pull(1);
+    for (int i = 0; i < chunkL->size(); ++i)
+    {
+      data.push_back((*chunkL)[i] * numeric_limits<int>::max());
+      data.push_back((*chunkR)[i] * numeric_limits<int>::max());
+    }
+    dataSize = data.size() * sizeof(*data.data());
+    write(fd, data.data(), dataSize);
+    data.clear();
   }
   return 0;
 }
