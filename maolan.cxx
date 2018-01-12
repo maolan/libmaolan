@@ -1,10 +1,10 @@
 #include <iostream>
-#include <cstring>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
-#include "fileinput.h"
+#include <vector>
+#include "audiofileinput.h"
 
 
 using namespace std;
@@ -42,25 +42,50 @@ int openAudioDevice(const string &path)
 }
 
 
-int main(int argc, char **argv)
+int fd = openAudioDevice("/dev/dsp");
+
+
+void play(vector<AudioChunk> &outputs)
 {
-  FileInput fileInput("/usr/home/meka/Files/reporter44k1.wav");
-  int fd = openAudioDevice("/dev/dsp");
-  size_t dataSize = 1;
   vector<int> data;
-  while (dataSize > 0)
+  for (size_t i = 0; i < AudioFileInput::size; ++i)
   {
-    fileInput.fetch();
-    Chunk chunkL = fileInput.pull(0);
-    Chunk chunkR = fileInput.pull(1);
-    for (int i = 0; i < chunkL->size(); ++i)
+    for (auto &channel : outputs)
     {
-      data.push_back((*chunkL)[i] * numeric_limits<int>::max());
-      data.push_back((*chunkR)[i] * numeric_limits<int>::max());
+      auto &element = channel->data[i];
+      int result = element * numeric_limits<int>::max();
+      data.push_back(result);
     }
-    dataSize = data.size() * sizeof(*data.data());
-    write(fd, data.data(), dataSize);
-    data.clear();
+  }
+  int dataSize = data.size() * sizeof(*data.data());
+  write(fd, data.data(), dataSize);
+}
+
+
+int runClasses(int argc, char **argv)
+{
+  AudioFileInput f(argv[1]);
+  vector<AudioChunk> outputs;
+  outputs.resize(f.channels());
+  while (true)
+  {
+    // Fetch
+    f.fetch();
+
+    // Pull
+    for (size_t channel = 0; channel < f.channels(); ++channel)
+    {
+      outputs[channel] = f.pull(channel);
+    }
+
+    // Process
+    play(outputs);
   }
   return 0;
+}
+
+
+int main(int argc, char **argv)
+{
+  return runClasses(argc, argv);
 }

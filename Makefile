@@ -2,10 +2,10 @@ CFLAGS = -Iinclude $(CPPFLAGS) -O2
 CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 CXXFILES = \
-	audiofile.cxx \
-	audioengine.cxx \
-	audiooss.cxx \
-	fileinput.cxx \
+	audiochunk.cxx \
+	audiofileinput.cxx \
+	audioio.cxx \
+	audioossout.cxx \
 	maolan.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include makeinclude

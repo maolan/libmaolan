@@ -2,24 +2,23 @@
 #include <string>
 #include <vector>
 #include <sndfile.hh>
-#include "types.h"
+#include "audioio.h"
 
 
-class FileInput
+class AudioFileInput : public AudioIO
 {
   public:
-    FileInput(const std::string &path);
-    ~FileInput();
+    AudioFileInput(const std::string &path);
+    ~AudioFileInput();
 
     static std::size_t size;
 
     void fetch();
-    Chunk pull(const unsigned &channel);
+    void split();
+    std::size_t channels() const;
 
   protected:
     SndfileHandle audioFile;
-    std::vector<Chunk> channels;
-
 
   private:
     float *rawData;
