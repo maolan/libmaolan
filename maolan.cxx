@@ -48,25 +48,45 @@ int fd = openAudioDevice("/dev/dsp");
 void play(vector<AudioChunk> &outputs)
 {
   vector<int> data;
+  int result;
+  float element;
   for (size_t i = 0; i < AudioFileInput::size; ++i)
   {
     for (auto &channel : outputs)
     {
-      auto &element = channel->data[i];
-      int result = element * numeric_limits<int>::max();
+      element = channel->data[i];
+      if (element > 1.0)
+      {
+        result = numeric_limits<int>::max();
+      }
+      else if (element < -1.0)
+      {
+        result = numeric_limits<int>::min();
+      }
+      else
+      {
+        result = element * numeric_limits<int>::max();
+      }
       data.push_back(result);
     }
   }
   int dataSize = data.size() * sizeof(*data.data());
   write(fd, data.data(), dataSize);
+  data.clear();
 }
 
 
 int runClasses(int argc, char **argv)
 {
+  if (argc < 2)
+  {
+    cerr << "Usage: " << argv[0] << " <wav file>" << endl;
+    return 1;
+  }
   AudioFileInput f(argv[1]);
   vector<AudioChunk> outputs;
   outputs.resize(f.channels());
+  cout << "Playing ..." << flush;
   while (true)
   {
     // Fetch
@@ -81,6 +101,7 @@ int runClasses(int argc, char **argv)
     // Process
     play(outputs);
   }
+  cout << endl;
   return 0;
 }
 
