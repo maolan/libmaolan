@@ -1,3 +1,4 @@
+/* vim: set syntax=cpp: */
 #pragma once
 #include <memory>
 

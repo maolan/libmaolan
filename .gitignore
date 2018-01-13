@@ -1,6 +1,7 @@
 *.o
+*.so
 *.core
-src/maolan
+src/maolan-cli
 makeinclude
 autom4te.cache
 config.log

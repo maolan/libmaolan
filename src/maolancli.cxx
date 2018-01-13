@@ -1,9 +1,11 @@
 #include <iostream>
+#include <cstring>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
 #include <errno.h>
 #include <vector>
+#include <limits>
 #include <maolan/audiofileinput>
 
 

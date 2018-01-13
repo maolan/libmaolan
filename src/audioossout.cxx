@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
