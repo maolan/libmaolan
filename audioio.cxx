@@ -1,15 +1,18 @@
-#include <iostream>
-#include <deque>
-#include <limits>
 #include "audioio.h"
 
 
 using namespace std;
 
 
+AudioIO::AudioIO() {}
+
+
 AudioIO::AudioIO(const size_t &size)
 {
-  outputs.resize(size);
+  if (size > 0)
+  {
+    outputs.resize(size);
+  }
 }
 
 

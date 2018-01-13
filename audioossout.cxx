@@ -1,10 +1,7 @@
 #include <iostream>
-#include <cstring>
-#include <vector>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <errno.h>
 #include "audioossout.h"
 
 

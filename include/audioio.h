@@ -6,6 +6,7 @@
 class AudioIO
 {
   public:
+    AudioIO();
     AudioIO(const size_t &size);
 
     virtual void fetch() = 0;

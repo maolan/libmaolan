@@ -1,6 +1,3 @@
-#include <iostream>
-#include <deque>
-#include <limits>
 #include "audiofileinput.h"
 
 
@@ -11,10 +8,10 @@ size_t AudioFileInput::size = 128;
 
 
 AudioFileInput::AudioFileInput(const string &path)
-  : AudioIO(2)
-  , audioFile(path)
+  : audioFile(path)
 {
   rawData = new float[size * audioFile.channels()];
+  outputs.resize(audioFile.channels());
 }
 
 
