@@ -2,7 +2,7 @@
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include "audioossout.h"
+#include <maolan/audioossout>
 
 
 using namespace std;

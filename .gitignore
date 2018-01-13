@@ -1,10 +1,9 @@
 *.o
 *.core
-maolan
+src/maolan
 makeinclude
 autom4te.cache
 config.log
 config.status
 configure
 makedepend
-

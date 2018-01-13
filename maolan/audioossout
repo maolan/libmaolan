@@ -1,6 +1,6 @@
 #pragma once
 #include <string>
-#include "audioio.h"
+#include <maolan/audioio>
 
 
 class AudioOSSOut : public AudioIO

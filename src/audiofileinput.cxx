@@ -1,4 +1,4 @@
-#include "audiofileinput.h"
+#include <maolan/audiofileinput>
 
 
 using namespace std;

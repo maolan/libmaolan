@@ -1,4 +1,4 @@
-AC_INIT(maolan.cxx)
+AC_INIT(src/maolan.cxx)
 
 MAOLAN_MAJOR_VERSION=0
 AC_SUBST(MAOLAN_MAJOR_VERSION)

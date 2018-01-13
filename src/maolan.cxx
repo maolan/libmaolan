@@ -4,7 +4,7 @@
 #include <unistd.h>
 #include <errno.h>
 #include <vector>
-#include "audiofileinput.h"
+#include <maolan/audiofileinput>
 
 
 using namespace std;
