@@ -6,8 +6,7 @@
 class AudioIO
 {
   public:
-    AudioIO();
-    AudioIO(const size_t &size);
+    AudioIO(const size_t &size = 0);
 
     virtual void fetch() = 0;
     virtual std::size_t channels() const = 0;

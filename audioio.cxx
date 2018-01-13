@@ -4,9 +4,6 @@
 using namespace std;
 
 
-AudioIO::AudioIO() {}
-
-
 AudioIO::AudioIO(const size_t &size)
 {
   if (size > 0)

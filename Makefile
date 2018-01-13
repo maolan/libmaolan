@@ -2,6 +2,7 @@ CFLAGS = -Iinclude $(CPPFLAGS) -O2
 CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 CXXFILES = \
+	audioconnection.cxx \
 	audiochunk.cxx \
 	audiofileinput.cxx \
 	audioio.cxx \
