@@ -4,6 +4,7 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <maolan/audioossout>
+#include <maolan/config>
 
 
 using namespace std;
@@ -12,6 +13,7 @@ using namespace std;
 AudioOSSOut::AudioOSSOut(const size_t &size)
   : AudioIO(size)
 {
+  inputs.resize(size);
   string device = "/dev/dsp";
   size_t channels = size;
   format = AFMT_S32_NE;
@@ -55,4 +57,66 @@ void AudioOSSOut::sync() const
   auto trig = PCM_ENABLE_INPUT | PCM_ENABLE_OUTPUT;
   ioctl(fd, SNDCTL_DSP_SETTRIGGER, &trig);
   ioctl(fd, SNDCTL_DSP_SYNC, NULL);
+}
+
+
+void AudioOSSOut::fetch()
+{
+  for (size_t i = 0; i < channels(); ++i)
+  {
+    outputs[i] = inputs[i].pull();
+  }
+}
+
+
+void AudioOSSOut::process()
+{
+  int result;
+  float element;
+  for (size_t i = 0; i < Config::audioChunkSize; ++i)
+  {
+    for (auto &channel : outputs)
+    {
+      if (channel == nullptr) {
+        result = 0;
+      }
+      else
+      {
+        element = channel->data[i];
+        if (element > 1.0)
+        {
+          result = numeric_limits<int>::max();
+        }
+        else if (element < -1.0)
+        {
+          result = numeric_limits<int>::min();
+        }
+        else
+        {
+          result = element * numeric_limits<int>::max();
+        }
+      }
+      normalizedOut.push_back(result);
+    }
+  }
+  int dataSize = normalizedOut.size() * sizeof(*normalizedOut.data());
+  write(fd, normalizedOut.data(), dataSize);
+  sync();
+  normalizedOut.clear();
+}
+
+
+size_t AudioOSSOut::channels() const
+{
+  return outputs.size();
+}
+
+
+void AudioOSSOut::connect(AudioIO *to)
+{
+  for (size_t channel = 0; channel < channels(); ++channel)
+  {
+    AudioConnection conn(to, channel);
+    inputs[channel].add(conn);
+  }
 }

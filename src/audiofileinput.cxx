@@ -1,17 +1,15 @@
 #include <maolan/audiofileinput>
+#include <maolan/config>
 
 
 using namespace std;
 
 
-size_t AudioFileInput::size = 128;
-
-
 AudioFileInput::AudioFileInput(const string &path)
   : audioFile(path)
 {
-  rawData = new float[size * audioFile.channels()];
-  outputs.resize(audioFile.channels());
+  rawData = new float[Config::audioChunkSize * audioFile.channels()];
+  outputs.resize(audioFile.channels(), nullptr);
 }
 
 
@@ -25,8 +23,8 @@ void AudioFileInput::split()
 {
   for (size_t channel = 0; channel < channels(); ++channel)
   {
-    outputs[channel] = AudioChunk(new AudioChunkData(size));
-    for (size_t i = 0; i < size; ++i)
+    outputs[channel] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
+    for (size_t i = 0; i < Config::audioChunkSize; ++i)
     {
       outputs[channel]->data[i] = rawData[i * outputs.size() + channel];
     }
@@ -36,7 +34,7 @@ void AudioFileInput::split()
 
 void AudioFileInput::fetch()
 {
-  int bytesRead = audioFile.read(rawData, channels() * size);
+  int bytesRead = audioFile.read(rawData, channels() * Config::audioChunkSize);
   split();
 }
 

@@ -2,18 +2,24 @@
 #pragma once
 #include <vector>
 #include <maolan/audiochunk>
+#include <maolan/audiostate>
 
 
 class AudioIO
 {
   public:
-    AudioIO(const size_t &size = 0);
+    AudioIO(const size_t &outs = 0);
+    ~AudioIO();
+
+    static std::vector<AudioIO *> ios;
 
     virtual void fetch() = 0;
     virtual std::size_t channels() const = 0;
+    virtual void process();
     AudioChunk pull(const unsigned &channel);
 
   protected:
+    int state;
     std::vector<AudioChunk> outputs;
+    std::vector<AudioIO *>::iterator it;
 };
-

@@ -4,12 +4,22 @@
 using namespace std;
 
 
-AudioIO::AudioIO(const size_t &size)
+vector<AudioIO *> AudioIO::ios;
+
+
+AudioIO::AudioIO(const size_t &outs)
 {
-  if (size > 0)
+  it = ios.emplace(ios.end(), this);
+  if (outs > 0)
   {
-    outputs.resize(size);
+    outputs.resize(outs);
   }
+}
+
+
+AudioIO::~AudioIO()
+{
+  ios.erase(it);
 }
 
 
@@ -18,3 +28,5 @@ AudioChunk AudioIO::pull(const unsigned &channel)
   return outputs[channel];
 }
 
+
+void AudioIO::process(){}

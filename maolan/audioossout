@@ -2,6 +2,7 @@
 #pragma once
 #include <string>
 #include <maolan/audioio>
+#include <maolan/audioinput>
 
 
 class AudioOSSOut : public AudioIO
@@ -11,9 +12,15 @@ class AudioOSSOut : public AudioIO
     ~AudioOSSOut();
 
     void sync() const;
+    void connect(AudioIO *to);
+    void fetch();
+    void process();
+    std::size_t channels() const;
 
   protected:
     int fd;
     int samplerate;
     int format;
+    std::vector<AudioInput> inputs;
+    std::vector<int> normalizedOut;
 };

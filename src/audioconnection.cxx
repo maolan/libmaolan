@@ -4,7 +4,7 @@
 using namespace std;
 
 
-AudioConnection::AudioConnection(AudioIO *connectTo, size_t &ch)
+AudioConnection::AudioConnection(AudioIO *connectTo, size_t ch)
 {
   to = connectTo;
   channel = ch;

@@ -3,11 +3,13 @@ CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 LDFLAGS_SHARED = -shared
 CXXFILES = \
-	audioconnection.cxx \
 	audiochunk.cxx \
+	audioconnection.cxx \
 	audiofileinput.cxx \
+	audioinput.cxx \
 	audioio.cxx \
-	audioossout.cxx
+	audioossout.cxx \
+	config.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include ../makeinclude
 

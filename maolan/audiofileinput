@@ -12,8 +12,6 @@ class AudioFileInput : public AudioIO
     AudioFileInput(const std::string &path);
     ~AudioFileInput();
 
-    static std::size_t size;
-
     void fetch();
     void split();
     std::size_t channels() const;

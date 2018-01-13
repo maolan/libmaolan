@@ -6,7 +6,7 @@
 class AudioConnection
 {
   public:
-    AudioConnection(AudioIO *connectTo, std::size_t &ch);
+    AudioConnection(AudioIO *connectTo, std::size_t ch);
 
     AudioIO * get();
     AudioChunk pull();

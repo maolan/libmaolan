@@ -1,0 +1,19 @@
+/* vim: set syntax=cpp: */
+#pragma once
+#include <vector>
+#include <maolan/audioconnection>
+#include <maolan/audiochunk>
+
+
+class AudioInput : public AudioIO
+{
+  public:
+    AudioInput();
+    void add(const AudioConnection &conn);
+    void fetch();
+    std::size_t channels() const;
+    AudioChunk pull();
+
+  protected:
+    std::vector<AudioConnection> connections;
+};
