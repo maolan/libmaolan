@@ -101,7 +101,6 @@ void AudioOSSOut::process()
   }
   int dataSize = normalizedOut.size() * sizeof(*normalizedOut.data());
   write(fd, normalizedOut.data(), dataSize);
-  sync();
   normalizedOut.clear();
 }
 
