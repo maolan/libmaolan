@@ -1,0 +1,22 @@
+/* vim: set syntax=cpp: */
+#pragma once
+#include <string>
+#include <maolan/audioio>
+
+
+class AudioOSSIn: public AudioIO
+{
+  public:
+    AudioOSSIn(const std::size_t &channels);
+    ~AudioOSSIn();
+
+    void fetch();
+    void process();
+    std::size_t channels() const;
+
+  protected:
+    int fd;
+    int samplerate;
+    int format;
+    int *rawData;
+};

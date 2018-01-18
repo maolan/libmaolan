@@ -13,6 +13,7 @@ class AudioOSSOut : public AudioIO
 
     void sync() const;
     void connect(AudioIO *to);
+    void connect(AudioIO *to, std::size_t inCh, std::size_t outCh);
     void fetch();
     void process();
     std::size_t channels() const;

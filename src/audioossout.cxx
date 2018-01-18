@@ -119,3 +119,10 @@ void AudioOSSOut::connect(AudioIO *to)
     inputs[channel].add(conn);
   }
 }
+
+
+void AudioOSSOut::connect(AudioIO *to, std::size_t inCh, std::size_t outCh)
+{
+  AudioConnection conn(to, outCh);
+  inputs[inCh].add(conn);
+}

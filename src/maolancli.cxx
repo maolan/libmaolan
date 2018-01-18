@@ -1,6 +1,7 @@
 #include <iostream>
 #include <maolan/audiofileinput>
 #include <maolan/audioossout>
+#include <maolan/audioossin>
 #include <maolan/audiotrack>
 
 
@@ -29,7 +30,25 @@ int runTracks(int argc, char **argv)
 }
 
 
+
+int runInputs(int argc, char **argv)
+{
+  AudioOSSIn in(10);
+  AudioOSSOut out(2);
+  out.connect(&in, 0, 8);
+  out.connect(&in, 1, 9);
+  cout << "Playing ..." << flush;
+  while (true)
+  {
+    for (auto &io : AudioIO::ios) {io->fetch();}
+    for (auto &io : AudioIO::ios) {io->process();}
+  }
+  cout << endl;
+}
+
+
+
 int main(int argc, char **argv)
 {
-  return runTracks(argc, argv);
+  return runInputs(argc, argv);
 }

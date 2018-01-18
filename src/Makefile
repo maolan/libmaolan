@@ -1,4 +1,4 @@
-CFLAGS = -I.. $(CPPFLAGS) -O2 -fPIC
+CFLAGS = -I.. $(CPPFLAGS) -O2 -fPIC -DPIC
 CXXFLAGS = $(CFLAGS) -std=c++14
 LDFLAGS = -pthread -lsndfile
 LDFLAGS_SHARED = -shared
@@ -8,6 +8,7 @@ CXXFILES = \
 	audiofileinput.cxx \
 	audioinput.cxx \
 	audioio.cxx \
+	audioossin.cxx \
 	audioossout.cxx \
 	audiotrack.cxx \
 	config.cxx
