@@ -9,6 +9,7 @@ CXXFILES = \
 	audioinput.cxx \
 	audioio.cxx \
 	audioossout.cxx \
+	audiotrack.cxx \
 	config.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include ../makeinclude
