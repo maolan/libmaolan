@@ -61,15 +61,13 @@ void AudioOSSIn::fetch()
 
 void AudioOSSIn::process()
 {
-  for (int i = 0; i < channels(); ++i)
+  for (int j = 0; j < channels(); ++j)
   {
-    outputs[i] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
-  }
-  for (int i = 0; i < Config::audioChunkSize; ++i)
-  {
-    for (int j = 0; j < channels(); ++j)
+    outputs[j] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
+    for (int i = 0; i < Config::audioChunkSize; ++i)
     {
       outputs[j]->data[i] = rawData[i * channels() + j];
+
     }
   }
 }

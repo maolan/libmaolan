@@ -51,7 +51,5 @@ int runInputs(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-  int result = runInputs(argc, argv);
-  cerr << "After" << endl;
-  return result;
+  return runInputs(argc, argv);
 }
