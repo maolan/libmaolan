@@ -14,11 +14,11 @@ AudioOSSOut::AudioOSSOut(const size_t &size)
   : AudioIO(size)
 {
   inputs.resize(size);
-  string device = "/dev/dsp";
+  string device = "/dev/vdsp.jack";
   size_t channels = size;
   format = AFMT_S32_NE;
-  samplerate = 44100;
-  if((fd = open(device.data(), O_RDWR, 0)) == -1)
+  samplerate = 88200;
+  if((fd = open(device.data(), O_WRONLY, 0)) == -1)
   {
     cerr << device << ' ' << strerror(errno) << endl;
     exit(1);

@@ -33,8 +33,8 @@ int runTracks(int argc, char **argv)
 
 int runInputs(int argc, char **argv)
 {
-  AudioOSSIn in(10);
-  AudioOSSOut out(2);
+  AudioOSSIn in(18);
+  AudioOSSOut out(18);
   out.connect(&in, 0, 8);
   out.connect(&in, 1, 9);
   cout << "Playing ..." << flush;
@@ -44,11 +44,14 @@ int runInputs(int argc, char **argv)
     for (auto &io : AudioIO::ios) {io->process();}
   }
   cout << endl;
+  return 0;
 }
 
 
 
 int main(int argc, char **argv)
 {
-  return runInputs(argc, argv);
+  int result = runInputs(argc, argv);
+  cerr << "After" << endl;
+  return result;
 }
