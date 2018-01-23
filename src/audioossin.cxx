@@ -14,7 +14,7 @@ AudioOSSIn::AudioOSSIn(const size_t &channels)
   : AudioIO(channels)
 {
   rawData = new int[channels * Config::audioChunkSize];
-  string device = "/dev/vdsp.jack";
+  string device = "/dev/dsp";
   format = AFMT_S32_NE;
   samplerate = 88200;
   if((fd = open(device.data(), O_RDONLY, 0)) == -1)

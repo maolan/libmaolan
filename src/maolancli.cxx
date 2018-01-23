@@ -33,10 +33,9 @@ int runTracks(int argc, char **argv)
 
 int runInputs(int argc, char **argv)
 {
-  AudioOSSIn in(18);
-  AudioOSSOut out(18);
-  out.connect(&in, 0, 8);
-  out.connect(&in, 1, 9);
+  AudioOSSIn in(2);
+  AudioOSSOut out(2);
+  out.connect(&in);
   cout << "Playing ..." << flush;
   while (true)
   {

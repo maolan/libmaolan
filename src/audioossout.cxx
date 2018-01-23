@@ -14,7 +14,7 @@ AudioOSSOut::AudioOSSOut(const size_t &size)
   : AudioIO(size)
 {
   inputs.resize(size);
-  string device = "/dev/vdsp.jack";
+  string device = "/dev/dsp";
   size_t channels = size;
   format = AFMT_S32_NE;
   samplerate = 88200;
