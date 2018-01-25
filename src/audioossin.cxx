@@ -16,7 +16,7 @@ AudioOSSIn::AudioOSSIn(const size_t &channels)
   rawData = new int[channels * Config::audioChunkSize];
   string device = "/dev/dsp";
   format = AFMT_S32_NE;
-  samplerate = 88200;
+  samplerate = 44100;
   if((fd = open(device.data(), O_RDONLY, 0)) == -1)
   {
     cerr << device << ' ' << strerror(errno) << endl;

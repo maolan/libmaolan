@@ -17,7 +17,7 @@ AudioOSSOut::AudioOSSOut(const size_t &size)
   string device = "/dev/dsp";
   size_t channels = size;
   format = AFMT_S32_NE;
-  samplerate = 88200;
+  samplerate = 44100;
   if((fd = open(device.data(), O_WRONLY, 0)) == -1)
   {
     cerr << device << ' ' << strerror(errno) << endl;
