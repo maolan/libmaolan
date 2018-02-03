@@ -43,7 +43,7 @@ static void openInput(const string &dspname)
     cout << " = " << ai.name << " for output" << endl;
   }
 
-  if (ioctl (fd_in, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
+  if (ioctl(fd_in, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
   {
     cerr << "SNDCTL_DSP_GETCAPS";
     cerr << strerror(errno) << endl;
@@ -51,7 +51,7 @@ static void openInput(const string &dspname)
   }
 
   tmp = frag;
-  if (ioctl (fd_in, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
+  if (ioctl(fd_in, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SETFRAGMENT";
     cerr << strerror(errno) << endl;
@@ -59,7 +59,7 @@ static void openInput(const string &dspname)
   }
 
   tmp = channels;
-  if (ioctl (fd_in, SNDCTL_DSP_CHANNELS, &tmp) == -1)
+  if (ioctl(fd_in, SNDCTL_DSP_CHANNELS, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_CHANNELS";
     cerr << strerror(errno) << endl;
@@ -73,7 +73,7 @@ static void openInput(const string &dspname)
   }
 
   tmp = format;
-  if (ioctl (fd_in, SNDCTL_DSP_SETFMT, &tmp) == -1)
+  if (ioctl(fd_in, SNDCTL_DSP_SETFMT, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SETFMT";
     cerr << strerror(errno) << endl;
@@ -85,7 +85,7 @@ static void openInput(const string &dspname)
   }
 
   tmp = rate;
-  if (ioctl (fd_in, SNDCTL_DSP_SPEED, &tmp) == -1)
+  if (ioctl(fd_in, SNDCTL_DSP_SPEED, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SPEED";
     cerr << strerror(errno) << endl;
@@ -119,7 +119,7 @@ static void openOutput(const string &dspname)
     cout << " = " << ai.name << " for output" << endl;
   }
 
-  if (ioctl (fd_out, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
+  if (ioctl(fd_out, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
   {
     cerr << "SNDCTL_DSP_GETCAPS";
     cerr << strerror(errno) << endl;
@@ -189,24 +189,14 @@ static void openOutput(const string &dspname)
 static void play(int fd_out, int fd_in)
 {
   int l;
-  int loopcount = 0;
-  char silence[64 * 1024];	/* Buffer for one fragment of silence */
+  int delay;
+  float t;
   while ((l = read(fd_in, rawData, fragsize)) == fragsize)
   {
-    int delay;
-    float t;
-
-    if (loopcount == 0)
+    if (ioctl(fd_out, SNDCTL_DSP_GETODELAY, &delay) == -1)
     {
-      memset(silence, 0, fragsize);
-      if (write(fd_out, silence, fragsize) != fragsize)
-      {
-        cerr << "write";
-        cerr << strerror(errno) << endl;
-        exit(1);
-      }
+      delay = 0;
     }
-    if (ioctl(fd_out, SNDCTL_DSP_GETODELAY, &delay) == -1) delay = 0;
     delay /= 8;  /* Get number of 32 bit stereo samples */
     t = (float)delay / (float)rate;  /* Get delay in seconds */
     t *= 1000.0;  /* Convert delay to milliseconds */
@@ -217,11 +207,7 @@ static void play(int fd_out, int fd_in)
       cerr << strerror(errno) << endl;
       exit(1);
     }
-
-#if 1
     cout << "\rDelay = " << t << "ms" << flush;
-#endif
-    loopcount++;
   }
   cerr << strerror(errno);
   exit(1);
@@ -231,15 +217,21 @@ static void play(int fd_out, int fd_in)
 int main (int argc, char **argv)
 {
 
-  if (argc > 1) dspname = argv[1];
+  if (argc > 1)
+  {
+    dspname = argv[1];
+  }
   if (argc > 2)
   {
     rate = atoi (argv[3]);
-    if (rate == 0) rate = 48000;
+    if (rate == 0)
+    {
+      rate = 48000;
+    }
   }
   openInput(dspname);
   openOutput(dspname);
   play(fd_out, fd_in);
-
+  delete []rawData;
   return 0;
 }
