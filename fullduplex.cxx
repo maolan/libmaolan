@@ -14,12 +14,12 @@ using namespace std;
 
 string dspname = "/dev/dsp";
 int fd_out = -1, fd_in = -1;
-int dataSize = 32 * 1024;
+int dataSize = 64 * 1024;
 int *rawData = new int[dataSize];		/* Max 32k local buffer */
 int rate = 48000;
 int fragsize;
 int channels = 2;
-int frag = 10;
+int frag = 4;
 int format = AFMT_S32_NE;
 
 
@@ -35,6 +35,7 @@ static void openInput(const string &dspname)
     cerr << strerror(errno) << endl;
     exit(1);
   }
+
   ai.dev = -1;
   if (ioctl(fd_in, SNDCTL_ENGINEINFO, &ai) != -1)
   {
@@ -187,10 +188,9 @@ static void openOutput(const string &dspname)
 
 static void play(int fd_out, int fd_in)
 {
-
   int l;
   int loopcount = 0;
-  char silence[32 * 1024];	/* Buffer for one fragment of silence */
+  char silence[64 * 1024];	/* Buffer for one fragment of silence */
   while ((l = read(fd_in, rawData, fragsize)) == fragsize)
   {
     int delay;
@@ -207,9 +207,9 @@ static void play(int fd_out, int fd_in)
       }
     }
     if (ioctl(fd_out, SNDCTL_DSP_GETODELAY, &delay) == -1) delay = 0;
-    delay /= 8;		/* Get number of 16 bit stereo samples */
-    t = (float)delay / (float)rate;	/* Get delay in seconds */
-    t *= 1000.0;		/* Convert delay to milliseconds */
+    delay /= 8;  /* Get number of 32 bit stereo samples */
+    t = (float)delay / (float)rate;  /* Get delay in seconds */
+    t *= 1000.0;  /* Convert delay to milliseconds */
 
     if ((l = write(fd_out, rawData, fragsize)) != fragsize)
     {
