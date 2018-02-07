@@ -21,6 +21,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
   oss_audioinfo ai;
   int tmp;
   int devcaps;
+  frag = 4;
 
   if ((fd = open(device.data(), O_WRONLY, 0)) == -1)
   {
@@ -42,10 +43,10 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
-  tmp = 0;
-  if (ioctl(fd, SNDCTL_DSP_POLICY, &tmp) == -1)
+  tmp = frag;
+  if (ioctl(fd, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
   {
-    cerr << "SNDCTL_DSP_POLICY";
+    cerr << "SNDCTL_DSP_SETFRAGMENT";
     cerr << strerror(errno) << endl;
     exit(1);
   }
@@ -60,7 +61,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
   if (tmp != channels())
   {
     cerr << device << " doesn't support ";
-    cerr << channels() << " channels, but ";
+    cout << channels() << " channels, but ";
     cerr << tmp << " instead" << endl;
     exit(1);
   }

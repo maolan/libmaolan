@@ -20,6 +20,7 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
   int devcaps;
   samplerate = 48000;
   outputs.resize(chs);
+  frag = 4;
 
   if ((fd = open(device.data(), O_RDONLY, 0)) == -1)
   {
@@ -42,10 +43,10 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
     exit(1);
   }
 
-  tmp = 0;
-  if (ioctl(fd, SNDCTL_DSP_POLICY, &tmp) == -1)
+  tmp = frag;
+  if (ioctl(fd, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
   {
-    cerr << "SNDCTL_DSP_POLICY";
+    cerr << "SNDCTL_DSP_SETFRAGMENT";
     cerr << strerror(errno) << endl;
     exit(1);
   }
