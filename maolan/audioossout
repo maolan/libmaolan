@@ -8,11 +8,12 @@
 class AudioOSSOut : public AudioIO
 {
   public:
-    AudioOSSOut(const std::size_t &size);
+    AudioOSSOut(const std::size_t &channels);
     ~AudioOSSOut();
 
     void sync() const;
     void connect(AudioIO *to);
+    void connect(AudioIO *to, std::size_t inCh, std::size_t outCh);
     void fetch();
     void process();
     std::size_t channels() const;
@@ -21,6 +22,8 @@ class AudioOSSOut : public AudioIO
     int fd;
     int samplerate;
     int format;
+    int frag;
+    int fragsize;
     std::vector<AudioInput> inputs;
     std::vector<int> normalizedOut;
 };
