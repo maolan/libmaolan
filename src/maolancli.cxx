@@ -50,5 +50,5 @@ int runInputs(int argc, char **argv)
 
 int main(int argc, char **argv)
 {
-  return runTracks(argc, argv);
+  return runInputs(argc, argv);
 }

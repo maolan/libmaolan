@@ -10,38 +10,96 @@
 using namespace std;
 
 
-AudioOSSIn::AudioOSSIn(const size_t &channels)
-  : AudioIO(channels)
+AudioOSSIn::AudioOSSIn(const size_t &chs)
+  : AudioIO(chs)
 {
-  rawData = new int[channels * Config::audioChunkSize];
   string device = "/dev/dsp";
-  format = AFMT_S32_NE;
-  samplerate = 44100;
-  if((fd = open(device.data(), O_RDONLY, 0)) == -1)
+  int format = AFMT_S32_NE;
+  oss_audioinfo ai;
+  int tmp;
+  int devcaps;
+  samplerate = 48000;
+  outputs.resize(chs);
+
+  if ((fd = open(device.data(), O_RDONLY, 0)) == -1)
   {
-    cerr << device << ' ' << strerror(errno) << endl;
-    exit(1);
-  }
-  int tmp = format;
-  if(ioctl(fd, SNDCTL_DSP_SETFMT, &tmp) == -1 || tmp != format)
-  {
-    cerr << "Setting audio format failed " << strerror(errno) << endl;
-    exit(1);
-  }
-  tmp = channels;
-  if(ioctl(fd, SNDCTL_DSP_CHANNELS, &tmp) == -1 || tmp != channels)
-  {
-    cerr << "Can not set number of channels to " << channels;
-    cerr << ": " << strerror(errno) << endl;
-    exit(1);
-  }
-  tmp = samplerate;
-  if(ioctl(fd, SNDCTL_DSP_SPEED, &tmp) == -1 || tmp != samplerate)
-  {
-    cerr << "Can not set sampling frequency to " << samplerate << ": ";
+    cerr << device;
     cerr << strerror(errno) << endl;
     exit(1);
   }
+
+  ai.dev = -1;
+  if (ioctl(fd, SNDCTL_ENGINEINFO, &ai) != -1)
+  {
+    cout << "Using audio engine " << ai.dev;
+    cout << " = " << ai.name << " for input" << endl;
+  }
+
+  if (ioctl(fd, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
+  {
+    cerr << "SNDCTL_DSP_GETCAPS";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+
+  tmp = 0;
+  if (ioctl(fd, SNDCTL_DSP_POLICY, &tmp) == -1)
+  {
+    cerr << "SNDCTL_DSP_POLICY";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+
+  if (ioctl(fd, SNDCTL_DSP_GETBLKSIZE, &fragsize) == -1)
+  {
+    cerr << "SNDCTL_DSP_GETBLKSIZE";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+  rawData = new int[fragsize];
+
+  tmp = channels();
+  if (ioctl(fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
+  {
+    cerr << "SNDCTL_DSP_CHANNELS: ";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+  if (tmp != channels())
+  {
+    cerr << device << " doesn't support ";
+    cout << channels() << " channels, but ";
+    cerr << tmp << " instead" << endl;
+    exit(1);
+  }
+
+  tmp = format;
+  if (ioctl(fd, SNDCTL_DSP_SETFMT, &tmp) == -1)
+  {
+    cerr << "SNDCTL_DSP_SETFMT";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+  if (tmp == AFMT_S32_OE)
+  {
+    cerr << "Warning: Using 32 bit sample format with wrong endianess." << endl;
+  }
+
+  tmp = samplerate;
+  if (ioctl(fd, SNDCTL_DSP_SPEED, &tmp) == -1)
+  {
+    cerr << "SNDCTL_DSP_SPEED";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+  if (tmp != samplerate)
+  {
+    cerr << device << " doesn't support requested samplerate ";
+    cerr << samplerate << " (" << tmp << ")" << endl;
+    exit(1);
+  }
+
+  cout << "Sample parameters for input set OK. Using fragment size " << fragsize << endl;
 }
 
 
@@ -54,21 +112,23 @@ AudioOSSIn::~AudioOSSIn()
 
 void AudioOSSIn::fetch()
 {
-  int dataSize = channels() * Config::audioChunkSize * sizeof(rawData[0]);
+  int dataSize = fragsize * sizeof(rawData[0]);
   read(fd, rawData, dataSize);
 }
 
 
 void AudioOSSIn::process()
 {
-  for (int j = 0; j < channels(); ++j)
+  auto chs = channels();
+  auto chunkSize = fragsize / chs;
+  for (int i = 0; i < chs; ++i)
   {
-    outputs[j] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
-    for (int i = 0; i < Config::audioChunkSize; ++i)
-    {
-      outputs[j]->data[i] = rawData[i * channels() + j];
-
-    }
+    outputs[i] = AudioChunk(new AudioChunkData(chunkSize));
+  }
+  for (int i = 0; i < fragsize; ++i)
+  {
+    auto channel = i % chs;
+    outputs[channel]->data[i / chs] = rawData[i];
   }
 }
 

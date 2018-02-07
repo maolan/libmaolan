@@ -18,5 +18,7 @@ class AudioOSSIn: public AudioIO
     int fd;
     int samplerate;
     int format;
+    int frag;
+    int fragsize;
     int *rawData;
 };
