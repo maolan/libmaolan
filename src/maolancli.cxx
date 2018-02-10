@@ -1,3 +1,11 @@
+#include <unistd.h>
+#include <string.h>
+#include <fcntl.h>
+#include <sys/types.h>
+#include <sys/mman.h>
+#include <sys/time.h>
+#include <sys/select.h>
+#include <sys/soundcard.h>
 #include <iostream>
 #include <maolan/audiofileinput>
 #include <maolan/audioossout>
@@ -39,13 +47,31 @@ int runInputs(int argc, char **argv)
   cout << "Playing ..." << flush;
   while (true)
   {
-    for (auto &io : AudioIO::ios) {io->fetch();}
-    for (auto &io : AudioIO::ios) {io->process();}
+    in.fetch();
+    in.process();
+    out.fetch();
+    out.process();
   }
   cout << endl;
   return 0;
 }
 
+
+int runHybrid(int argc, char **argv)
+{
+  AudioOSSIn in(2);
+  AudioOSSOut out(2);
+  out.connect(&in);
+  while (true)
+  {
+    in.fetch();
+    in.process();
+    out.fetch();
+    out.process();
+    // out.play(in.rawData, in.fragsize);
+  }
+  return 0;
+}
 
 
 int main(int argc, char **argv)

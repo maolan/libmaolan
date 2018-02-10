@@ -53,7 +53,7 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
 
   if (ioctl(fd, SNDCTL_DSP_GETBLKSIZE, &fragsize) == -1)
   {
-    cerr << "SNDCTL_DSP_GETBLKSIZE";
+    cerr << "SNDCTL_DSP_GETBLKSIZE: ";
     cerr << strerror(errno) << endl;
     exit(1);
   }
@@ -100,6 +100,7 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
     exit(1);
   }
 
+  Config::audioChunkSize = fragsize / channels();
   cout << "Sample parameters for input set OK. Using fragment size " << fragsize << endl;
 }
 
@@ -113,23 +114,24 @@ AudioOSSIn::~AudioOSSIn()
 
 void AudioOSSIn::fetch()
 {
-  int dataSize = fragsize * sizeof(rawData[0]);
-  read(fd, rawData, dataSize);
+  read(fd, rawData, fragsize);
 }
 
 
 void AudioOSSIn::process()
 {
   auto chs = channels();
-  auto chunkSize = fragsize / chs;
+  int channel;
+  int index;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = AudioChunk(new AudioChunkData(chunkSize));
+    outputs[i] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
   }
   for (int i = 0; i < fragsize; ++i)
   {
-    auto channel = i % chs;
-    outputs[channel]->data[i / chs] = rawData[i];
+    channel = i % chs;
+    index = i / chs;
+    outputs[channel]->data[index] = rawData[i];
   }
 }
 

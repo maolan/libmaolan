@@ -17,6 +17,7 @@ class AudioOSSOut : public AudioIO
     void fetch();
     void process();
     std::size_t channels() const;
+    void play(int *rawData, std::size_t dataSize);
 
   protected:
     int fd;

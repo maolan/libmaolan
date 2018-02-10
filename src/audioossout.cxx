@@ -158,6 +158,12 @@ void AudioOSSOut::process()
 }
 
 
+void AudioOSSOut::play(int *rawData, size_t dataSize)
+{
+  write(fd, rawData, dataSize);
+}
+
+
 size_t AudioOSSOut::channels() const
 {
   return outputs.size();
@@ -166,10 +172,9 @@ size_t AudioOSSOut::channels() const
 
 void AudioOSSOut::connect(AudioIO *to)
 {
-  for (size_t channel = 0; channel < channels(); ++channel)
+  for (auto channel = 0; channel < channels(); ++channel)
   {
-    AudioConnection conn(to, channel);
-    inputs[channel].add(conn);
+    connect(to, channel, channel);
   }
 }
 
