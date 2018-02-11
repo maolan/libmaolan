@@ -15,10 +15,6 @@ class AudioOSSIn: public AudioIO
     std::size_t channels() const;
 
   protected:
-    int samplerate;
-    int format;
-    int frag;
-    int fragsize;
     int fd;
     int *rawData;
 };

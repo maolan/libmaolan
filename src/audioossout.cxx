@@ -18,12 +18,9 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
   inputs.resize(chs);
   outputs.resize(chs);
   string device = "/dev/dsp";
-  format = AFMT_S32_NE;
-  samplerate = 48000;
   oss_audioinfo ai;
   int tmp;
   int devcaps;
-  frag = 4;
 
   if ((fd = open(device.data(), O_WRONLY, 0)) == -1)
   {
@@ -45,7 +42,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
-  tmp = frag;
+  tmp = Config::frag;
   if (ioctl(fd, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SETFRAGMENT";
@@ -68,7 +65,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
-  tmp = format;
+  tmp = Config::format;
   if (ioctl(fd, SNDCTL_DSP_SETFMT, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SETFMT";
@@ -82,7 +79,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
-  tmp = samplerate;
+  tmp = Config::samplerate;
   if (ioctl(fd, SNDCTL_DSP_SPEED, &tmp) == -1)
   {
     cerr << "SNDCTL_DSP_SPEED";
@@ -90,15 +87,8 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
-  if (ioctl(fd, SNDCTL_DSP_GETBLKSIZE, &fragsize) == -1)
-  {
-    cerr << "SNDCTL_DSP_GETBLKSIZE";
-    cerr << strerror(errno) << endl;
-    exit(1);
-  }
-
-  rawData = new int[fragsize];
-  cout << "Sample parameters for output set OK. Using fragment size " << fragsize << endl;
+  rawData = new int[Config::fragSize];
+  cout << "Sample parameters for output set OK. Using fragment size " << Config::fragSize << endl;
 }
 
 
@@ -156,7 +146,7 @@ void AudioOSSOut::convertToRaw()
 void AudioOSSOut::process()
 {
   convertToRaw();
-  play(rawData, fragsize);
+  play(rawData, Config::fragSize);
 }
 
 

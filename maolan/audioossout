@@ -22,10 +22,6 @@ class AudioOSSOut : public AudioIO
 
   protected:
     int fd;
-    int samplerate;
-    int format;
-    int frag;
-    int fragsize;
     int *rawData;
     std::vector<AudioInput> inputs;
 };
