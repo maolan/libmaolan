@@ -11,16 +11,28 @@ using namespace std;
 
 int main(int argc, char **argv)
 {
-  AudioOSSIn in(2);
-  AudioOSSOut out(2);
+  if (argc < 2)
+  {
+    cerr << "Usage: " << argv[0] << " <wav file>" << endl;
+    return 1;
+  }
+  cout << "Using " << argv[1] << " as input file" << endl;
+  AudioOSSIn in(1);
+  AudioFileInput infile(argv[1]);
+  AudioOSSOut out(1);
   out.connect(&in);
+  out.connect(&infile);
   cout << "Playing ..." << endl;
   while (true)
   {
     for (auto &io : AudioIO::ios)
     {
+      cout << "Fetching " << io->name;
       io->fetch();
+      cout << endl;
+      cout << "Processing " << io->name;
       io->process();
+      cout << endl;
     }
   }
   cout << endl;

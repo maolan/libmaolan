@@ -50,8 +50,7 @@ void AudioTrack::connect(AudioIO *to)
 {
   for (size_t channel = 0; channel < channels(); ++channel)
   {
-    AudioConnection conn(to, channel);
-    inputs[channel].add(conn);
+    inputs[channel].add(to, channel);
   }
 }
 

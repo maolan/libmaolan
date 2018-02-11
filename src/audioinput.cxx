@@ -10,12 +10,14 @@ AudioInput::AudioInput()
   : AudioIO(1)
 {
   name = "AudioInput";
+  connections.clear();
 }
 
 
-void AudioInput::add(const AudioConnection &conn)
+void AudioInput::add(AudioIO *to, size_t ch)
 {
-  connections.push_back(conn);
+  auto it = connections.emplace(connections.end());
+  it->add(to, ch);
 }
 
 

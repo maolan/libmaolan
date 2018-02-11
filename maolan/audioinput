@@ -9,7 +9,7 @@ class AudioInput : public AudioIO
 {
   public:
     AudioInput();
-    void add(const AudioConnection &conn);
+    void add(AudioIO *to, std::size_t ch);
     void fetch();
     std::size_t channels() const;
     AudioChunk pull();

@@ -7,7 +7,18 @@ using namespace std;
 vector<AudioConnection *> AudioConnection::connections;
 
 
-AudioConnection::AudioConnection(AudioIO *connectTo, size_t ch)
+AudioConnection::AudioConnection()
+{
+}
+
+
+AudioConnection::AudioConnection(AudioIO *connectTo, size_t &ch)
+{
+  add(connectTo, ch);
+}
+
+
+void AudioConnection::add(AudioIO *connectTo, size_t &ch)
 {
   it = connections.emplace(connections.end(), this);
   to = connectTo;

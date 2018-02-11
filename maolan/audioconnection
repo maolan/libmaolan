@@ -6,12 +6,14 @@
 class AudioConnection
 {
   public:
-    AudioConnection(AudioIO *connectTo, std::size_t ch);
+    AudioConnection();
+    AudioConnection(AudioIO *connectTo, std::size_t &ch);
     ~AudioConnection();
 
     static std::vector<AudioConnection *> connections;
 
     AudioIO * get();
+    void add(AudioIO *connectTo, std::size_t &ch);
     AudioChunk pull();
 
   protected:
