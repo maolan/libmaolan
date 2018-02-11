@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <maolan/audioossout>
 #include <maolan/config>
+#include <maolan/constants>
 
 
 using namespace std;
@@ -13,6 +14,7 @@ using namespace std;
 AudioOSSOut::AudioOSSOut(const size_t &chs)
   : AudioIO(chs)
 {
+  name = "AudioOSSOut";
   inputs.resize(chs);
   outputs.resize(chs);
   string device = "/dev/dsp";
@@ -95,6 +97,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
     exit(1);
   }
 
+  rawData = new int[fragsize];
   cout << "Sample parameters for output set OK. Using fragment size " << fragsize << endl;
 }
 
@@ -122,39 +125,38 @@ void AudioOSSOut::fetch()
 }
 
 
-void AudioOSSOut::process()
+void AudioOSSOut::convertToRaw()
 {
-  int result;
-  float element;
-  for (size_t i = 0; i < Config::audioChunkSize; ++i)
+  auto chs = channels();
+  for (auto i = 0; i < Config::audioChunkSize; ++i)
   {
-    for (auto &channel : outputs)
+    auto inputIndex = i % chs;
+    auto buffer = inputs[inputIndex].pull();
+    if (buffer == nullptr) {rawData[i] = 0;}
+    else
     {
-      if (channel == nullptr) {
-        result = 0;
+      auto sample = buffer->data[i];
+      if (sample <= -1.0)
+      {
+        rawData[i] = floatMinInt;
+      }
+      else if (sample >= 1.0)
+      {
+        rawData[i] = floatMaxInt;
       }
       else
       {
-        element = channel->data[i];
-        if (element > 1.0)
-        {
-          result = numeric_limits<int>::max();
-        }
-        else if (element < -1.0)
-        {
-          result = numeric_limits<int>::min();
-        }
-        else
-        {
-          result = element * numeric_limits<int>::max();
-        }
+        rawData[i] = sample * floatMaxInt;
       }
-      normalizedOut.push_back(result);
     }
   }
-  int dataSize = normalizedOut.size() * sizeof(*normalizedOut.data());
-  write(fd, normalizedOut.data(), dataSize);
-  normalizedOut.clear();
+}
+
+
+void AudioOSSOut::process()
+{
+  convertToRaw();
+  play(rawData, fragsize);
 }
 
 

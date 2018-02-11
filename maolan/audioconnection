@@ -7,6 +7,9 @@ class AudioConnection
 {
   public:
     AudioConnection(AudioIO *connectTo, std::size_t ch);
+    ~AudioConnection();
+
+    static std::vector<AudioConnection *> connections;
 
     AudioIO * get();
     AudioChunk pull();
@@ -14,4 +17,5 @@ class AudioConnection
   protected:
     AudioIO *to;
     std::size_t channel;
+    std::vector<AudioConnection *>::iterator it;
 };

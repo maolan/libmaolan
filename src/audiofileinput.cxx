@@ -8,6 +8,7 @@ using namespace std;
 AudioFileInput::AudioFileInput(const string &path)
   : audioFile(path)
 {
+  name = "AudioFileInput";
   rawData = new float[Config::audioChunkSize * audioFile.channels()];
   outputs.resize(audioFile.channels(), nullptr);
 }

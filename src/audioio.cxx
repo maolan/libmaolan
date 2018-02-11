@@ -7,12 +7,13 @@ using namespace std;
 vector<AudioIO *> AudioIO::ios;
 
 
-AudioIO::AudioIO(const size_t &outs)
+AudioIO::AudioIO(const size_t &chs)
 {
+  name = "AudioIO";
   it = ios.emplace(ios.end(), this);
-  if (outs > 0)
+  if (chs > 0)
   {
-    outputs.resize(outs);
+    outputs.resize(chs);
   }
 }
 

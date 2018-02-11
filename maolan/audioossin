@@ -13,12 +13,12 @@ class AudioOSSIn: public AudioIO
     void fetch();
     void process();
     std::size_t channels() const;
-    int fd;
-    int *rawData;
-    int fragsize;
 
   protected:
     int samplerate;
     int format;
     int frag;
+    int fragsize;
+    int fd;
+    int *rawData;
 };

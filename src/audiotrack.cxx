@@ -11,6 +11,7 @@ vector<AudioTrack *> AudioTrack::tracks;
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)
 {
+  name = "AudioTrack";
   trackIterator = tracks.emplace(tracks.end(), this);
 }
 

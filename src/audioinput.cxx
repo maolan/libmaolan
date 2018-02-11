@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/audioinput>
 #include <maolan/config>
 
@@ -7,7 +8,9 @@ using namespace std;
 
 AudioInput::AudioInput()
   : AudioIO(1)
-{}
+{
+  name = "AudioInput";
+}
 
 
 void AudioInput::add(const AudioConnection &conn)

@@ -16,6 +16,7 @@ class AudioOSSOut : public AudioIO
     void connect(AudioIO *to, std::size_t inCh, std::size_t outCh);
     void fetch();
     void process();
+    void convertToRaw();
     std::size_t channels() const;
     void play(int *rawData, std::size_t dataSize);
 
@@ -25,6 +26,6 @@ class AudioOSSOut : public AudioIO
     int format;
     int frag;
     int fragsize;
+    int *rawData;
     std::vector<AudioInput> inputs;
-    std::vector<int> normalizedOut;
 };

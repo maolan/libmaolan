@@ -5,6 +5,7 @@
 #include <unistd.h>
 #include <maolan/audioossin>
 #include <maolan/config>
+#include <maolan/constants>
 
 
 using namespace std;
@@ -13,6 +14,7 @@ using namespace std;
 AudioOSSIn::AudioOSSIn(const size_t &chs)
   : AudioIO(chs)
 {
+  name = "AudioOSSIn";
   string device = "/dev/dsp";
   int format = AFMT_S32_NE;
   oss_audioinfo ai;
@@ -131,7 +133,7 @@ void AudioOSSIn::process()
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data[index] = rawData[i];
+    outputs[channel]->data[index] = rawData[i] / floatMaxInt;
   }
 }
 
