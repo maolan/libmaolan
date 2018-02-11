@@ -17,22 +17,18 @@ int main(int argc, char **argv)
     return 1;
   }
   cout << "Using " << argv[1] << " as input file" << endl;
-  AudioOSSIn in(1);
+  AudioOSSIn in(2);
   AudioFileInput infile(argv[1]);
-  AudioOSSOut out(1);
-  out.connect(&in);
+  AudioOSSOut out(2);
+  // out.connect(&in);
   out.connect(&infile);
   cout << "Playing ..." << endl;
   while (true)
   {
     for (auto &io : AudioIO::ios)
     {
-      cout << "Fetching " << io->name;
       io->fetch();
-      cout << endl;
-      cout << "Processing " << io->name;
       io->process();
-      cout << endl;
     }
   }
   cout << endl;
