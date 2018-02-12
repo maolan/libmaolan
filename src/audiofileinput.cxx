@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/audiofileinput>
 #include <maolan/config>
 
@@ -10,6 +11,7 @@ AudioFileInput::AudioFileInput(const string &path)
 {
   name = "AudioFileInput";
   outputs.resize(audioFile.channels(), nullptr);
+  cout << "AudioFileInput::AudioFileInput::Config::audioChunkSize = " << Config::audioChunkSize << endl;
   rawData = new float[Config::audioChunkSize * channels()];
 }
 

@@ -8,6 +8,7 @@ CXXFILES = \
 	audiofileinput.cxx \
 	audioinput.cxx \
 	audioio.cxx \
+	audiooss.cxx \
 	audioossin.cxx \
 	audioossout.cxx \
 	audiotrack.cxx \

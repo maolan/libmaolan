@@ -17,9 +17,9 @@ int main(int argc, char **argv)
     return 1;
   }
   cout << "Using " << argv[1] << " as input file" << endl;
-  AudioOSSIn in(2);
+  AudioOSSIn in("/dev/dsp", 2);
   AudioFileInput infile(argv[1]);
-  AudioOSSOut out(2);
+  AudioOSSOut out("/dev/dsp", 2);
   // out.connect(&in);
   out.connect(&infile);
   cout << "Playing ..." << endl;

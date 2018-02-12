@@ -1,0 +1,19 @@
+/* vim: set syntax=cpp: */
+#pragma once
+#include <string>
+#include <maolan/audioio>
+#include <maolan/audioinput>
+
+
+class AudioOSS : public AudioIO
+{
+  public:
+    AudioOSS(const std::string &device);
+    ~AudioOSS();
+
+    std::size_t channels() const;
+
+  protected:
+    int fd;
+    int *rawData;
+};
