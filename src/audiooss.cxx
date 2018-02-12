@@ -47,6 +47,13 @@ AudioOSS::AudioOSS(const string &device)
     cerr << strerror(errno) << endl;
     exit(1);
   }
+  if (ioctl(fd, SNDCTL_DSP_GETBLKSIZE, &Config::fragSize) == -1)
+  {
+    cerr << "SNDCTL_DSP_GETBLKSIZE: ";
+    cerr << strerror(errno) << endl;
+    exit(1);
+  }
+
 
   tmp = channels();
   if (ioctl(fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
