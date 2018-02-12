@@ -22,7 +22,7 @@ AudioOSSOut::AudioOSSOut(const size_t &chs)
   int tmp;
   int devcaps;
 
-  if ((fd = open(device.data(), O_WRONLY, 0)) == -1)
+  if ((fd = open(device.data(), O_RDWR, 0)) == -1)
   {
     cerr << device;
     cerr << strerror(errno) << endl;

@@ -21,7 +21,7 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
   int devcaps;
   outputs.resize(chs);
 
-  if ((fd = open(device.data(), O_RDONLY, 0)) == -1)
+  if ((fd = open(device.data(), O_RDWR, 0)) == -1)
   {
     cerr << device;
     cerr << strerror(errno) << endl;
@@ -56,7 +56,6 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
     cerr << strerror(errno) << endl;
     exit(1);
   }
-  rawData = new int[Config::fragSize];
 
   tmp = channels();
   if (ioctl(fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
@@ -99,7 +98,9 @@ AudioOSSIn::AudioOSSIn(const size_t &chs)
     exit(1);
   }
 
-  Config::audioChunkSize = Config::fragSize / channels();
+  const auto rawDataSize = Config::fragSize / sizeof(int);
+  Config::audioChunkSize = rawDataSize / channels();
+  rawData = new int[rawDataSize];
   cout << "Sample parameters for input set OK. Using fragment size " << Config::fragSize << endl;
 }
 
@@ -126,7 +127,8 @@ void AudioOSSIn::process()
   {
     outputs[i] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
   }
-  for (int i = 0; i < Config::fragSize; ++i)
+  auto sizeLimit = Config::fragSize / sizeof(int);
+  for (int i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;
     index = i / chs;
