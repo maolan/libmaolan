@@ -59,13 +59,13 @@ void AudioOSSOut::convertToRaw()
 void AudioOSSOut::process()
 {
   convertToRaw();
-  play(rawData, Config::fragSize);
+  play(rawData, config.fragSize);
 }
 
 
 void AudioOSSOut::play(int *rawData, size_t dataSize)
 {
-  write(fd, rawData, dataSize);
+  write(config.fd, rawData, dataSize);
 }
 
 

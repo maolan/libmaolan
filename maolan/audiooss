@@ -2,7 +2,7 @@
 #pragma once
 #include <string>
 #include <maolan/audioio>
-#include <maolan/audioinput>
+#include <maolan/ossconfig>
 
 
 class AudioOSS : public AudioIO
@@ -14,6 +14,6 @@ class AudioOSS : public AudioIO
     std::size_t channels() const;
 
   protected:
-    int fd;
     int *rawData;
+    OSSConfig config;
 };

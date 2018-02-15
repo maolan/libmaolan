@@ -20,7 +20,7 @@ AudioOSSIn::AudioOSSIn(const string &device, const size_t &chs)
 
 void AudioOSSIn::fetch()
 {
-  read(fd, rawData, Config::fragSize);
+  read(config.fd, rawData, config.fragSize);
 }
 
 
@@ -33,7 +33,7 @@ void AudioOSSIn::process()
   {
     outputs[i] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
   }
-  auto sizeLimit = Config::fragSize / sizeof(int);
+  auto sizeLimit = config.fragSize / sizeof(int);
   for (int i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;

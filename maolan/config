@@ -3,12 +3,8 @@
 #include <memory>
 
 
-class Config
+struct Config
 {
-  public:
-    static int format;
-    static int samplerate;
-    static std::size_t frag;
-    static std::size_t fragSize;
-    static std::size_t audioChunkSize;
+  static std::size_t audioChunkSize;
+  std::size_t audioChannels;
 };
