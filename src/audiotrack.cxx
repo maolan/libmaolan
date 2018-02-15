@@ -11,6 +11,7 @@ vector<AudioTrack *> AudioTrack::tracks;
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)
 {
+  name = "AudioTrack";
   trackIterator = tracks.emplace(tracks.end(), this);
 }
 
@@ -49,8 +50,7 @@ void AudioTrack::connect(AudioIO *to)
 {
   for (size_t channel = 0; channel < channels(); ++channel)
   {
-    AudioConnection conn(to, channel);
-    inputs[channel].add(conn);
+    inputs[channel].add(to, channel);
   }
 }
 

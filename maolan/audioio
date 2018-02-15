@@ -1,5 +1,6 @@
 /* vim: set syntax=cpp: */
 #pragma once
+#include <string>
 #include <vector>
 #include <maolan/audiochunk>
 #include <maolan/audiostate>
@@ -17,6 +18,7 @@ class AudioIO
     virtual std::size_t channels() const = 0;
     virtual void process();
     AudioChunk pull(const unsigned &channel);
+    std::string name;
 
   protected:
     int state;

@@ -8,10 +8,12 @@ CXXFILES = \
 	audiofileinput.cxx \
 	audioinput.cxx \
 	audioio.cxx \
+	audiooss.cxx \
 	audioossin.cxx \
 	audioossout.cxx \
 	audiotrack.cxx \
-	config.cxx
+	config.cxx \
+	ossconfig.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include ../makeinclude
 

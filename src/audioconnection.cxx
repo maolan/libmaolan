@@ -4,10 +4,31 @@
 using namespace std;
 
 
-AudioConnection::AudioConnection(AudioIO *connectTo, size_t ch)
+vector<AudioConnection *> AudioConnection::connections;
+
+
+AudioConnection::AudioConnection()
 {
+}
+
+
+AudioConnection::AudioConnection(AudioIO *connectTo, size_t &ch)
+{
+  add(connectTo, ch);
+}
+
+
+void AudioConnection::add(AudioIO *connectTo, size_t &ch)
+{
+  it = connections.emplace(connections.end(), this);
   to = connectTo;
   channel = ch;
+}
+
+
+AudioConnection::~AudioConnection()
+{
+  connections.erase(it);
 }
 
 

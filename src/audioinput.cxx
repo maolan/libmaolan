@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/audioinput>
 #include <maolan/config>
 
@@ -7,12 +8,16 @@ using namespace std;
 
 AudioInput::AudioInput()
   : AudioIO(1)
-{}
-
-
-void AudioInput::add(const AudioConnection &conn)
 {
-  connections.push_back(conn);
+  name = "AudioInput";
+  connections.clear();
+}
+
+
+void AudioInput::add(AudioIO *to, size_t ch)
+{
+  auto it = connections.emplace(connections.end());
+  it->add(to, ch);
 }
 
 

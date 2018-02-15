@@ -1,4 +1,5 @@
+#include <sys/soundcard.h>
 #include <maolan/config>
 
 
-size_t Config::audioChunkSize = 128;
+size_t Config::audioChunkSize = 4;

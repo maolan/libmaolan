@@ -3,8 +3,8 @@
 #include <memory>
 
 
-class Config
+struct Config
 {
-  public:
-    static std::size_t audioChunkSize;
+  static std::size_t audioChunkSize;
+  std::size_t audioChannels;
 };
