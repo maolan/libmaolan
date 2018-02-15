@@ -4,7 +4,6 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <maolan/audioossout>
-#include <maolan/config>
 #include <maolan/constants>
 
 
@@ -31,7 +30,7 @@ void AudioOSSOut::fetch()
 void AudioOSSOut::convertToRaw()
 {
   auto chs = channels();
-  for (auto i = 0; i < Config::audioChunkSize; ++i)
+  for (auto i = 0; i < it->audioChunkSize; ++i)
   {
     auto inputIndex = i % chs;
     auto buffer = inputs[inputIndex].pull();
@@ -59,13 +58,13 @@ void AudioOSSOut::convertToRaw()
 void AudioOSSOut::process()
 {
   convertToRaw();
-  play(rawData, config.fragSize);
+  play(rawData, it->fragSize);
 }
 
 
 void AudioOSSOut::play(int *rawData, size_t dataSize)
 {
-  write(config.fd, rawData, dataSize);
+  write(it->fd, rawData, dataSize);
 }
 
 

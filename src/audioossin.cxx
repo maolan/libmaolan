@@ -4,11 +4,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <maolan/audioossin>
-#include <maolan/config>
 #include <maolan/constants>
 
 
 using namespace std;
+
+
+bool shouldPrint = true;
 
 
 AudioOSSIn::AudioOSSIn(const string &device, const size_t &chs)
@@ -20,7 +22,7 @@ AudioOSSIn::AudioOSSIn(const string &device, const size_t &chs)
 
 void AudioOSSIn::fetch()
 {
-  read(config.fd, rawData, config.fragSize);
+  read(it->fd, rawData, it->fragSize);
 }
 
 
@@ -31,9 +33,9 @@ void AudioOSSIn::process()
   int index;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
+    outputs[i] = AudioChunk(new AudioChunkData(it->audioChunkSize));
   }
-  auto sizeLimit = config.fragSize / sizeof(int);
+  auto sizeLimit = it->fragSize / sizeof(int);
   for (int i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;

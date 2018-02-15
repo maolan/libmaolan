@@ -12,7 +12,8 @@ CXXFILES = \
 	audioossin.cxx \
 	audioossout.cxx \
 	audiotrack.cxx \
-	config.cxx
+	config.cxx \
+	ossconfig.cxx
 OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
 -include ../makeinclude
 

@@ -11,9 +11,11 @@ class AudioOSS : public AudioIO
     AudioOSS(const std::string &device);
     ~AudioOSS();
 
+    static std::vector<OSSConfig> devices;
+
     std::size_t channels() const;
 
   protected:
     int *rawData;
-    OSSConfig config;
+    std::vector<OSSConfig>::iterator it;
 };

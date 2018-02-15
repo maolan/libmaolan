@@ -1,10 +1,13 @@
 /* vim: set syntax=cpp: */
 #pragma once
+#include <string>
 #include <maolan/config>
 
 
 struct OSSConfig : public Config
 {
+  OSSConfig();
+  OSSConfig(const OSSConfig &config);
   int fd;
   int format;
   int samplerate;
