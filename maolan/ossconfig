@@ -4,14 +4,16 @@
 #include <maolan/config>
 
 
-struct OSSConfig : public Config
+class OSSConfig : public Config
 {
-  OSSConfig();
-  OSSConfig(const OSSConfig &config);
-  int fd;
-  int format;
-  int samplerate;
-  std::size_t frag;
-  std::size_t fragSize;
-  std::string device;
+  public:
+    OSSConfig();
+    OSSConfig(const OSSConfig &config);
+
+    int fd;
+    int format;
+    int samplerate;
+    std::size_t frag;
+    std::size_t fragSize;
+    std::string device;
 };

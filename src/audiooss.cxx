@@ -46,8 +46,8 @@ AudioOSS::AudioOSS(const string &device)
     ai.dev = -1;
     if (ioctl(config.fd, SNDCTL_ENGINEINFO, &ai) != -1)
     {
-      cout << "Using audio engine " << ai.dev;
-      cout << " = " << ai.name << " for output" << endl;
+      cout << "Using OSS audio engine " << ai.dev;
+      cout << " = " << ai.name << endl;
     }
 
     if (ioctl(config.fd, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
