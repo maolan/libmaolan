@@ -4,9 +4,6 @@
 using namespace std;
 
 
-vector<AudioConnection *> AudioConnection::connections;
-
-
 AudioConnection::AudioConnection()
 {
 }
@@ -14,25 +11,24 @@ AudioConnection::AudioConnection()
 
 AudioConnection::AudioConnection(AudioIO *connectTo, size_t &ch)
 {
-  add(connectTo, ch);
+  target(connectTo, ch);
 }
 
 
-void AudioConnection::add(AudioIO *connectTo, size_t &ch)
+void AudioConnection::target(AudioIO *connectTo, size_t &ch)
 {
-  it = connections.emplace(connections.end(), this);
   to = connectTo;
   channel = ch;
-}
-
-
-AudioConnection::~AudioConnection()
-{
-  connections.erase(it);
 }
 
 
 AudioChunk AudioConnection::pull()
 {
   return to->pull(channel);
+}
+
+
+AudioIO * AudioConnection::get()
+{
+  return to;
 }

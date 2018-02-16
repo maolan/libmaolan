@@ -22,7 +22,7 @@ int main(int argc, char **argv)
   AudioFileInput infile(argv[1]);
   AudioOSSOut out("/dev/dsp", 2);
   out.connect(&in);
-  // out.connect(&infile);
+  out.connect(&infile);
   cout << "Playing ..." << endl;
   while (true)
   {
