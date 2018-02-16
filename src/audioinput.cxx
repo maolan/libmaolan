@@ -17,7 +17,7 @@ AudioInput::AudioInput()
 void AudioInput::add(AudioIO *to, size_t ch)
 {
   auto it = connections.emplace(connections.end());
-  it->add(to, ch);
+  it->target(to, ch);
 }
 
 

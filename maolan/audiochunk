@@ -3,10 +3,13 @@
 #include <memory>
 
 
-struct AudioChunkData {
-  AudioChunkData(const size_t &size);
-  ~AudioChunkData();
-  float *data;
+class AudioChunkData
+{
+  public:
+    AudioChunkData(const size_t &size);
+    ~AudioChunkData();
+
+    float *data;
 };
 
 
