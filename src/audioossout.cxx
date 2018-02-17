@@ -44,7 +44,10 @@ void AudioOSSOut::convertToRaw()
     {
       for (auto i = 0; i < it->audioChunkSize; ++i)
       {
-        rawData[i * chs + channel] = buffer->data[i] * maxInt;
+        float sample = buffer->data[i];
+        if (sample <= -1.0) {sample = 1.0;}
+        else if (sample >= 1.0) {sample = 1.0;}
+        rawData[i * chs + channel] = sample * maxInt;
       }
     }
   }
