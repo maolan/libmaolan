@@ -2,5 +2,7 @@
 #pragma once
 #include <limits>
 
-const float floatMaxInt = std::numeric_limits<int>::max();
-const float floatMinInt = std::numeric_limits<int>::min();
+const int maxInt = std::numeric_limits<int>::max();
+const int minInt = std::numeric_limits<int>::min();
+const float floatMaxInt = float(maxInt);
+const float floatMinInt = float(minInt);

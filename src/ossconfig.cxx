@@ -6,8 +6,8 @@ OSSConfig::OSSConfig()
 {
   format = AFMT_S32_NE;
   samplerate = 44100;
-  frag = 4;
-  fragSize = 16;
+  frag = 16;
+  fragSize = 0;
 }
 
 

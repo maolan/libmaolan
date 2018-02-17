@@ -9,6 +9,11 @@ using namespace std;
 AudioFileInput::AudioFileInput(const string &path)
   : audioFile(path)
 {
+  if (Config::audioChunkSize == 0)
+  {
+    cerr << "Loding order error. Load some hardware IO first!" << endl;
+    exit(1);
+  }
   name = "AudioFileInput";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];

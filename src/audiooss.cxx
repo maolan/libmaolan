@@ -71,7 +71,6 @@ AudioOSS::AudioOSS(const string &device)
       exit(1);
     }
 
-
     tmp = channels();
     if (ioctl(config.fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
     {

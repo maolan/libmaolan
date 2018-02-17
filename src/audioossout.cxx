@@ -30,25 +30,21 @@ void AudioOSSOut::fetch()
 void AudioOSSOut::convertToRaw()
 {
   auto chs = channels();
-  for (auto i = 0; i < it->audioChunkSize; ++i)
+  for (auto channel = 0; channel < chs; ++channel)
   {
-    auto inputIndex = i % chs;
-    auto buffer = inputs[inputIndex].pull();
-    if (buffer == nullptr) {rawData[i] = 0;}
+    auto buffer = outputs[channel];
+    if (buffer == nullptr)
+    {
+      for (auto i = 0; i < it->audioChunkSize; ++i)
+      {
+        rawData[i * chs + channel] = 0;
+      }
+    }
     else
     {
-      auto sample = buffer->data[i];
-      if (sample <= -1.0)
+      for (auto i = 0; i < it->audioChunkSize; ++i)
       {
-        rawData[i] = floatMinInt;
-      }
-      else if (sample >= 1.0)
-      {
-        rawData[i] = floatMaxInt;
-      }
-      else
-      {
-        rawData[i] = sample * floatMaxInt;
+        rawData[i * chs + channel] = buffer->data[i] * maxInt;
       }
     }
   }
