@@ -2,4 +2,4 @@
 #include <maolan/config>
 
 
-size_t Config::audioChunkSize = 4;
+size_t Config::audioChunkSize = 0;
