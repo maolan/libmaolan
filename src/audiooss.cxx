@@ -18,23 +18,23 @@ AudioOSS::AudioOSS(const string &device)
 {
   const int chs = 2;
   outputs.resize(chs);
-  oss_audioinfo ai;
-  int tmp;
-  int devcaps;
 
   bool found = false;
   for (auto iter = devices.begin(); iter < devices.end(); ++iter)
   {
-    cout << iter->device << endl;
     if (iter->device == device)
     {
       found = true;
       it = iter;
+      ++it->count;
     }
   }
 
   if (!found)
   {
+    oss_audioinfo ai;
+    int tmp;
+    int devcaps;
     OSSConfig config;
     config.device = device;
     if ((config.fd = open(device.data(), O_RDWR, 0)) == -1)
@@ -118,8 +118,12 @@ AudioOSS::AudioOSS(const string &device)
 AudioOSS::~AudioOSS()
 {
   delete []rawData;
-  close(it->fd);
-  devices.erase(it);
+  --it->count;
+  if (it->count < 1)
+  {
+    close(it->fd);
+    devices.erase(it);
+  }
 }
 
 
