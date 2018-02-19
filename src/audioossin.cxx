@@ -1,16 +1,9 @@
-#include <iostream>
-#include <cstring>
-#include <sys/soundcard.h>
-#include <fcntl.h>
 #include <unistd.h>
 #include <maolan/audioossin>
 #include <maolan/constants>
 
 
 using namespace std;
-
-
-bool shouldPrint = true;
 
 
 AudioOSSIn::AudioOSSIn(const string &device, const size_t &chs)
