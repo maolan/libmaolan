@@ -22,4 +22,3 @@ git: distclean
 
 maolan-cli:
 	$(MAKE) $(MFLAGS) -C src maolan-cli
-
