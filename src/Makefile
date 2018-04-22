@@ -1,5 +1,5 @@
 CFLAGS = -I.. $(CPPFLAGS) -O2 -fPIC -DPIC
-CXXFLAGS = $(CFLAGS) -std=c++14
+CXXFLAGS = $(CFLAGS) -std=c++11
 LDFLAGS = -pthread -lsndfile
 LDFLAGS_SHARED = -shared
 CXXFILES = \

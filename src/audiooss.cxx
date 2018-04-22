@@ -39,7 +39,7 @@ AudioOSS::AudioOSS(const string &device)
     config.device = device;
     if ((config.fd = open(device.data(), O_RDWR, 0)) == -1)
     {
-      cerr << device;
+      cerr << device << ": " ;
       cerr << strerror(errno) << endl;
       exit(1);
     }
