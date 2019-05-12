@@ -1,4 +1,4 @@
-#include <maolan/audioconnection>
+#include <maolan/audioconnection.h>
 
 
 using namespace std;

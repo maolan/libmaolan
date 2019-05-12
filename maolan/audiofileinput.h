@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <sndfile.hh>
-#include <maolan/audioio>
+#include <maolan/audioio.h>
 
 
 class AudioFileInput : public AudioIO
@@ -14,6 +14,7 @@ class AudioFileInput : public AudioIO
 
     void fetch();
     void split();
+    void process();
     std::size_t channels() const;
 
   protected:

@@ -1,3 +1,5 @@
+PREFIX ?= /usr/local
+
 all:
 	$(MAKE) $(MFLAGS) -C src all
 
@@ -20,5 +22,6 @@ git: distclean
 	$(MAKE) $(MFLAGS) -C src gendep
 	rm -rf autom4te.cache config.log config.status
 
-maolan-cli:
-	$(MAKE) $(MFLAGS) -C src maolan-cli
+install:
+	install -m 0755 src/libmaolan.so ${DESTDIR}${PREFIX}/lib
+	cp -r maolan ${DESTDIR}${PREFIX}/include

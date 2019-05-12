@@ -1,4 +1,4 @@
-#include <maolan/audiochunk>
+#include <maolan/audiochunk.h>
 
 
 AudioChunkData::AudioChunkData(const size_t &size)

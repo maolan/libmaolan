@@ -1,7 +1,7 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/audiooss>
+#include <maolan/audiooss.h>
 
 
 class AudioOSSIn: public AudioOSS
