@@ -1,8 +1,8 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/audioio>
-#include <maolan/ossconfig>
+#include <maolan/audioio.h>
+#include <maolan/ossconfig.h>
 
 
 class AudioOSS : public AudioIO
@@ -11,11 +11,11 @@ class AudioOSS : public AudioIO
     AudioOSS(const std::string &device);
     ~AudioOSS();
 
-    static std::vector<OSSConfig> devices;
+    static std::vector<OSSConfig *> devices;
 
     std::size_t channels() const;
 
   protected:
     int *rawData;
-    std::vector<OSSConfig>::iterator it;
+    OSSConfig *device;
 };

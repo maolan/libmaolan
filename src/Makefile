@@ -2,19 +2,8 @@ CFLAGS = -I.. $(CPPFLAGS) -O2 -fPIC -DPIC
 CXXFLAGS = $(CFLAGS) -std=c++11
 LDFLAGS = -pthread -lsndfile
 LDFLAGS_SHARED = -shared
-CXXFILES = \
-	audiochunk.cxx \
-	audioconnection.cxx \
-	audiofileinput.cxx \
-	audioinput.cxx \
-	audioio.cxx \
-	audiooss.cxx \
-	audioossin.cxx \
-	audioossout.cxx \
-	audiotrack.cxx \
-	config.cxx \
-	ossconfig.cxx
-OBJECTS = $(CXXFILES:.cxx=.o) $(CFILES:.c=.o)
+CPPFILES != ls -1 *.cpp
+OBJECTS = $(CPPFILES:.cpp=.o) $(CFILES:.c=.o)
 -include ../makeinclude
 
 .MAIN: all
@@ -29,7 +18,7 @@ libmaolan.so: $(OBJECTS)
 clean:
 	rm -rf $(OBJECTS) libmaolan.so maolan-cli
 
-%.o: %.cxx
+%.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 distclean: clean
@@ -40,6 +29,3 @@ makedepend:
 
 gendep: $(CXXFILES)
 	$(CXX) -MM -DMAKEDEPEND $(CXXFLAGS) $(CXXFILES) >makedepend
-
-maolan-cli: maolancli.cxx
-	$(CXX) $(CXXFLAGS) $(LDFLAGS) -L. -lmaolan -o $@ maolancli.cxx

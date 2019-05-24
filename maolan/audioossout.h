@@ -1,8 +1,8 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/audiooss>
-#include <maolan/audioinput>
+#include <maolan/audiooss.h>
+#include <maolan/audioinput.h>
 
 
 class AudioOSSOut : public AudioOSS

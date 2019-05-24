@@ -1,16 +1,12 @@
-#include <iostream>
 #include <cstring>
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <maolan/audioossout>
-#include <maolan/constants>
+#include <maolan/audioossout.h>
+#include <maolan/constants.h>
 
 
-using namespace std;
-
-
-AudioOSSOut::AudioOSSOut(const string &device, const size_t &chs)
+AudioOSSOut::AudioOSSOut(const std::string &device, const size_t &chs)
   : AudioOSS(device)
 {
   name = "AudioOSSOut";
@@ -35,14 +31,14 @@ void AudioOSSOut::convertToRaw()
     auto buffer = outputs[channel];
     if (buffer == nullptr)
     {
-      for (auto i = 0; i < it->audioChunkSize; ++i)
+      for (auto i = 0; i < device->audioChunkSize; ++i)
       {
         rawData[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (auto i = 0; i < it->audioChunkSize; ++i)
+      for (auto i = 0; i < device->audioChunkSize; ++i)
       {
         float sample = buffer->data[i];
         if (sample <= -1.0) {sample = 1.0;}
@@ -57,13 +53,13 @@ void AudioOSSOut::convertToRaw()
 void AudioOSSOut::process()
 {
   convertToRaw();
-  play(rawData, it->fragSize);
+  play(rawData, device->fragSize);
 }
 
 
 void AudioOSSOut::play(int *rawData, size_t dataSize)
 {
-  write(it->fd, rawData, dataSize);
+  write(device->fd, rawData, dataSize);
 }
 
 

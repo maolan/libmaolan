@@ -1,17 +1,14 @@
 #include <iostream>
-#include <maolan/audiofileinput>
-#include <maolan/config>
+#include <maolan/audiofileinput.h>
+#include <maolan/config.h>
 
 
-using namespace std;
-
-
-AudioFileInput::AudioFileInput(const string &path)
+AudioFileInput::AudioFileInput(const std::string &path)
   : audioFile(path)
 {
   if (Config::audioChunkSize == 0)
   {
-    cerr << "Loding order error. Load some hardware IO first!" << endl;
+    std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
     exit(1);
   }
   name = "AudioFileInput";
@@ -50,4 +47,9 @@ void AudioFileInput::fetch()
 size_t AudioFileInput::channels() const
 {
   return audioFile.channels();
+}
+
+
+void AudioFileInput::process()
+{
 }

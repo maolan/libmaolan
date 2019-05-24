@@ -1,13 +1,9 @@
-#include <iostream>
-#include <maolan/audioinput>
-#include <maolan/config>
-
-
-using namespace std;
+#include <maolan/audioinput.h>
+#include <maolan/config.h>
 
 
 AudioInput::AudioInput()
-  : AudioIO(1)
+  : AudioIO(1, true)
 {
   name = "AudioInput";
   connections.clear();
@@ -23,7 +19,7 @@ void AudioInput::add(AudioIO *to, size_t ch)
 
 void AudioInput::fetch()
 {
-  vector<AudioChunk> channels;
+  std::vector<AudioChunk> channels;
   bool empty = true;
   for (auto &connection : connections)
   {
@@ -69,4 +65,9 @@ size_t AudioInput::channels() const
 AudioChunk AudioInput::pull()
 {
   return outputs[0];
+}
+
+
+void AudioInput::process()
+{
 }

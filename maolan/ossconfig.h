@@ -1,7 +1,7 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/config>
+#include <maolan/config.h>
 
 
 class OSSConfig : public Config
@@ -11,7 +11,7 @@ class OSSConfig : public Config
 
     int fd;
     int format;
-    int samplerate;
+    std::size_t audioChannels;
     std::size_t frag;
     std::size_t fragSize;
     std::size_t count;

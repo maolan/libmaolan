@@ -1,6 +1,6 @@
 /* vim: set syntax=cpp: */
 #pragma once
-#include <maolan/audioio>
+#include <maolan/audioio.h>
 
 
 class AudioConnection

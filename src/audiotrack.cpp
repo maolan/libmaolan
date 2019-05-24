@@ -1,24 +1,20 @@
-#include <iostream>
-#include <maolan/audiotrack>
+#include <maolan/audiotrack.h>
 
 
-using namespace std;
-
-
-vector<AudioTrack *> AudioTrack::tracks;
+std::vector<AudioTrack *> AudioTrack::tracks;
 
 
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)
 {
   name = "AudioTrack";
-  trackIterator = tracks.emplace(tracks.end(), this);
+  tracks.emplace(tracks.end(), this);
 }
 
 
 AudioTrack::~AudioTrack()
 {
-  tracks.erase(trackIterator);
+  tracks.erase(std::find(tracks.begin(), tracks.end(), this));
 }
 
 
@@ -55,7 +51,7 @@ void AudioTrack::connect(AudioIO *to)
 }
 
 
-void AudioTrack::addFile(const string &filePath)
+void AudioTrack::addFile(const std::string &filePath)
 {
   files.push_back(AudioFileInput(filePath));
 }

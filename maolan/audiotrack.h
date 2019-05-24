@@ -1,9 +1,9 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/audioio>
-#include <maolan/audioinput>
-#include <maolan/audiofileinput>
+#include <maolan/audioio.h>
+#include <maolan/audioinput.h>
+#include <maolan/audiofileinput.h>
 
 
 class AudioTrack : public AudioIO
@@ -23,5 +23,4 @@ class AudioTrack : public AudioIO
   protected:
     std::vector<AudioInput> inputs;
     std::vector<AudioFileInput> files;
-    std::vector<AudioTrack *>::iterator trackIterator;
 };
