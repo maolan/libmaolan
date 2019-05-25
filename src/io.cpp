@@ -4,7 +4,7 @@
 
 IO * IO::ios = nullptr;
 IO * last = nullptr;
-bool IO::stage = true;
+bool IO::_stage = true;
 
 
 IO::IO(bool front)
@@ -71,7 +71,7 @@ void IO::previous(IO *p)
 
 void IO::work()
 {
-  if (stage)
+  if (_stage)
   {
     fetch();
   }
@@ -79,5 +79,16 @@ void IO::work()
   {
     process();
   }
-  stage = !stage;
+}
+
+
+void IO::stage(const bool &s)
+{
+  _stage = s;
+}
+
+
+bool IO::stage()
+{
+  return _stage;
 }

@@ -19,9 +19,13 @@ class IO
     void previous(IO *);
     IO * previous();
 
+    void stage(const bool &s);
+    bool stage();
+
   protected:
     static IO * ios;
-    static bool stage;
+    static bool _stage;
+
     std::string name;
     int state;
     IO * _next;

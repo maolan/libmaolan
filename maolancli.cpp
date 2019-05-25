@@ -22,6 +22,7 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <midi file>" << std::endl;
     return 1;
   }
+  Config::bpms.emplace_back();
   MIDIClip *clip = new MIDIClip();
   clip->load(argv[1]);
   MIDIChunk *chunk;
