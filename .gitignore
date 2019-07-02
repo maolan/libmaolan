@@ -8,5 +8,3 @@ config.log
 config.status
 configure
 makedepend
-obj/*
-!obj/.keep
