@@ -1,4 +1,3 @@
-OBJECTS = $(CXXFILES:.cpp=.o)
 CXXFLAGS += -I . -std=c++14
 PREFIX ?= /usr/local
 CXXFLAGS += -fPIC

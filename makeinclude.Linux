@@ -1,4 +1,5 @@
 CXXFILES = $(wildcard src/*.cpp)
+OBJECTS = $(CXXFILES:.cpp=.o)
 
 all: $(PROG_CXX)
 
