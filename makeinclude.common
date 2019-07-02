@@ -1,0 +1,10 @@
+OBJECTS = $(CXXFILES:.cpp=.o)
+CXXFLAGS += -I . -std=c++14
+PREFIX ?= /usr/local
+CXXFLAGS += -fPIC
+
+clean_depend: clean
+	rm -rf .depend.src_*
+
+distclean: clean_depend clean
+	rm -rf config.log config.status configure makeinclude.configured autom4te.cache

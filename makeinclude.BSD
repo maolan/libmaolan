@@ -1,0 +1,4 @@
+LIB=maolan
+SHLIB_MAJOR=0
+SHLIB_MINOR=0
+SRCS != ls -1 src/*.cpp
