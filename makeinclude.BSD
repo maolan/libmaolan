@@ -1,4 +1,9 @@
-LIB=maolan
-SHLIB_MAJOR=0
-SHLIB_MINOR=0
+MK_PROFILE=no
 SRCS != ls -1 src/*.cpp
+LIBDIR = ${PREFIX}/lib
+
+beforeinstall:
+	cp -r maolan $(DESTDIR)$(PREFIX)/include
+
+distclean: clean cleandepend
+	rm -rf config.log config.status configure makeinclude.configured autom4te.cache

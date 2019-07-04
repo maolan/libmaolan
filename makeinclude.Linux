@@ -1,20 +1,31 @@
-CXXFILES = $(wildcard src/*.cpp)
-OBJECTS = $(CXXFILES:.cpp=.o)
+SRCS = $(wildcard src/*.cpp)
+OBJECTS = $(SRCS:.cpp=.o)
+.DEFAULT_GOAL := all
+LIBNAME = lib$(LIB_CXX).so
+LIBNAME_VERSIONED = $(LIBNAME).$(SHLIB_MAJOR)
 
-all: $(PROG_CXX)
+all: $(LIBNAME)
 
-$(PROG_CXX): $(OBJECTS)
-        @echo -n "Linking $(PROG_CXX) ... "
-        @$(CXX) $(CXXFLAGS) $(OBJECTS) -o src/$(PROG_CXX) $(LDFLAGS)
-        @echo "done"
+$(LIBNAME): $(LIBNAME_VERSIONED)
+	ln -s $(LIBNAME_VERSIONED) $(LIBNAME)
+
+$(LIBNAME_VERSIONED): $(OBJECTS)
+	@echo -n "Linking $(LIB_CXX) ... "
+	@$(CXX) $(CXXFLAGS) $(OBJECTS) -shared -o $(LIBNAME_VERSIONED) $(LDFLAGS)
+	@echo "done"
 
 .cpp.o:
-        @echo -n "$< ... "
-        @$(CXX) $(CXXFLAGS) -c $< -o $@
-        @echo "done"
+	@echo -n "$< ... "
+	@$(CXX) $(CFLAGS) $(CXXFLAGS) -c $< -o $@
+	@echo "done"
 
 install:
-        install -m 0755 src/$(PROG_CXX) $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(LIBNAME) $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(LIBNAME_VERSIONED) $(DESTDIR)$(PREFIX)/bin
+	cp -r maolan $(DESTDIR)$(PREFIX)/include
 
 clean:
-        rm -rf $(OBJECTS) src/$(PROG_CXX)
+	rm -rf $(OBJECTS) $(LIBNAME) $(LIBNAME_VERSIONED)
+
+distclean: clean
+	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
