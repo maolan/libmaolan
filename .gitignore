@@ -1,6 +1,9 @@
 *.o
 *.so
 *.core
+*.po
+*.pico
+libmaolan*
 maolan-cli
 makeinclude
 autom4te.cache
