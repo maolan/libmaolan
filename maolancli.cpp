@@ -2,8 +2,8 @@
 #include <fstream>
 #include <fcntl.h>
 #include <maolan/audiofileinput.h>
-#include <maolan/audioossout.h>
-#include <maolan/audioossin.h>
+#include <maolan/ossout.h>
+#include <maolan/ossin.h>
 #include <maolan/audiotrack.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
