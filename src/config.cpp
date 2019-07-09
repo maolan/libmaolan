@@ -1,5 +1,6 @@
 #include <maolan/config.h>
 
+using namespace maolan;
 
 size_t Config::audioChunkSize = 0;
 int Config::samplerate = 48000;

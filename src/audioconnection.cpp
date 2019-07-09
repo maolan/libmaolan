@@ -1,34 +1,34 @@
 #include <maolan/audioconnection.h>
 
 
-using namespace std;
+using namespace maolan::audio;
 
 
-AudioConnection::AudioConnection()
+Connection::Connection()
 {
 }
 
 
-AudioConnection::AudioConnection(AudioIO *connectTo, size_t &ch)
+Connection::Connection(IO *connectTo, size_t &ch)
 {
   target(connectTo, ch);
 }
 
 
-void AudioConnection::target(AudioIO *connectTo, size_t &ch)
+void Connection::target(IO *connectTo, size_t &ch)
 {
   to = connectTo;
   channel = ch;
 }
 
 
-AudioChunk AudioConnection::pull()
+Chunk Connection::pull()
 {
   return to->pull(channel);
 }
 
 
-AudioIO * AudioConnection::get()
+IO * Connection::get()
 {
   return to;
 }

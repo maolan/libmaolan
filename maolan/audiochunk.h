@@ -2,15 +2,20 @@
 #pragma once
 #include <memory>
 
-
-class AudioChunkData
+namespace maolan
 {
-  public:
-    AudioChunkData(const size_t &size);
-    ~AudioChunkData();
+  namespace audio
+  {
+    class ChunkData
+    {
+    public:
+    ChunkData(const size_t &size);
+    ~ChunkData();
 
     float *data;
-};
+    };
 
 
-typedef std::shared_ptr<AudioChunkData> AudioChunk;
+    typedef std::shared_ptr<ChunkData> Chunk;
+  }
+}

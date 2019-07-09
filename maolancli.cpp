@@ -11,7 +11,7 @@
 #include <maolan/midiclip.h>
 #include <maolan/io.h>
 
-
+using namespace maolan::audio;
 int main(int argc, char **argv)
 {
   /* MIDI file input
@@ -75,35 +75,35 @@ int main(int argc, char **argv)
 
   /* Audio device and file input and output
    *
-  AudioOSSIn in("/dev/dsp", 2);
-  AudioOSSOut out("/dev/dsp", 2);
-  AudioFileInput infile(argv[1]);
+  OSSIn in("/dev/dsp", 2);
+  OSSOut out("/dev/dsp", 2);
+  FileInput infile(argv[1]);
   out.connect(&in);
   out.connect(&infile);
   std::cout << "Playing ..." << std::endl;
   while (true)
   {
-    for (auto &io : AudioIO::ios)
+    for (auto &io : IO::ios)
     {
       io->fetch();
     }
-    for (auto &io : AudioIO::ios)
+    for (auto &io : IO::ios)
     {
       io->process();
     }
   }
   std::cout << std::endl;
   */
-  AudioOSSOut out("/dev/dsp", 2);
-  AudioFileInput infile(argv[1]);
+  OSSOut out("/dev/dsp", 2);
+  FileInput infile(argv[1]);
   out.connect(&infile);
   while(1)
   {
-    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->fetch();
     }
-    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->process();
     }

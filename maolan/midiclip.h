@@ -5,7 +5,7 @@
 #include <maolan/midichunk.h>
 
 
-class MIDIClip : public IO
+class MIDIClip : public maolan::IO
 {
   public:
     MIDIClip();

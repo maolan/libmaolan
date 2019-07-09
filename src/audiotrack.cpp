@@ -1,14 +1,15 @@
 #include <maolan/audiotrack.h>
 
+using namespace maolan::audio;
 
-AudioTrack::AudioTrack(const size_t &size)
-  : AudioIO(size)
+Track::Track(const size_t &size)
+  : IO(size)
 {
-  _name = "AudioTrack";
+  _name = "Track";
 }
 
 
-void AudioTrack::fetch()
+void Track::fetch()
 {
   for (auto &file : files)
   {
@@ -17,7 +18,7 @@ void AudioTrack::fetch()
 }
 
 
-void AudioTrack::process()
+void Track::process()
 {
   for (size_t i = 0; i < channels(); ++i)
   {
@@ -26,13 +27,13 @@ void AudioTrack::process()
 }
 
 
-size_t AudioTrack::channels() const
+size_t Track::channels() const
 {
   return outputs.size();
 }
 
 
-void AudioTrack::connect(AudioIO *to)
+void Track::connect(IO *to)
 {
   for (size_t channel = 0; channel < channels(); ++channel)
   {
@@ -41,7 +42,7 @@ void AudioTrack::connect(AudioIO *to)
 }
 
 
-void AudioTrack::addFile(const std::string &filePath)
+void Track::addFile(const std::string &filePath)
 {
-  files.push_back(AudioFileInput(filePath));
+  files.push_back(FileInput(filePath));
 }

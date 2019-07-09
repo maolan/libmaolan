@@ -1,6 +1,7 @@
 #include <iostream>
 #include <maolan/io.h>
 
+using namespace maolan;
 
 IO * IO::ios = nullptr;
 IO * last = nullptr;

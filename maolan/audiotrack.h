@@ -6,19 +6,25 @@
 #include <maolan/audiofileinput.h>
 
 
-class AudioTrack : public AudioIO
+namespace maolan
 {
-  public:
-    AudioTrack(const std::size_t &size);
-    ~AudioTrack();
+  namespace audio
+  {
+    class Track : public IO
+    {
+      public:
+        Track(const std::size_t &size);
+        ~Track();
 
-    void connect(AudioIO *to);
-    void fetch();
-    std::size_t channels() const;
-    void process();
-    void addFile(const std::string &filePath);
+        void connect(IO *to);
+        void fetch();
+        std::size_t channels() const;
+        void process();
+        void addFile(const std::string &filePath);
 
-  protected:
-    std::vector<AudioInput> inputs;
-    std::vector<AudioFileInput> files;
-};
+      protected:
+        std::vector<Input> inputs;
+        std::vector<FileInput> files;
+    };
+  }
+}

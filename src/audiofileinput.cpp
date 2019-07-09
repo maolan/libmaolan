@@ -2,9 +2,10 @@
 #include <maolan/audiofileinput.h>
 #include <maolan/config.h>
 
+using namespace maolan::audio;
 
-AudioFileInput::AudioFileInput(const std::string &path)
-  : AudioIO(0, true)
+FileInput::FileInput(const std::string &path)
+  : IO(0, true)
   , audioFile(path)
 {
   if (Config::audioChunkSize == 0)
@@ -12,24 +13,24 @@ AudioFileInput::AudioFileInput(const std::string &path)
     std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
     exit(1);
   }
-  _name = "AudioFileInput";
+  _name = "FileInput";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
 }
 
 
-AudioFileInput::~AudioFileInput()
+FileInput::~FileInput()
 {
   delete []rawData;
 }
 
 
-void AudioFileInput::split()
+void FileInput::split()
 {
   const auto chs = channels();
   for (size_t channel = 0; channel < channels(); ++channel)
   {
-    outputs[channel] = AudioChunk(new AudioChunkData(Config::audioChunkSize));
+    outputs[channel] = Chunk(new ChunkData(Config::audioChunkSize));
     for (size_t i = 0; i < Config::audioChunkSize; ++i)
     {
       outputs[channel]->data[i] = rawData[i * chs + channel];
@@ -38,19 +39,19 @@ void AudioFileInput::split()
 }
 
 
-void AudioFileInput::fetch()
+void FileInput::fetch()
 {
   int bytesRead = audioFile.read(rawData, channels() * Config::audioChunkSize);
   split();
 }
 
 
-size_t AudioFileInput::channels() const
+size_t FileInput::channels() const
 {
   return audioFile.channels();
 }
 
 
-void AudioFileInput::process()
+void FileInput::process()
 {
 }

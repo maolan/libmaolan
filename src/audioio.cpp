@@ -1,8 +1,9 @@
 #include <maolan/audioio.h>
 
+using namespace maolan::audio;
 
-AudioIO::AudioIO(const size_t &chs, bool front)
-  : IO(front)
+IO::IO(const size_t &chs, bool front)
+  : maolan::IO(front)
 {
   if (chs > 0)
   {
@@ -11,11 +12,11 @@ AudioIO::AudioIO(const size_t &chs, bool front)
 }
 
 
-AudioIO::~AudioIO()
+IO::~IO()
 {}
 
 
-AudioChunk AudioIO::pull(const unsigned &channel)
+Chunk IO::pull(const unsigned &channel)
 {
   return outputs[channel];
 }

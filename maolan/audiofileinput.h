@@ -6,20 +6,26 @@
 #include <maolan/audioio.h>
 
 
-class AudioFileInput : public AudioIO
+namespace maolan
 {
-  public:
-    AudioFileInput(const std::string &path);
-    ~AudioFileInput();
+  namespace audio
+  {
+    class FileInput : public IO
+    {
+      public:
+        FileInput(const std::string &path);
+        ~FileInput();
 
-    void fetch();
-    void split();
-    void process();
-    std::size_t channels() const;
+        void fetch();
+        void split();
+        void process();
+        std::size_t channels() const;
 
-  protected:
-    SndfileHandle audioFile;
+      protected:
+        SndfileHandle audioFile;
 
-  private:
-    float *rawData;
-};
+      private:
+        float *rawData;
+    };
+  }
+}

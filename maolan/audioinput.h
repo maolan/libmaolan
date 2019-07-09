@@ -5,17 +5,23 @@
 #include <maolan/audiochunk.h>
 
 
-class AudioInput : public AudioIO
+namespace maolan
 {
-  public:
-    AudioInput();
+  namespace audio
+  {
+    class Input : public IO
+    {
+      public:
+        Input();
 
-    void add(AudioIO *to, std::size_t ch);
-    void fetch();
-    void process();
-    std::size_t channels() const;
-    AudioChunk pull();
+        void add(IO *to, std::size_t ch);
+        void fetch();
+        void process();
+        std::size_t channels() const;
+        Chunk pull();
 
-  protected:
-    std::vector<AudioConnection> connections;
-};
+      protected:
+        std::vector<Connection> connections;
+    };
+  }
+}

@@ -5,11 +5,14 @@
 #include <maolan/bpm.h>
 
 
-class Config
+namespace maolan
 {
-  public:
-    static std::size_t audioChunkSize;
-    static int samplerate;
-    static int bpm;
-    static std::vector<BPM> bpms;
-};
+  class Config
+  {
+    public:
+      static std::size_t audioChunkSize;
+      static int samplerate;
+      static int bpm;
+      static std::vector<BPM> bpms;
+  };
+}

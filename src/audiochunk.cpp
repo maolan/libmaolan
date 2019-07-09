@@ -1,13 +1,14 @@
 #include <maolan/audiochunk.h>
 
+using namespace maolan::audio;
 
-AudioChunkData::AudioChunkData(const size_t &size)
+ChunkData::ChunkData(const size_t &size)
 {
   data = new float[size];
 }
 
 
-AudioChunkData::~AudioChunkData()
+ChunkData::~ChunkData()
 {
   delete []data;
 }

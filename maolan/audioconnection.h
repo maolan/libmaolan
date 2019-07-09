@@ -3,17 +3,23 @@
 #include <maolan/audioio.h>
 
 
-class AudioConnection
+namespace maolan
 {
-  public:
-    AudioConnection();
-    AudioConnection(AudioIO *connectTo, std::size_t &ch);
+  namespace audio
+  {
+    class Connection
+    {
+      public:
+        Connection();
+        Connection(IO *connectTo, std::size_t &ch);
 
-    AudioIO * get();
-    void target(AudioIO *connectTo, std::size_t &ch);
-    AudioChunk pull();
+        IO * get();
+        void target(IO *connectTo, std::size_t &ch);
+        Chunk pull();
 
-  protected:
-    AudioIO *to;
-    std::size_t channel;
-};
+      protected:
+        IO *to;
+        std::size_t channel;
+    };
+  }
+}

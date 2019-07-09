@@ -2,28 +2,29 @@
 #include <maolan/audioossin.h>
 #include <maolan/constants.h>
 
+using namespace maolan::audio;
 
-AudioOSSIn::AudioOSSIn(const std::string &device, const size_t &chs)
-  : AudioOSS(device)
+OSSIn::OSSIn(const std::string &device, const size_t &chs)
+  : OSS(device)
 {
-  _name = "AudioOSSIn";
+  _name = "OSSIn";
 }
 
 
-void AudioOSSIn::fetch()
+void OSSIn::fetch()
 {
   read(device->fd, rawData, device->fragSize);
 }
 
 
-void AudioOSSIn::process()
+void OSSIn::process()
 {
   auto chs = channels();
   int channel;
   int index;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = AudioChunk(new AudioChunkData(device->audioChunkSize));
+    outputs[i] = Chunk(new ChunkData(device->audioChunkSize));
   }
   auto sizeLimit = device->fragSize / sizeof(int);
   for (int i = 0; i < sizeLimit; ++i)
