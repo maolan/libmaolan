@@ -7,18 +7,18 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioConnection
+    class Connection
     {
       public:
-        AudioConnection();
-        AudioConnection(AudioIO *connectTo, std::size_t &ch);
+        Connection();
+        Connection(IO *connectTo, std::size_t &ch);
 
-        AudioIO * get();
-        void target(AudioIO *connectTo, std::size_t &ch);
-        AudioChunk pull();
+        IO * get();
+        void target(IO *connectTo, std::size_t &ch);
+        Chunk pull();
 
       protected:
-        AudioIO *to;
+        IO *to;
         std::size_t channel;
     };
   }

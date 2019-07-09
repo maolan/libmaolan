@@ -9,11 +9,11 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioOSS : public AudioIO
+    class OSS : public IO
     {
       public:
-        AudioOSS(const std::string &device);
-        ~AudioOSS();
+        OSS(const std::string &device);
+        ~OSS();
 
         static std::vector<OSSConfig *> devices;
 

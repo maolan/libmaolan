@@ -9,11 +9,11 @@
 
 using namespace maolan::audio;
 
-std::vector<OSSConfig *> AudioOSS::devices;
+std::vector<OSSConfig *> OSS::devices;
 
 
-AudioOSS::AudioOSS(const std::string &deviceName)
-  : AudioIO(0, true)
+OSS::OSS(const std::string &deviceName)
+  : IO(0, true)
   , device{nullptr}
 {
   const int chs = 2;
@@ -117,7 +117,7 @@ AudioOSS::AudioOSS(const std::string &deviceName)
 }
 
 
-AudioOSS::~AudioOSS()
+OSS::~OSS()
 {
   delete []rawData;
   --(device->count);
@@ -129,7 +129,7 @@ AudioOSS::~AudioOSS()
 }
 
 
-size_t AudioOSS::channels() const
+size_t OSS::channels() const
 {
   return outputs.size();
 }

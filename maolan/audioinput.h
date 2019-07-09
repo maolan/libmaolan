@@ -9,19 +9,19 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioInput : public AudioIO
+    class Input : public IO
     {
       public:
-        AudioInput();
+        Input();
 
-        void add(AudioIO *to, std::size_t ch);
+        void add(IO *to, std::size_t ch);
         void fetch();
         void process();
         std::size_t channels() const;
-        AudioChunk pull();
+        Chunk pull();
 
       protected:
-        std::vector<AudioConnection> connections;
+        std::vector<Connection> connections;
     };
   }
 }

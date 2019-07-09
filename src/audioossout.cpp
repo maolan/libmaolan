@@ -7,15 +7,15 @@
 
 using namespace maolan::audio;
 
-AudioOSSOut::AudioOSSOut(const std::string &device, const size_t &chs)
-  : AudioOSS(device)
+OSSOut::OSSOut(const std::string &device, const size_t &chs)
+  : OSS(device)
 {
-  _name = "AudioOSSOut";
+  _name = "OSSOut";
   inputs.resize(chs);
 }
 
 
-void AudioOSSOut::fetch()
+void OSSOut::fetch()
 {
   for (size_t i = 0; i < channels(); ++i)
   {
@@ -24,7 +24,7 @@ void AudioOSSOut::fetch()
 }
 
 
-void AudioOSSOut::convertToRaw()
+void OSSOut::convertToRaw()
 {
   auto chs = channels();
   for (auto channel = 0; channel < chs; ++channel)
@@ -51,20 +51,20 @@ void AudioOSSOut::convertToRaw()
 }
 
 
-void AudioOSSOut::process()
+void OSSOut::process()
 {
   convertToRaw();
   play(rawData, device->fragSize);
 }
 
 
-void AudioOSSOut::play(int *rawData, size_t dataSize)
+void OSSOut::play(int *rawData, size_t dataSize)
 {
   write(device->fd, rawData, dataSize);
 }
 
 
-void AudioOSSOut::connect(AudioIO *to)
+void OSSOut::connect(IO *to)
 {
   for (auto channel = 0; channel < channels(); ++channel)
   {
@@ -73,7 +73,7 @@ void AudioOSSOut::connect(AudioIO *to)
 }
 
 
-void AudioOSSOut::connect(AudioIO *to, std::size_t inCh, std::size_t outCh)
+void OSSOut::connect(IO *to, std::size_t inCh, std::size_t outCh)
 {
   inputs[inCh].add(to, outCh);
 }
