@@ -11,7 +11,7 @@ AudioFileInput::AudioFileInput(const std::string &path)
     std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
     exit(1);
   }
-  name = "AudioFileInput";
+  _name = "AudioFileInput";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
 }

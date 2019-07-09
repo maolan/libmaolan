@@ -7,7 +7,7 @@ std::vector<AudioTrack *> AudioTrack::tracks;
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)
 {
-  name = "AudioTrack";
+  _name = "AudioTrack";
   tracks.emplace(tracks.end(), this);
 }
 

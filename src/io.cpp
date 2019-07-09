@@ -64,9 +64,21 @@ void IO::next(IO *n)
 }
 
 
+IO * IO::next()
+{
+  return _next;
+}
+
+
 void IO::previous(IO *p)
 {
   _previous = p;
+}
+
+
+IO * IO::previous()
+{
+  return _previous;
 }
 
 
@@ -97,4 +109,15 @@ bool IO::stage()
 IO * IO::begin()
 {
   return ios;
+}
+
+std::string IO::name()
+{
+  return _name;
+}
+
+
+void IO::name(const std::string &argName)
+{
+  _name = argName;
 }
