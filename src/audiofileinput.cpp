@@ -4,7 +4,8 @@
 
 
 AudioFileInput::AudioFileInput(const std::string &path)
-  : audioFile(path)
+  : AudioIO(0, true)
+  , audioFile(path)
 {
   if (Config::audioChunkSize == 0)
   {
