@@ -10,21 +10,21 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioTrack : public AudioIO
+    class Track : public IO
     {
       public:
-        AudioTrack(const std::size_t &size);
-        ~AudioTrack();
+        Track(const std::size_t &size);
+        ~Track();
 
-        void connect(AudioIO *to);
+        void connect(IO *to);
         void fetch();
         std::size_t channels() const;
         void process();
         void addFile(const std::string &filePath);
 
       protected:
-        std::vector<AudioInput> inputs;
-        std::vector<AudioFileInput> files;
+        std::vector<Input> inputs;
+        std::vector<FileInput> files;
     };
   }
 }

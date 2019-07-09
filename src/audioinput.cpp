@@ -3,24 +3,24 @@
 
 using namespace maolan::audio;
 
-AudioInput::AudioInput()
-  : AudioIO(1, true)
+Input::Input()
+  : IO(1, true)
 {
-  _name = "AudioInput";
+  _name = "Input";
   connections.clear();
 }
 
 
-void AudioInput::add(AudioIO *to, size_t ch)
+void Input::add(IO *to, size_t ch)
 {
   auto it = connections.emplace(connections.end());
   it->target(to, ch);
 }
 
 
-void AudioInput::fetch()
+void Input::fetch()
 {
-  std::vector<AudioChunk> channels;
+  std::vector<Chunk> channels;
   bool empty = true;
   for (auto &connection : connections)
   {
@@ -40,7 +40,7 @@ void AudioInput::fetch()
   }
   else
   {
-    const AudioChunk result = AudioChunk(new AudioChunkData(Config::audioChunkSize));
+    const Chunk result = Chunk(new ChunkData(Config::audioChunkSize));
     for (size_t i = 0; i < Config::audioChunkSize; ++i)
     {
       float sum = 0;
@@ -57,18 +57,18 @@ void AudioInput::fetch()
 }
 
 
-size_t AudioInput::channels() const
+size_t Input::channels() const
 {
   return outputs.size();
 }
 
 
-AudioChunk AudioInput::pull()
+Chunk Input::pull()
 {
   return outputs[0];
 }
 
 
-void AudioInput::process()
+void Input::process()
 {
 }

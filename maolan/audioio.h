@@ -10,17 +10,17 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioIO : public IO
+    class IO : public maolan::IO
     {
       public:
-        AudioIO(const size_t &outs = 0, bool front = false);
-        ~AudioIO();
+        IO(const size_t &outs = 0, bool front = false);
+        ~IO();
 
         virtual std::size_t channels() const = 0;
-        AudioChunk pull(const unsigned &channel);
+        Chunk pull(const unsigned &channel);
 
       protected:
-        std::vector<AudioChunk> outputs;
+        std::vector<Chunk> outputs;
     };
   }
 }

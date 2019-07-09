@@ -10,11 +10,11 @@ namespace maolan
 {
   namespace audio
   {
-    class AudioFileInput : public AudioIO
+    class FileInput : public IO
     {
       public:
-        AudioFileInput(const std::string &path);
-        ~AudioFileInput();
+        FileInput(const std::string &path);
+        ~FileInput();
 
         void fetch();
         void split();
