@@ -3,7 +3,7 @@
 #include <sys/soundcard.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <maolan/audiooss.h>
+#include <maolan/oss.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
 
