@@ -24,12 +24,15 @@ class IO
     void stage(const bool &s);
     bool stage();
 
+    void name(const std::string &);
+    std::string name();
+
 
   protected:
     static IO * ios;
     static bool _stage;
 
-    std::string name;
+    std::string _name;
     int state;
     IO * _next;
     IO * _previous;

@@ -9,7 +9,7 @@
 AudioOSSOut::AudioOSSOut(const std::string &device, const size_t &chs)
   : AudioOSS(device)
 {
-  name = "AudioOSSOut";
+  _name = "AudioOSSOut";
   inputs.resize(chs);
 }
 

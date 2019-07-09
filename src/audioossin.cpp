@@ -6,7 +6,7 @@
 AudioOSSIn::AudioOSSIn(const std::string &device, const size_t &chs)
   : AudioOSS(device)
 {
-  name = "AudioOSSIn";
+  _name = "AudioOSSIn";
 }
 
 

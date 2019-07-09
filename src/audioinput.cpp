@@ -5,7 +5,7 @@
 AudioInput::AudioInput()
   : AudioIO(1, true)
 {
-  name = "AudioInput";
+  _name = "AudioInput";
   connections.clear();
 }
 
