@@ -33,7 +33,6 @@ IO::IO(bool front)
       ios = this;
     }
   }
-  std::cout << ios << ' ' << this << std::endl;
 }
 
 

@@ -12,3 +12,4 @@ config.status
 configure
 makedepend
 makeinclude.configured
+maolancli

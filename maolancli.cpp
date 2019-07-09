@@ -17,19 +17,19 @@ int main(int argc, char **argv)
   /* MIDI file input
    *
    */
-  if (argc < 2)
-  {
-    std::cerr << "Usage: " << argv[0] << " <midi file>" << std::endl;
-    return 1;
-  }
-  Config::bpms.emplace_back();
-  MIDIClip *clip = new MIDIClip();
-  clip->load(argv[1]);
-  MIDIChunk *chunk;
-  while ((chunk = clip->next()) != nullptr)
-  {
-    std::cout << *chunk << std::endl;
-  }
+  // if (argc < 2)
+  // {
+    // std::cerr << "Usage: " << argv[0] << " <midi file>" << std::endl;
+    // return 1;
+  // }
+  // Config::bpms.emplace_back();
+  // MIDIClip *clip = new MIDIClip();
+  // clip->load(argv[1]);
+  // MIDIChunk *chunk;
+  // while ((chunk = clip->next()) != nullptr)
+  // {
+    // std::cout << *chunk << std::endl;
+  // }
 
 
   /* Beats
@@ -94,5 +94,19 @@ int main(int argc, char **argv)
   }
   std::cout << std::endl;
   */
+  AudioOSSOut out("/dev/dsp", 2);
+  AudioFileInput infile(argv[1]);
+  out.connect(&infile);
+  while(1)
+  {
+    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    {
+      item->fetch();
+    }
+    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    {
+      item->process();
+    }
+  }
   return 0;
 }
