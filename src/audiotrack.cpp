@@ -1,5 +1,6 @@
 #include <maolan/audiotrack.h>
 
+using namespace maolan::audio;
 
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)

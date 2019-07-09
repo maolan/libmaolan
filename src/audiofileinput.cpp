@@ -2,6 +2,7 @@
 #include <maolan/audiofileinput.h>
 #include <maolan/config.h>
 
+using namespace maolan::audio;
 
 AudioFileInput::AudioFileInput(const std::string &path)
   : AudioIO(0, true)

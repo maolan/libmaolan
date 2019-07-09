@@ -1,5 +1,6 @@
 #include <maolan/audioio.h>
 
+using namespace maolan::audio;
 
 AudioIO::AudioIO(const size_t &chs, bool front)
   : IO(front)

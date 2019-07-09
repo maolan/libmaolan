@@ -5,18 +5,24 @@
 #include <maolan/audioinput.h>
 
 
-class AudioOSSOut : public AudioOSS
+namespace maolan
 {
-  public:
-    AudioOSSOut(const std::string &device, const std::size_t &channels);
+  namespace audio
+  {
+    class AudioOSSOut : public AudioOSS
+    {
+      public:
+        AudioOSSOut(const std::string &device, const std::size_t &channels);
 
-    void connect(AudioIO *to);
-    void connect(AudioIO *to, std::size_t inCh, std::size_t outCh);
-    void fetch();
-    void process();
-    void convertToRaw();
-    void play(int *rawData, std::size_t dataSize);
+        void connect(AudioIO *to);
+        void connect(AudioIO *to, std::size_t inCh, std::size_t outCh);
+        void fetch();
+        void process();
+        void convertToRaw();
+        void play(int *rawData, std::size_t dataSize);
 
-  protected:
-    std::vector<AudioInput> inputs;
-};
+      protected:
+        std::vector<AudioInput> inputs;
+    };
+  }
+}

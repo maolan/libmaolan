@@ -4,11 +4,17 @@
 #include <maolan/audiooss.h>
 
 
-class AudioOSSIn: public AudioOSS
+namespace maolan
 {
-  public:
-    AudioOSSIn(const std::string &device, const std::size_t &channels);
+  namespace audio
+  {
+    class AudioOSSIn: public AudioOSS
+    {
+      public:
+        AudioOSSIn(const std::string &device, const std::size_t &channels);
 
-    void fetch();
-    void process();
-};
+        void fetch();
+        void process();
+    };
+  }
+}

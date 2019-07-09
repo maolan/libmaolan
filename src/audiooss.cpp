@@ -7,6 +7,7 @@
 #include <maolan/config.h>
 #include <maolan/constants.h>
 
+using namespace maolan::audio;
 
 std::vector<OSSConfig *> AudioOSS::devices;
 

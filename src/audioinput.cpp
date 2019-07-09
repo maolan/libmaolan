@@ -1,6 +1,7 @@
 #include <maolan/audioinput.h>
 #include <maolan/config.h>
 
+using namespace maolan::audio;
 
 AudioInput::AudioInput()
   : AudioIO(1, true)

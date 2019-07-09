@@ -11,7 +11,7 @@
 #include <maolan/midiclip.h>
 #include <maolan/io.h>
 
-
+using namespace maolan::audio;
 int main(int argc, char **argv)
 {
   /* MIDI file input

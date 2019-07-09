@@ -1,5 +1,6 @@
 #include <maolan/audiochunk.h>
 
+using namespace maolan::audio;
 
 AudioChunkData::AudioChunkData(const size_t &size)
 {

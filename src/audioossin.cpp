@@ -2,6 +2,7 @@
 #include <maolan/audioossin.h>
 #include <maolan/constants.h>
 
+using namespace maolan::audio;
 
 AudioOSSIn::AudioOSSIn(const std::string &device, const size_t &chs)
   : AudioOSS(device)

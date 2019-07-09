@@ -1,7 +1,7 @@
 #include <maolan/audioconnection.h>
 
 
-using namespace std;
+using namespace maolan::audio;
 
 
 AudioConnection::AudioConnection()

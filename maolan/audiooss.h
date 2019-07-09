@@ -5,17 +5,23 @@
 #include <maolan/ossconfig.h>
 
 
-class AudioOSS : public AudioIO
+namespace maolan
 {
-  public:
-    AudioOSS(const std::string &device);
-    ~AudioOSS();
+  namespace audio
+  {
+    class AudioOSS : public AudioIO
+    {
+      public:
+        AudioOSS(const std::string &device);
+        ~AudioOSS();
 
-    static std::vector<OSSConfig *> devices;
+        static std::vector<OSSConfig *> devices;
 
-    std::size_t channels() const;
+        std::size_t channels() const;
 
-  protected:
-    int *rawData;
-    OSSConfig *device;
-};
+      protected:
+        int *rawData;
+        OSSConfig *device;
+    };
+  }
+}
