@@ -1,6 +1,7 @@
 #include <sys/soundcard.h>
 #include <maolan/ossconfig.h>
 
+using namespace maolan::audio;
 
 OSSConfig::OSSConfig()
   : count{1}

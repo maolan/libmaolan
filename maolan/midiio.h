@@ -4,7 +4,7 @@
 #include <maolan/midichunk.h>
 
 
-class MIDIIO : public IO
+class MIDIIO : public maolan::IO
 {
   public:
     MIDIChunk * get(int fd);

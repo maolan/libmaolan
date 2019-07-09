@@ -99,11 +99,11 @@ int main(int argc, char **argv)
   out.connect(&infile);
   while(1)
   {
-    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->fetch();
     }
-    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->process();
     }
