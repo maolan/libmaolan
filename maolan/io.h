@@ -7,6 +7,8 @@
 class IO
 {
   public:
+    static IO * begin();
+
     IO(bool front = true);
     ~IO();
 
@@ -21,6 +23,7 @@ class IO
 
     void stage(const bool &s);
     bool stage();
+
 
   protected:
     static IO * ios;

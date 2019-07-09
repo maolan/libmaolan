@@ -33,6 +33,7 @@ IO::IO(bool front)
       ios = this;
     }
   }
+  std::cout << ios << ' ' << this << std::endl;
 }
 
 
@@ -91,4 +92,9 @@ void IO::stage(const bool &s)
 bool IO::stage()
 {
   return _stage;
+}
+
+IO * IO::begin()
+{
+  return ios;
 }

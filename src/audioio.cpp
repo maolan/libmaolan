@@ -11,6 +11,10 @@ AudioIO::AudioIO(const size_t &chs, bool front)
 }
 
 
+AudioIO::~AudioIO()
+{}
+
+
 AudioChunk AudioIO::pull(const unsigned &channel)
 {
   return outputs[channel];
