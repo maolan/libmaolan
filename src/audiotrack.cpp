@@ -1,20 +1,15 @@
 #include <maolan/audiotrack.h>
 
 
-std::vector<AudioTrack *> AudioTrack::tracks;
-
-
 AudioTrack::AudioTrack(const size_t &size)
   : AudioIO(size)
 {
   _name = "AudioTrack";
-  tracks.emplace(tracks.end(), this);
 }
 
 
 AudioTrack::~AudioTrack()
 {
-  tracks.erase(std::find(tracks.begin(), tracks.end(), this));
 }
 
 

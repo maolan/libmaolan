@@ -12,8 +12,6 @@ class AudioTrack : public AudioIO
     AudioTrack(const std::size_t &size);
     ~AudioTrack();
 
-    static std::vector<AudioTrack *> tracks;
-
     void connect(AudioIO *to);
     void fetch();
     std::size_t channels() const;
