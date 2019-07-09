@@ -8,11 +8,6 @@ AudioTrack::AudioTrack(const size_t &size)
 }
 
 
-AudioTrack::~AudioTrack()
-{
-}
-
-
 void AudioTrack::fetch()
 {
   for (auto &file : files)
