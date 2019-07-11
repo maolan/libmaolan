@@ -2,7 +2,7 @@
 #include <string>
 #include <fstream>
 #include <maolan/io.h>
-#include <maolan/midichunk.h>
+#include <maolan/midi/chunk.h>
 
 
 class MIDIFile

@@ -1,7 +1,7 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/oss.h>
+#include <maolan/audio/oss.h>
 
 
 namespace maolan

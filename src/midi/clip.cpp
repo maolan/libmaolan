@@ -1,6 +1,6 @@
 #include <iostream>
-#include <maolan/midiclip.h>
-#include <maolan/midifile.h>
+#include <maolan/midi/clip.h>
+#include <maolan/midi/file.h>
 
 
 std::vector<MIDIChunk *>::iterator nextChunk;

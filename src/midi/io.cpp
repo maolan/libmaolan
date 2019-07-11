@@ -1,8 +1,8 @@
 #include <iostream>
 #include <unistd.h>
-#include <maolan/midiio.h>
-#include <maolan/midichunk.h>
-#include <maolan/midievent.h>
+#include <maolan/midi/io.h>
+#include <maolan/midi/chunk.h>
+#include <maolan/midi/event.h>
 
 
 MIDIChunk * MIDIIO::get(int fd)

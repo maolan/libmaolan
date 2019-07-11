@@ -1,5 +1,9 @@
 MK_PROFILE=no
-SRCS != ls -1 src/*.cpp
+CFLAGS += -I${.CURDIR}
+SRCS_AUDIO != ls -1 src/audio/*.cpp
+SRCS_MIDI != ls -1 src/midi/*.cpp
+SRCS_CORE != ls -1 src/*.cpp
+SRCS = $(SRCS_CORE) $(SRCS_AUDIO) $(SRCS_MIDI)
 LIBDIR = ${PREFIX}/lib
 
 beforeinstall:
@@ -7,3 +11,6 @@ beforeinstall:
 
 distclean: clean cleandepend
 	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
+
+cvrc:
+	echo ${.CURDIR}

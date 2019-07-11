@@ -1,8 +1,8 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <string>
-#include <maolan/audioio.h>
-#include <maolan/ossconfig.h>
+#include <maolan/audio/io.h>
+#include <maolan/audio/ossconfig.h>
 
 
 namespace maolan

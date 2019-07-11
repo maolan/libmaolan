@@ -1,7 +1,7 @@
 #include <iostream>
 #include <unistd.h>
-#include <maolan/midichunk.h>
-#include <maolan/midievent.h>
+#include <maolan/midi/chunk.h>
+#include <maolan/midi/event.h>
 
 
 std::ostream & operator<<(std::ostream &os, const MIDIChunk &midi)

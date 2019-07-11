@@ -2,7 +2,7 @@
 #include <vector>
 #include <string>
 #include <maolan/io.h>
-#include <maolan/midichunk.h>
+#include <maolan/midi/chunk.h>
 
 
 class MIDIClip : public maolan::IO

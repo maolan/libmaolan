@@ -1,4 +1,4 @@
-#include <maolan/audiotrack.h>
+#include <maolan/audio/track.h>
 
 using namespace maolan::audio;
 

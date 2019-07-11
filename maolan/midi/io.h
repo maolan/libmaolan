@@ -1,7 +1,7 @@
 #pragma once
 #include <iostream>
 #include <maolan/io.h>
-#include <maolan/midichunk.h>
+#include <maolan/midi/chunk.h>
 
 
 class MIDIIO : public maolan::IO

@@ -1,8 +1,8 @@
 SRCS = $(wildcard src/*.cpp)
 OBJECTS = $(SRCS:.cpp=.o)
-.DEFAULT_GOAL := all
 LIBNAME = lib$(LIB_CXX).so
 LIBNAME_VERSIONED = $(LIBNAME).$(SHLIB_MAJOR)
+.DEFAULT_GOAL := all
 
 all: $(LIBNAME)
 
@@ -20,8 +20,8 @@ $(LIBNAME_VERSIONED): $(OBJECTS)
 	@echo "done"
 
 install:
-	install -m 0755 $(LIBNAME) $(DESTDIR)$(PREFIX)/bin
-	install -m 0755 $(LIBNAME_VERSIONED) $(DESTDIR)$(PREFIX)/bin
+	install -m 0755 $(LIBNAME) $(DESTDIR)$(PREFIX)/lib
+	install -m 0755 $(LIBNAME_VERSIONED) $(DESTDIR)$(PREFIX)/lib
 	cp -r maolan $(DESTDIR)$(PREFIX)/include
 
 clean:

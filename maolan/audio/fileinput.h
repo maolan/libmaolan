@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <sndfile.hh>
-#include <maolan/audioio.h>
+#include <maolan/audio/io.h>
 
 
 namespace maolan

@@ -1,5 +1,5 @@
 #include <sys/soundcard.h>
-#include <maolan/ossconfig.h>
+#include <maolan/audio/ossconfig.h>
 
 using namespace maolan::audio;
 

@@ -1,9 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h>
-#include <maolan/midifile.h>
-#include <maolan/midichunk.h>
-#include <maolan/midievent.h>
+#include <maolan/midi/file.h>
+#include <maolan/midi/chunk.h>
+#include <maolan/midi/event.h>
 
 
 unsigned int readVarLen(std::ifstream &file)

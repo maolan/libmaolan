@@ -1,8 +1,8 @@
 /* vim: set syntax=cpp: */
 #pragma once
 #include <vector>
-#include <maolan/audioconnection.h>
-#include <maolan/audiochunk.h>
+#include <maolan/audio/connection.h>
+#include <maolan/audio/chunk.h>
 
 
 namespace maolan
