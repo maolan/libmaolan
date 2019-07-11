@@ -1,4 +1,4 @@
-#include <maolan/audiochunk.h>
+#include <maolan/audio/chunk.h>
 
 using namespace maolan::audio;
 

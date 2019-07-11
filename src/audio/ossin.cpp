@@ -1,5 +1,5 @@
 #include <unistd.h>
-#include <maolan/ossin.h>
+#include <maolan/audio/ossin.h>
 #include <maolan/constants.h>
 
 using namespace maolan::audio;
