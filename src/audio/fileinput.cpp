@@ -1,6 +1,7 @@
 #include <iostream>
 #include <maolan/audio/fileinput.h>
 #include <maolan/config.h>
+#include <cstdint>
 
 using namespace maolan::audio;
 
@@ -11,11 +12,11 @@ FileInput::FileInput(const std::string &path)
   if (Config::audioChunkSize == 0)
   {
     std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
-    exit(1);
-  }
+    exit(1); }
   _name = "FileInput";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
+
 }
 
 

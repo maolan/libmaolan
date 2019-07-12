@@ -24,6 +24,7 @@ void Connection::target(IO *connectTo, size_t &ch)
 
 Chunk Connection::pull()
 {
+  std::cout<<channel<<std::endl;
   return to->pull(channel);
 }
 
