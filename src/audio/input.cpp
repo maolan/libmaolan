@@ -1,7 +1,9 @@
 #include <maolan/audio/input.h>
 #include <maolan/config.h>
 
+
 using namespace maolan::audio;
+
 
 Input::Input()
   : IO(1, true)

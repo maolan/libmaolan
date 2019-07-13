@@ -105,7 +105,6 @@ int main(int argc, char **argv)
   {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
-      std::cout<<"fetch "<< item->name()<<std::endl;
       item->fetch();
     }
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())

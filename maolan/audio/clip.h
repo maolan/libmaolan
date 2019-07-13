@@ -23,7 +23,7 @@ namespace maolan
       protected:
         uint64_t _offset;
         bool initialized= false;
-        SndfileHandle audiofajl;
+        FileInput file;
     };
   }
 }

@@ -5,10 +5,11 @@
 
 using namespace maolan::audio;
 
+
 Clip::Clip(const uint64_t &offset, const std::string &path)
   : IO(0, true)
   , _offset{offset}
-  , audiofajl(path)
+  , file(path)
 {
   _name = "Clip";
 }
@@ -23,7 +24,7 @@ void Clip::process()
 
 std::size_t Clip::channels() const
 {
-  return audiofajl.channels();
+  return file.channels();
 }
 
 uint64_t Clip::offset()
@@ -34,6 +35,5 @@ uint64_t Clip::offset()
 
 Chunk Clip::pull(const unsigned &channel)
 {
-  std::cout<<outputs.size()<<std::endl;
-  return outputs[channel];
+  return file.pull(channel);
 }
