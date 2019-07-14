@@ -1,15 +1,16 @@
 #include <iostream>
 #include <fstream>
 #include <fcntl.h>
-#include <maolan/audiofileinput.h>
-#include <maolan/ossout.h>
-#include <maolan/ossin.h>
-#include <maolan/audiotrack.h>
+#include <maolan/audio/fileinput.h>
+#include <maolan/audio/ossout.h>
+#include <maolan/audio/ossin.h>
+#include <maolan/audio/track.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
-#include <maolan/midichunk.h>
-#include <maolan/midiclip.h>
+#include <maolan/midi/chunk.h>
+#include <maolan/midi/clip.h>
 #include <maolan/io.h>
+#include <maolan/audio/clip.h>
 
 using namespace maolan::audio;
 int main(int argc, char **argv)
@@ -95,8 +96,11 @@ int main(int argc, char **argv)
   std::cout << std::endl;
   */
   OSSOut out("/dev/dsp", 2);
+  Clip clip(150000,argv[1]);
   FileInput infile(argv[1]);
-  out.connect(&infile);
+  clip.connect(&infile);
+  out.connect(&clip);
+
   while(1)
   {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())

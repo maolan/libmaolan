@@ -13,7 +13,7 @@ namespace maolan
     class FileInput : public IO
     {
       public:
-        FileInput(const std::string &path);
+        FileInput(const std::string &path = "");
         ~FileInput();
 
         void fetch();
