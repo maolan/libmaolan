@@ -12,6 +12,7 @@ Clip::Clip(const uint64_t &offset, const std::string &path)
   , file(path)
 {
   _name = "Clip";
+  connect(&file);
 }
 
 void Clip::fetch()
