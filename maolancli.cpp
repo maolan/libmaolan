@@ -97,8 +97,6 @@ int main(int argc, char **argv)
   */
   OSSOut out("/dev/dsp", 2);
   Clip clip(150000,argv[1]);
-  FileInput infile(argv[1]);
-  clip.connect(&infile);
   out.connect(&clip);
 
   while(1)
