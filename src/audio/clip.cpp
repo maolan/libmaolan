@@ -17,6 +17,8 @@ Clip::Clip(const uint64_t &offset, const std::string &path)
 
 void Clip::fetch()
 {
+  file.fetch();
+  file.process();
 }
 
 void Clip::process()
