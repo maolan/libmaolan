@@ -1,5 +1,5 @@
 #include <iostream>
-#include <maolan/audio/fileinput.h>
+#include <maolan/audio/file.h>
 #include <maolan/config.h>
 #include <cstdint>
 
