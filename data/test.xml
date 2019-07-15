@@ -1,0 +1,6 @@
+<?xml?>
+<track name="ime_trake">
+	<clips>
+		<clip name="ime_clipa" file="data/session.wav" />
+	</clips>
+</track>
