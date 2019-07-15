@@ -6,7 +6,7 @@
 using namespace maolan::audio;
 
 FileInput::FileInput(const std::string &path)
-  : IO(0, true)
+  : IO(0, true, false)
   , audioFile(path)
 {
   if (Config::audioChunkSize == 0)

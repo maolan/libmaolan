@@ -13,7 +13,7 @@ namespace maolan
     class IO : public maolan::IO
     {
       public:
-        IO(const size_t &outs = 0, bool front = false);
+        IO(const size_t &outs = 0, const bool &front = true, const bool &reg = true);
         ~IO();
 
         virtual std::size_t channels() const = 0;

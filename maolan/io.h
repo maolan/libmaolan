@@ -11,7 +11,7 @@ namespace maolan
     public:
       static IO * begin();
 
-      IO(bool front = true);
+      IO(const bool &front = true, const bool &reg = true);
       ~IO();
 
       virtual void fetch() = 0;
