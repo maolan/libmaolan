@@ -1,7 +1,7 @@
 #pragma once
 #include <sndfile.hh>
 #include <maolan/audio/io.h>
-#include <maolan/audio/fileinput.h>
+#include <maolan/audio/file.h>
 #include <cstdint>
 
 namespace maolan

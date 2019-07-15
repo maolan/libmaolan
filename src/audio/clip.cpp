@@ -1,6 +1,6 @@
 #include <maolan/audio/clip.h>
 #include <sndfile.hh>
-#include <maolan/audio/fileinput.h>
+#include <maolan/audio/file.h>
 #include <iostream>
 
 using namespace maolan::audio;
