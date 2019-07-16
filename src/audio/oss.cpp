@@ -111,13 +111,13 @@ OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
     devices.emplace(devices.begin(), device);
   }
 
-  rawData = new int[device->fragSize];
+  frame = new int[device->fragSize];
 }
 
 
 OSS::~OSS()
 {
-  delete[] rawData;
+  delete[] frame;
   --(device->count);
   if (device->count < 1)
   {

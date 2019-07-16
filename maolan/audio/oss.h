@@ -20,7 +20,7 @@ namespace maolan
         std::size_t channels() const;
 
       protected:
-        int *rawData;
+        int *frame;
         OSSConfig *device;
     };
   }

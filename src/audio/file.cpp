@@ -15,11 +15,11 @@ File::File(const std::string &path) : IO(0, true, false), audioFile(path)
   }
   _type = "File";
   outputs.resize(audioFile.channels(), nullptr);
-  rawData = new float[Config::audioBufferSize * channels()];
+  frame = new float[Config::audioBufferSize * channels()];
 }
 
 
-File::~File() { delete[] rawData; }
+File::~File() { delete[] frame; }
 
 
 void File::split()
@@ -30,7 +30,7 @@ void File::split()
     outputs[channel] = Buffer(new BufferData(Config::audioBufferSize));
     for (size_t i = 0; i < Config::audioBufferSize; ++i)
     {
-      outputs[channel]->data[i] = rawData[i * chs + channel];
+      outputs[channel]->data[i] = frame[i * chs + channel];
     }
   }
 }
@@ -38,7 +38,7 @@ void File::split()
 
 void File::fetch()
 {
-  int bytesRead = audioFile.read(rawData, channels() * Config::audioBufferSize);
+  int bytesRead = audioFile.read(frame, channels() * Config::audioBufferSize);
   split();
 }
 
