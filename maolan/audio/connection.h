@@ -15,7 +15,7 @@ namespace maolan
 
         IO * get();
         void target(IO *connectTo, std::size_t &ch);
-        Chunk pull();
+        Buffer pull();
 
       protected:
         IO *to;

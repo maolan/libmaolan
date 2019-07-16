@@ -2,7 +2,7 @@
 #pragma once
 #include <vector>
 #include <maolan/audio/connection.h>
-#include <maolan/audio/chunk.h>
+#include <maolan/audio/buffer.h>
 
 
 namespace maolan
@@ -18,7 +18,7 @@ namespace maolan
         void fetch();
         void process();
         std::size_t channels() const;
-        Chunk pull();
+        Buffer pull();
 
       protected:
         std::vector<Connection> connections;

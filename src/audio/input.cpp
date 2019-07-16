@@ -21,7 +21,7 @@ void Input::add(IO *to, size_t ch)
 
 void Input::fetch()
 {
-  std::vector<Chunk> channels;
+  std::vector<Buffer> channels;
   bool empty = true;
   for (auto &connection : connections)
   {
@@ -42,8 +42,8 @@ void Input::fetch()
   }
   else
   {
-    const Chunk result = Chunk(new ChunkData(Config::audioChunkSize));
-    for (size_t i = 0; i < Config::audioChunkSize; ++i)
+    const Buffer result = Buffer(new BufferData(Config::audioBufferSize));
+    for (size_t i = 0; i < Config::audioBufferSize; ++i)
     {
       float sum = 0;
       for (auto channel : channels)
@@ -68,7 +68,7 @@ void Input::fetch()
 size_t Input::channels() const { return outputs.size(); }
 
 
-Chunk Input::pull() { return outputs[0]; }
+Buffer Input::pull() { return outputs[0]; }
 
 
 void Input::process() {}

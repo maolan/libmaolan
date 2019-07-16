@@ -10,7 +10,7 @@ namespace maolan
   class Config
   {
     public:
-      static std::size_t audioChunkSize;
+      static std::size_t audioBufferSize;
       static int samplerate;
       static int bpm;
       static std::vector<BPM> bpms;

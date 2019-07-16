@@ -17,7 +17,7 @@ IO::IO(const size_t &chs, const bool &front, const bool &reg)
 IO::~IO() {}
 
 
-Chunk IO::pull(const unsigned &channel) { return outputs[channel]; }
+Buffer IO::pull(const unsigned &channel) { return outputs[channel]; }
 
 
 void IO::connect(IO *to)

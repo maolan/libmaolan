@@ -25,4 +25,4 @@ std::size_t Clip::channels() const { return file.channels(); }
 uint64_t Clip::offset() { return _offset; }
 
 
-Chunk Clip::pull(const unsigned &channel) { return file.pull(channel); }
+Buffer Clip::pull(const unsigned &channel) { return file.pull(channel); }
