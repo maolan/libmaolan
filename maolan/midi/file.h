@@ -1,22 +1,22 @@
 #pragma once
-#include <string>
 #include <fstream>
 #include <maolan/io.h>
 #include <maolan/midi/chunk.h>
+#include <string>
 
 
 class MIDIFile
 {
-  public:
-    MIDIFile(const std::string &path);
-    ~MIDIFile();
+public:
+  MIDIFile(const std::string &path);
+  ~MIDIFile();
 
-    MIDIChunk * read();
-    void skipHeaders();
-    bool eof();
+  MIDIChunk *read();
+  void skipHeaders();
+  bool eof();
 
-    int division;
+  int division;
 
-  protected:
-    std::ifstream file;
+protected:
+  std::ifstream file;
 };

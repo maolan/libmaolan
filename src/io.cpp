@@ -5,6 +5,7 @@ using namespace maolan;
 IO *IO::ios = nullptr;
 IO *last = nullptr;
 bool IO::_stage = true;
+uint64_t IO::_playHead = 0;
 
 
 IO::IO(const std::string &argName, const bool &front, const bool &reg)
@@ -108,3 +109,7 @@ std::string IO::name() { return _name; }
 
 
 void IO::name(const std::string &argName) { _name = argName; }
+
+uint64_t IO::playHead() { return _playHead; }
+
+void IO::playHead(const uint64_t &argPlayHead) { _playHead = argPlayHead; }

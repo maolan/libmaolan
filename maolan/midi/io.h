@@ -6,6 +6,6 @@
 
 class MIDIIO : public maolan::IO
 {
-  public:
-    MIDIChunk * get(int fd);
+public:
+  MIDIChunk *get(int fd);
 };

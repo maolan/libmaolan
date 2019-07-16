@@ -6,40 +6,45 @@
 
 namespace maolan
 {
-  class IO
-  {
-    public:
-      static IO * begin();
+class IO
+{
+public:
+  static IO *begin();
 
-      IO(const std::string &argName = "", const bool &front = true, const bool &reg = true);
-      ~IO();
+  IO(const std::string &argName = "", const bool &front = true,
+     const bool &reg = true);
+  ~IO();
 
-      virtual void fetch() = 0;
-      virtual void process() = 0;
-      void work();
+  virtual void fetch() = 0;
+  virtual void process() = 0;
+  void work();
 
-      void next(IO *);
-      IO * next();
-      void previous(IO *);
-      IO * previous();
+  void next(IO *);
+  IO *next();
+  void previous(IO *);
+  IO *previous();
 
-      void stage(const bool &s);
-      bool stage();
+  void stage(const bool &s);
+  bool stage();
 
-      void type(const std::string &);
-      std::string type();
+  void type(const std::string &);
+  std::string type();
 
-      void name(const std::string &);
-      std::string name();
+  void name(const std::string &);
+  std::string name();
 
-    protected:
-      static IO * ios;
-      static bool _stage;
+  static void playHead(const uint64_t &argPlayHead);
+  static uint64_t playHead();
 
-      std::string _type;
-      std::string _name;
-      int state;
-      IO * _next;
-      IO * _previous;
-  };
-}
+protected:
+  static IO *ios;
+  static bool _stage;
+  static uint64_t _playHead;
+
+  std::string _type;
+  std::string _name;
+  int state;
+  IO *_next;
+  IO *_previous;
+};
+} // namespace maolan
