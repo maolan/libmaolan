@@ -10,7 +10,7 @@ OSSIn::OSSIn(const std::string &device, const size_t &chs) : OSS(device)
 }
 
 
-void OSSIn::fetch() { read(device->fd, rawData, device->fragSize); }
+void OSSIn::fetch() { read(device->fd, frame, device->fragSize); }
 
 
 void OSSIn::process()
@@ -27,6 +27,6 @@ void OSSIn::process()
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data[index] = rawData[i] / floatMaxInt;
+    outputs[channel]->data[index] = frame[i] / floatMaxInt;
   }
 }

@@ -19,7 +19,7 @@ namespace maolan
         void fetch();
         void process();
         void convertToRaw();
-        void play(int *rawData, std::size_t dataSize);
+        void play(int *frame, std::size_t dataSize);
 
       protected:
         std::vector<Input> inputs;

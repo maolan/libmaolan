@@ -33,7 +33,7 @@ void OSSOut::convertToRaw()
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        rawData[i * chs + channel] = 0;
+        frame[i * chs + channel] = 0;
       }
     }
     else
@@ -49,7 +49,7 @@ void OSSOut::convertToRaw()
         {
           sample = 1.0;
         }
-        rawData[i * chs + channel] = sample * maxInt;
+        frame[i * chs + channel] = sample * maxInt;
       }
     }
   }
@@ -59,13 +59,13 @@ void OSSOut::convertToRaw()
 void OSSOut::process()
 {
   convertToRaw();
-  play(rawData, device->fragSize);
+  play(frame, device->fragSize);
 }
 
 
-void OSSOut::play(int *rawData, size_t dataSize)
+void OSSOut::play(int *frame, size_t dataSize)
 {
-  write(device->fd, rawData, dataSize);
+  write(device->fd, frame, dataSize);
 }
 
 

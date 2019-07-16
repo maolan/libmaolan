@@ -25,7 +25,7 @@ namespace maolan
         SndfileHandle audioFile;
 
       private:
-        float *rawData;
+        float *frame;
     };
   }
 }
