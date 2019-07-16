@@ -17,9 +17,9 @@ namespace maolan
         void process();
         std::size_t channels() const;
         uint64_t offset();
-        void offset(uint64_t offset);
+        void offset(const uint64_t &offset);
         uint64_t start();
-        void start(uint64_t start);
+        void start(const uint64_t &start);
         Buffer pull(const unsigned &channel);
 
       protected:
