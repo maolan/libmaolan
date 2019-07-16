@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 #include <maolan/io.h>
-#include <maolan/audio/chunk.h>
+#include <maolan/audio/buffer.h>
 
 
 namespace maolan
@@ -17,12 +17,12 @@ namespace maolan
         ~IO();
 
         virtual std::size_t channels() const = 0;
-        virtual Chunk pull(const unsigned &channel);
+        virtual Buffer pull(const unsigned &channel);
         void connect(IO *to);
         void connect(IO *to, std::size_t inCh, std::size_t outCh);
 
       protected:
-        std::vector<Chunk> outputs;
+        std::vector<Buffer> outputs;
     };
   }
 }

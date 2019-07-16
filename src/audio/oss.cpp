@@ -107,7 +107,7 @@ OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
-    device->audioChunkSize = device->fragSize / channels() / sizeof(int);
+    device->audioBufferSize = device->fragSize / channels() / sizeof(int);
     devices.emplace(devices.begin(), device);
   }
 

@@ -6,16 +6,16 @@ namespace maolan
 {
   namespace audio
   {
-    class ChunkData
+    class BufferData
     {
     public:
-    ChunkData(const size_t &size);
-    ~ChunkData();
+    BufferData(const size_t &size);
+    ~BufferData();
 
     float *data;
     };
 
 
-    typedef std::shared_ptr<ChunkData> Chunk;
+    typedef std::shared_ptr<BufferData> Buffer;
   }
 }

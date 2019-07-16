@@ -20,7 +20,7 @@ void OSSIn::process()
   int index;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = Chunk(new ChunkData(device->audioChunkSize));
+    outputs[i] = Buffer(new BufferData(device->audioBufferSize));
   }
   auto sizeLimit = device->fragSize / sizeof(int);
   for (int i = 0; i < sizeLimit; ++i)

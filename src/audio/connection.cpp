@@ -17,7 +17,7 @@ void Connection::target(IO *connectTo, size_t &ch)
 }
 
 
-Chunk Connection::pull() { return to->pull(channel); }
+Buffer Connection::pull() { return to->pull(channel); }
 
 
 IO *Connection::get() { return to; }

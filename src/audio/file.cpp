@@ -7,7 +7,7 @@ using namespace maolan::audio;
 
 File::File(const std::string &path) : IO(0, true, false), audioFile(path)
 {
-  if (Config::audioChunkSize == 0)
+  if (Config::audioBufferSize == 0)
   {
     std::cerr << "Loding order error. Load some hardware IO first!"
               << std::endl;
@@ -15,7 +15,7 @@ File::File(const std::string &path) : IO(0, true, false), audioFile(path)
   }
   _type = "File";
   outputs.resize(audioFile.channels(), nullptr);
-  rawData = new float[Config::audioChunkSize * channels()];
+  rawData = new float[Config::audioBufferSize * channels()];
 }
 
 
@@ -27,8 +27,8 @@ void File::split()
   const auto chs = channels();
   for (size_t channel = 0; channel < channels(); ++channel)
   {
-    outputs[channel] = Chunk(new ChunkData(Config::audioChunkSize));
-    for (size_t i = 0; i < Config::audioChunkSize; ++i)
+    outputs[channel] = Buffer(new BufferData(Config::audioBufferSize));
+    for (size_t i = 0; i < Config::audioBufferSize; ++i)
     {
       outputs[channel]->data[i] = rawData[i * chs + channel];
     }
@@ -38,7 +38,7 @@ void File::split()
 
 void File::fetch()
 {
-  int bytesRead = audioFile.read(rawData, channels() * Config::audioChunkSize);
+  int bytesRead = audioFile.read(rawData, channels() * Config::audioBufferSize);
   split();
 }
 

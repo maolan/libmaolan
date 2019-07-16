@@ -31,14 +31,14 @@ void OSSOut::convertToRaw()
     auto buffer = outputs[channel];
     if (buffer == nullptr)
     {
-      for (auto i = 0; i < device->audioChunkSize; ++i)
+      for (auto i = 0; i < device->audioBufferSize; ++i)
       {
         rawData[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (auto i = 0; i < device->audioChunkSize; ++i)
+      for (auto i = 0; i < device->audioBufferSize; ++i)
       {
         float sample = buffer->data[i];
         if (sample <= -1.0)
