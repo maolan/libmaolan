@@ -43,7 +43,7 @@ void OSSOut::convertToRaw()
         float sample = buffer->data[i];
         if (sample <= -1.0)
         {
-          sample = 1.0;
+          sample = -1.0;
         }
         else if (sample >= 1.0)
         {
