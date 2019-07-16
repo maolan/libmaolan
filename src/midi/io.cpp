@@ -1,16 +1,16 @@
 #include <iostream>
-#include <unistd.h>
-#include <maolan/midi/io.h>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/event.h>
+#include <maolan/midi/io.h>
+#include <unistd.h>
 
 
-MIDIChunk * MIDIIO::get(int fd)
+MIDIChunk *MIDIIO::get(int fd)
 {
   int l;
   unsigned char buf[8];
   MIDIChunk *chunk = new MIDIChunk;
-  if ((l = read(fd, buf, sizeof (buf))) != -1)
+  if ((l = read(fd, buf, sizeof(buf))) != -1)
   {
     chunk->type = buf[0] & MIDIEvent::NOTE_MASK;
     if (chunk->type == MIDIEvent::NOTE_ON)

@@ -1,32 +1,28 @@
+#include <cstdint>
 #include <iostream>
 #include <maolan/audio/file.h>
 #include <maolan/config.h>
-#include <cstdint>
 
 using namespace maolan::audio;
 
-FileInput::FileInput(const std::string &path)
-  : IO(0, true, false)
-  , audioFile(path)
+File::File(const std::string &path) : IO(0, true, false), audioFile(path)
 {
   if (Config::audioChunkSize == 0)
   {
-    std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
-    exit(1); }
-  _name = "FileInput";
+    std::cerr << "Loding order error. Load some hardware IO first!"
+              << std::endl;
+    exit(1);
+  }
+  _type = "File";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
-
 }
 
 
-FileInput::~FileInput()
-{
-  delete []rawData;
-}
+File::~File() { delete[] rawData; }
 
 
-void FileInput::split()
+void File::split()
 {
   const auto chs = channels();
   for (size_t channel = 0; channel < channels(); ++channel)
@@ -40,19 +36,14 @@ void FileInput::split()
 }
 
 
-void FileInput::fetch()
+void File::fetch()
 {
   int bytesRead = audioFile.read(rawData, channels() * Config::audioChunkSize);
   split();
 }
 
 
-size_t FileInput::channels() const
-{
-  return audioFile.channels();
-}
+size_t File::channels() const { return audioFile.channels(); }
 
 
-void FileInput::process()
-{
-}
+void File::process() {}

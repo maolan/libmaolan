@@ -1,10 +1,10 @@
 #include <iostream>
-#include <unistd.h>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/event.h>
+#include <unistd.h>
 
 
-std::ostream & operator<<(std::ostream &os, const MIDIChunk &midi)
+std::ostream &operator<<(std::ostream &os, const MIDIChunk &midi)
 {
   if (midi.type == MIDIEvent::NOTE_ON)
   {

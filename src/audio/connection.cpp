@@ -4,15 +4,10 @@
 using namespace maolan::audio;
 
 
-Connection::Connection()
-{
-}
+Connection::Connection() {}
 
 
-Connection::Connection(IO *connectTo, size_t &ch)
-{
-  target(connectTo, ch);
-}
+Connection::Connection(IO *connectTo, size_t &ch) { target(connectTo, ch); }
 
 
 void Connection::target(IO *connectTo, size_t &ch)
@@ -22,13 +17,7 @@ void Connection::target(IO *connectTo, size_t &ch)
 }
 
 
-Chunk Connection::pull()
-{
-  return to->pull(channel);
-}
+Chunk Connection::pull() { return to->pull(channel); }
 
 
-IO * Connection::get()
-{
-  return to;
-}
+IO *Connection::get() { return to; }

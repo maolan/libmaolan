@@ -5,10 +5,9 @@
 using namespace maolan::audio;
 
 
-Input::Input()
-  : IO(1, true)
+Input::Input() : IO(1, true)
 {
-  _name = "Input";
+  _type = "Input";
   connections.clear();
 }
 
@@ -33,7 +32,8 @@ void Input::fetch()
       channels.push_back(element);
     }
   }
-  if (empty) {
+  if (empty)
+  {
     outputs[0] = nullptr;
   }
   else if (channels.size() == 1)
@@ -48,8 +48,14 @@ void Input::fetch()
       float sum = 0;
       for (auto channel : channels)
       {
-        if (channel == nullptr) {continue;}
-        if (channel->data[i] == 0.0) {continue;}
+        if (channel == nullptr)
+        {
+          continue;
+        }
+        if (channel->data[i] == 0.0)
+        {
+          continue;
+        }
         sum += channel->data[i];
       }
       result->data[i] = sum;
@@ -59,18 +65,10 @@ void Input::fetch()
 }
 
 
-size_t Input::channels() const
-{
-  return outputs.size();
-}
+size_t Input::channels() const { return outputs.size(); }
 
 
-Chunk Input::pull()
-{
-  return outputs[0];
-}
+Chunk Input::pull() { return outputs[0]; }
 
 
-void Input::process()
-{
-}
+void Input::process() {}

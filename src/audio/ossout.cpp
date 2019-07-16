@@ -1,16 +1,15 @@
 #include <cstring>
-#include <sys/soundcard.h>
 #include <fcntl.h>
-#include <unistd.h>
 #include <maolan/audio/ossout.h>
 #include <maolan/constants.h>
+#include <sys/soundcard.h>
+#include <unistd.h>
 
 using namespace maolan::audio;
 
-OSSOut::OSSOut(const std::string &device, const size_t &chs)
-  : OSS(device)
+OSSOut::OSSOut(const std::string &device, const size_t &chs) : OSS(device)
 {
-  _name = "OSSOut";
+  _type = "OSSOut";
   inputs.resize(chs);
 }
 
@@ -42,8 +41,14 @@ void OSSOut::convertToRaw()
       for (auto i = 0; i < device->audioChunkSize; ++i)
       {
         float sample = buffer->data[i];
-        if (sample <= -1.0) {sample = 1.0;}
-        else if (sample >= 1.0) {sample = 1.0;}
+        if (sample <= -1.0)
+        {
+          sample = -1.0;
+        }
+        else if (sample >= 1.0)
+        {
+          sample = 1.0;
+        }
         rawData[i * chs + channel] = sample * maxInt;
       }
     }

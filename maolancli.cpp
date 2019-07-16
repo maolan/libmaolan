@@ -1,15 +1,15 @@
-#include <iostream>
-#include <fstream>
 #include <fcntl.h>
-#include <maolan/audio/ossout.h>
+#include <fstream>
+#include <iostream>
+#include <maolan/audio/clip.h>
 #include <maolan/audio/ossin.h>
+#include <maolan/audio/ossout.h>
 #include <maolan/audio/track.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
+#include <maolan/io.h>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/clip.h>
-#include <maolan/io.h>
-#include <maolan/audio/clip.h>
 #include <pugixml.hpp>
 
 using namespace maolan::audio;
@@ -20,8 +20,8 @@ int main(int argc, char **argv)
    */
   // if (argc < 2)
   // {
-    // std::cerr << "Usage: " << argv[0] << " <midi file>" << std::endl;
-    // return 1;
+  // std::cerr << "Usage: " << argv[0] << " <midi file>" << std::endl;
+  // return 1;
   // }
   // Config::bpms.emplace_back();
   // MIDIClip *clip = new MIDIClip();
@@ -29,7 +29,7 @@ int main(int argc, char **argv)
   // MIDIChunk *chunk;
   // while ((chunk = clip->next()) != nullptr)
   // {
-    // std::cout << *chunk << std::endl;
+  // std::cout << *chunk << std::endl;
   // }
 
 
@@ -43,9 +43,6 @@ int main(int argc, char **argv)
   int res = ratio * sample;
   std::cout << ratio << ' ' << res << std::endl;
   */
-
-
-
 
 
   /* MIDI device input and output
@@ -69,9 +66,6 @@ int main(int argc, char **argv)
     midi.get(fd);
   }
   */
-
-
-
 
 
   /* Audio device and file input and output
@@ -98,20 +92,23 @@ int main(int argc, char **argv)
 
 
   pugi::xml_document doc;
-  pugi::xml_parse_result result = doc.load_file("data/test.xml",pugi::parse_default|pugi::parse_declaration);
-if (!result)
-{
+  pugi::xml_parse_result result = doc.load_file(
+      "data/test.xml", pugi::parse_default | pugi::parse_declaration);
+  if (!result)
+  {
     std::cout << "Parse error: " << result.description()
-        << ", character pos= " << result.offset;
-}
-pugi::xml_node root = doc.document_element(); // treba da je 1 ( Single root node )
-auto file = doc.child("track").child("clips").child("clip").attribute("file").value();
+              << ", character pos= " << result.offset;
+  }
+  pugi::xml_node root =
+      doc.document_element(); // treba da je 1 ( Single root node )
+  auto file =
+      doc.child("track").child("clips").child("clip").attribute("file").value();
 
   OSSOut out("/dev/dsp", 2);
-  Clip clip(150000,file);
+  Clip clip(150000, file);
   out.connect(&clip);
 
-  while(1)
+  while (1)
   {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
