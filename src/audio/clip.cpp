@@ -35,14 +35,11 @@ uint64_t Clip::end() { return _end; }
 
 void Clip::end(const uint64_t &argEnd) { _start = argEnd; }
 
-Buffer Clip::pull(const unsigned &channel) { return file.pull(channel); }
-
-uint64_t Clip::playHeadCheck()
+Buffer Clip::pull(const unsigned &channel)
 {
-  if (playHead() < start())
+  if (_playHead >= _start)
   {
-    return playHead();
+    return file.pull(channel);
   }
-  else
-    return start();
-};
+  return nullptr;
+}

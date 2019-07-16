@@ -24,7 +24,6 @@ public:
   uint64_t end();
   void end(const uint64_t &argEnd);
   Buffer pull(const unsigned &channel);
-  uint64_t playHeadCheck();
 
 protected:
   uint64_t _offset;
