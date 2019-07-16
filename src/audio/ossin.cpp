@@ -7,7 +7,7 @@ using namespace maolan::audio;
 OSSIn::OSSIn(const std::string &device, const size_t &chs)
   : OSS(device)
 {
-  _name = "OSSIn";
+  _type= "OSSIn";
 }
 
 

@@ -10,7 +10,7 @@ using namespace maolan::audio;
 OSSOut::OSSOut(const std::string &device, const size_t &chs)
   : OSS(device)
 {
-  _name = "OSSOut";
+  _type= "OSSOut";
   inputs.resize(chs);
 }
 

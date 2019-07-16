@@ -5,7 +5,7 @@ using namespace maolan::audio;
 Track::Track(const size_t &size)
   : IO(size)
 {
-  _name = "Track";
+  _type= "Track";
 }
 
 

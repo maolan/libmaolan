@@ -8,7 +8,7 @@ IO * last = nullptr;
 bool IO::_stage = true;
 
 
-IO::IO(const bool &front, const bool &reg)
+IO::IO(const std::string &argName, const bool &front, const bool &reg)
   : _next{nullptr}
   , _previous{nullptr}
 {
@@ -36,6 +36,14 @@ IO::IO(const bool &front, const bool &reg)
         ios = this;
       }
     }
+  }
+  if (argName == "")
+  {
+    name("GeneratedName");
+  }
+  else
+  {
+    name(argName);
   }
 }
 
@@ -114,6 +122,17 @@ IO * IO::begin()
   return ios;
 }
 
+std::string IO::type()
+{
+  return _type;
+}
+
+
+void IO::type(const std::string &argType)
+{
+  _type= argType;
+}
+
 std::string IO::name()
 {
   return _name;
@@ -122,5 +141,5 @@ std::string IO::name()
 
 void IO::name(const std::string &argName)
 {
-  _name = argName;
+  _name= argName;
 }

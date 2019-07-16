@@ -5,7 +5,7 @@ using namespace maolan::audio;
 
 
 IO::IO(const size_t &chs, const bool &front, const bool &reg)
-  : maolan::IO(front, reg)
+  : maolan::IO("", front, reg)
 {
   if (chs > 0)
   {

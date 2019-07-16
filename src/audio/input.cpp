@@ -8,7 +8,7 @@ using namespace maolan::audio;
 Input::Input()
   : IO(1, true)
 {
-  _name = "Input";
+  _type= "Input";
   connections.clear();
 }
 

@@ -13,7 +13,7 @@ File::File(const std::string &path)
   {
     std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
     exit(1); }
-  _name = "File";
+  _type= "File";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
 

@@ -11,7 +11,7 @@ Clip::Clip(const uint64_t &offset, const std::string &path)
   , _offset{offset}
   , file(path)
 {
-  _name = "Clip";
+  _type= "Clip";
   connect(&file);
 }
 
