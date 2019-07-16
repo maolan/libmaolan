@@ -1,16 +1,14 @@
-#include <iostream>
 #include <maolan/io.h>
 
 using namespace maolan;
 
-IO * IO::ios = nullptr;
-IO * last = nullptr;
+IO *IO::ios = nullptr;
+IO *last = nullptr;
 bool IO::_stage = true;
 
 
 IO::IO(const std::string &argName, const bool &front, const bool &reg)
-  : _next{nullptr}
-  , _previous{nullptr}
+    : _next{nullptr}, _previous{nullptr}
 {
   if (reg)
   {
@@ -69,28 +67,16 @@ IO::~IO()
 }
 
 
-void IO::next(IO *n)
-{
-  _next = n;
-}
+void IO::next(IO *n) { _next = n; }
 
 
-IO * IO::next()
-{
-  return _next;
-}
+IO *IO::next() { return _next; }
 
 
-void IO::previous(IO *p)
-{
-  _previous = p;
-}
+void IO::previous(IO *p) { _previous = p; }
 
 
-IO * IO::previous()
-{
-  return _previous;
-}
+IO *IO::previous() { return _previous; }
 
 
 void IO::work()
@@ -106,40 +92,19 @@ void IO::work()
 }
 
 
-void IO::stage(const bool &s)
-{
-  _stage = s;
-}
+void IO::stage(const bool &s) { _stage = s; }
 
 
-bool IO::stage()
-{
-  return _stage;
-}
+bool IO::stage() { return _stage; }
 
-IO * IO::begin()
-{
-  return ios;
-}
+IO *IO::begin() { return ios; }
 
-std::string IO::type()
-{
-  return _type;
-}
+std::string IO::type() { return _type; }
 
 
-void IO::type(const std::string &argType)
-{
-  _type= argType;
-}
+void IO::type(const std::string &argType) { _type = argType; }
 
-std::string IO::name()
-{
-  return _name;
-}
+std::string IO::name() { return _name; }
 
 
-void IO::name(const std::string &argName)
-{
-  _name= argName;
-}
+void IO::name(const std::string &argName) { _name = argName; }

@@ -6,26 +6,16 @@
 std::vector<MIDIChunk *>::iterator nextChunk;
 
 
-MIDIClip::MIDIClip()
-  : IO()
-{
-}
+MIDIClip::MIDIClip() : IO() {}
 
 
-MIDIClip::~MIDIClip()
-{
-  data.clear();
-}
+MIDIClip::~MIDIClip() { data.clear(); }
 
 
-void MIDIClip::fetch()
-{
-}
+void MIDIClip::fetch() {}
 
 
-void MIDIClip::process()
-{
-}
+void MIDIClip::process() {}
 
 
 void MIDIClip::load(const std::string &filepath)
@@ -47,7 +37,7 @@ void MIDIClip::load(const std::string &filepath)
 }
 
 
-MIDIChunk * MIDIClip::next()
+MIDIChunk *MIDIClip::next()
 {
   if (data.empty() || nextChunk == data.end())
   {

@@ -1,28 +1,28 @@
-#include <iostream>
 #include <fstream>
-#include <unistd.h>
-#include <maolan/midi/file.h>
+#include <iostream>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/event.h>
+#include <maolan/midi/file.h>
+#include <unistd.h>
 
 
 unsigned int readVarLen(std::ifstream &file)
 {
-    unsigned int value;
-    unsigned char c;
-    file >> c;
-    value = c;
-    if (value & 0x80)
+  unsigned int value;
+  unsigned char c;
+  file >> c;
+  value = c;
+  if (value & 0x80)
+  {
+    value &= 0x7F;
+    do
     {
-       value &= 0x7F;
-       do
-       {
-         value = (value << 7);
-         file >> c;
-         value += c & 0x7F;
-       } while (c & 0x80);
-    }
-    return(value);
+      value = (value << 7);
+      file >> c;
+      value += c & 0x7F;
+    } while (c & 0x80);
+  }
+  return (value);
 }
 
 
@@ -57,19 +57,13 @@ void readNote(std::ifstream &file, MIDIChunk *chunk)
 }
 
 
-MIDIFile::MIDIFile(const std::string &path)
-  : file(path, std::ios::binary)
-{
-}
+MIDIFile::MIDIFile(const std::string &path) : file(path, std::ios::binary) {}
 
 
-MIDIFile::~MIDIFile()
-{
-  file.close();
-}
+MIDIFile::~MIDIFile() { file.close(); }
 
 
-MIDIChunk * MIDIFile::read()
+MIDIChunk *MIDIFile::read()
 {
   MIDIChunk *chunk = new MIDIChunk;
   chunk->channel = 0;
@@ -95,7 +89,7 @@ MIDIChunk * MIDIFile::read()
 void MIDIFile::skipHeaders()
 {
   int size = 4;
-  char rawData[size+1];
+  char rawData[size + 1];
 
   // MThd
   file.read(rawData, size);
@@ -115,7 +109,4 @@ void MIDIFile::skipHeaders()
 }
 
 
-bool MIDIFile::eof()
-{
-  return file.eof();
-}
+bool MIDIFile::eof() { return file.eof(); }

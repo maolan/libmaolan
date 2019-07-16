@@ -1,20 +1,16 @@
-#include <unistd.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/constants.h>
+#include <unistd.h>
 
 using namespace maolan::audio;
 
-OSSIn::OSSIn(const std::string &device, const size_t &chs)
-  : OSS(device)
+OSSIn::OSSIn(const std::string &device, const size_t &chs) : OSS(device)
 {
-  _type= "OSSIn";
+  _type = "OSSIn";
 }
 
 
-void OSSIn::fetch()
-{
-  read(device->fd, rawData, device->fragSize);
-}
+void OSSIn::fetch() { read(device->fd, rawData, device->fragSize); }
 
 
 void OSSIn::process()

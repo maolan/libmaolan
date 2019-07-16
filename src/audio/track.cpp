@@ -2,11 +2,7 @@
 
 using namespace maolan::audio;
 
-Track::Track(const size_t &size)
-  : IO(size)
-{
-  _type= "Track";
-}
+Track::Track(const size_t &size) : IO(size) { _type = "Track"; }
 
 
 void Track::fetch()
@@ -27,10 +23,7 @@ void Track::process()
 }
 
 
-size_t Track::channels() const
-{
-  return outputs.size();
-}
+size_t Track::channels() const { return outputs.size(); }
 
 
 void Track::connect(IO *to)

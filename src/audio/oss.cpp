@@ -1,20 +1,18 @@
-#include <iostream>
 #include <cstring>
-#include <sys/soundcard.h>
 #include <fcntl.h>
-#include <unistd.h>
+#include <iostream>
 #include <maolan/audio/oss.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
+#include <sys/soundcard.h>
+#include <unistd.h>
 
 using namespace maolan::audio;
 
 std::vector<OSSConfig *> OSS::devices;
 
 
-OSS::OSS(const std::string &deviceName)
-  : IO(0, true)
-  , device{nullptr}
+OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
 {
   const int chs = 2;
   outputs.resize(chs);
@@ -41,7 +39,7 @@ OSS::OSS(const std::string &deviceName)
     device->device = deviceName;
     if ((device->fd = open(deviceName.data(), O_RDWR, 0)) == -1)
     {
-      std::cerr << deviceName << ": " ;
+      std::cerr << deviceName << ": ";
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
@@ -119,7 +117,7 @@ OSS::OSS(const std::string &deviceName)
 
 OSS::~OSS()
 {
-  delete []rawData;
+  delete[] rawData;
   --(device->count);
   if (device->count < 1)
   {
@@ -129,7 +127,4 @@ OSS::~OSS()
 }
 
 
-size_t OSS::channels() const
-{
-  return outputs.size();
-}
+size_t OSS::channels() const { return outputs.size(); }

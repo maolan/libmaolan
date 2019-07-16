@@ -5,7 +5,7 @@ using namespace maolan::audio;
 
 
 IO::IO(const size_t &chs, const bool &front, const bool &reg)
-  : maolan::IO("", front, reg)
+    : maolan::IO("", front, reg)
 {
   if (chs > 0)
   {
@@ -14,14 +14,10 @@ IO::IO(const size_t &chs, const bool &front, const bool &reg)
 }
 
 
-IO::~IO()
-{}
+IO::~IO() {}
 
 
-Chunk IO::pull(const unsigned &channel)
-{
-  return outputs[channel];
-}
+Chunk IO::pull(const unsigned &channel) { return outputs[channel]; }
 
 
 void IO::connect(IO *to)
@@ -33,6 +29,4 @@ void IO::connect(IO *to)
 }
 
 
-void IO::connect(IO *to, std::size_t inCh, std::size_t outCh)
-{
-}
+void IO::connect(IO *to, std::size_t inCh, std::size_t outCh) {}
