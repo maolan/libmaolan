@@ -24,7 +24,7 @@ namespace maolan
 
       protected:
         std::vector<Input> inputs;
-        std::vector<FileInput> files;
+        std::vector<File> files;
     };
   }
 }

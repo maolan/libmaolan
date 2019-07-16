@@ -44,5 +44,5 @@ void Track::connect(IO *to)
 
 void Track::addFile(const std::string &filePath)
 {
-  files.push_back(FileInput(filePath));
+  files.push_back(File(filePath));
 }

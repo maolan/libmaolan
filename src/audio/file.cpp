@@ -5,7 +5,7 @@
 
 using namespace maolan::audio;
 
-FileInput::FileInput(const std::string &path)
+File::File(const std::string &path)
   : IO(0, true, false)
   , audioFile(path)
 {
@@ -13,20 +13,20 @@ FileInput::FileInput(const std::string &path)
   {
     std::cerr << "Loding order error. Load some hardware IO first!" << std::endl;
     exit(1); }
-  _name = "FileInput";
+  _name = "File";
   outputs.resize(audioFile.channels(), nullptr);
   rawData = new float[Config::audioChunkSize * channels()];
 
 }
 
 
-FileInput::~FileInput()
+File::~File()
 {
   delete []rawData;
 }
 
 
-void FileInput::split()
+void File::split()
 {
   const auto chs = channels();
   for (size_t channel = 0; channel < channels(); ++channel)
@@ -40,19 +40,19 @@ void FileInput::split()
 }
 
 
-void FileInput::fetch()
+void File::fetch()
 {
   int bytesRead = audioFile.read(rawData, channels() * Config::audioChunkSize);
   split();
 }
 
 
-size_t FileInput::channels() const
+size_t File::channels() const
 {
   return audioFile.channels();
 }
 
 
-void FileInput::process()
+void File::process()
 {
 }
