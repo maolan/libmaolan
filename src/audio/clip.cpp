@@ -6,7 +6,7 @@ using namespace maolan::audio;
 
 
 Clip::Clip(const uint64_t &start, const uint64_t &offset,
-           const std::string &path)
+t            const std::string &path)
     : IO(0, true), _offset{offset}, file(path)
 {
   _type = "Clip";
@@ -29,6 +29,6 @@ void Clip::offset(uint64_t offset) { _offset = offset; }
 
 uint64_t Clip::start() { return _start; }
 
-void Clip::start(uint64_t start) { _start= start; }
+void Clip::start(uint64_t start) { _start = start; }
 
 Buffer Clip::pull(const unsigned &channel) { return file.pull(channel); }
