@@ -105,7 +105,7 @@ int main(int argc, char **argv)
       doc.child("track").child("clips").child("clip").attribute("file").value();
 
   OSSOut out("/dev/dsp", 2);
-  Clip clip(150000, file);
+  Clip clip(0,150000,file);
   out.connect(&clip);
 
   while (1)
