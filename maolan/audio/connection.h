@@ -5,21 +5,21 @@
 
 namespace maolan
 {
-  namespace audio
-  {
-    class Connection
-    {
-      public:
-        Connection();
-        Connection(IO *connectTo, std::size_t &ch);
+namespace audio
+{
+class Connection
+{
+public:
+  Connection();
+  Connection(IO *connectTo, std::size_t &ch);
 
-        IO * get();
-        void target(IO *connectTo, std::size_t &ch);
-        Buffer pull();
+  IO *get();
+  void target(IO *connectTo, std::size_t &ch);
+  Buffer pull();
 
-      protected:
-        IO *to;
-        std::size_t channel;
-    };
-  }
-}
+protected:
+  IO *to;
+  std::size_t channel;
+};
+} // namespace audio
+} // namespace maolan
