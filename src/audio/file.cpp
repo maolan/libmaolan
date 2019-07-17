@@ -5,8 +5,10 @@
 
 using namespace maolan::audio;
 
-File::File(const std::string &path) : IO(0, true, false), audioFile(path)
+File::File(const std::string &path, const uint64_t &offset)
+    : IO(0, true, false), audioFile(path)
 {
+  audioFile.seek(offset, SEEK_SET);
   if (Config::audioBufferSize == 0)
   {
     std::cerr << "Loding order error. Load some hardware IO first!"
@@ -47,3 +49,8 @@ size_t File::channels() const { return audioFile.channels(); }
 
 
 void File::process() {}
+
+
+uint64_t File::offset() { return _offset; };
+
+void File::offset(const uint64_t &argOffset) { _offset = argOffset; };
