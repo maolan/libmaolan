@@ -7,7 +7,7 @@ using namespace maolan::audio;
 
 Clip::Clip(const uint64_t &start, const uint64_t &offset,
            const std::string &path)
-    : IO(0, true), _offset{offset}, file(path)
+    : IO(0, true), _offset{offset}, _start{start}, file(path, offset)
 {
   _type = "Clip";
   connect(&file);
@@ -15,8 +15,11 @@ Clip::Clip(const uint64_t &start, const uint64_t &offset,
 
 void Clip::fetch()
 {
-  file.fetch();
-  file.process();
+  if (_playHead >= _start)
+  {
+    file.fetch();
+    file.process();
+  }
 }
 
 void Clip::process() {}

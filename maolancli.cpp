@@ -118,6 +118,8 @@ int main(int argc, char **argv)
     {
       item->process();
     }
+    auto playhead = maolan::IO::playHead();
+    maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }
   return 0;
 }
