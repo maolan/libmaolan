@@ -113,3 +113,5 @@ void IO::name(const std::string &argName) { _name = argName; }
 uint64_t IO::playHead() { return _playHead; }
 
 void IO::playHead(const uint64_t &argPlayHead) { _playHead = argPlayHead; }
+
+void IO::setup() {}

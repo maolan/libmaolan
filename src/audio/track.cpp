@@ -1,41 +1,82 @@
+#include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
+#include <pugixml.hpp>
 
 using namespace maolan::audio;
 
-Track::Track(const size_t &size) : IO(size) { _type = "Track"; }
+Track::Track() : IO(0, true), _current{nullptr}, first{nullptr}, last{nullptr}
+{
 
+  addClip(0, 650000, 0, "data/session.wav");
+  addClip(600000, 12000000, 0, "data/session.wav");
+  _type = "Track";
+}
 
 void Track::fetch()
 {
-  for (auto &file : files)
+  auto clip = _current;
+  if (clip != nullptr)
   {
-    file.fetch();
+    clip->fetch();
+    clip->process();
   }
 }
 
+void Track::process() {}
 
-void Track::process()
+void Track::addClip(const uint64_t &start, const uint64_t &end,
+                    const uint64_t &offset, const std::string &path)
 {
-  for (size_t i = 0; i < channels(); ++i)
-  {
-    outputs[i] = files[0].pull(i);
-  }
+  new Clip(start, end, offset, path, this);
 }
 
-
-size_t Track::channels() const { return outputs.size(); }
-
-
-void Track::connect(IO *to)
+std::size_t Track::channels() const
 {
-  for (size_t channel = 0; channel < channels(); ++channel)
+  if (_current == nullptr)
   {
-    inputs[channel].add(to, channel);
+    return 0;
   }
+  return _current->channels();
 }
 
-
-void Track::addFile(const std::string &filePath)
+Buffer Track::pull(const unsigned &channel)
 {
-  files.push_back(File(filePath));
+  if (_current == nullptr)
+  {
+    return nullptr;
+  }
+  if (_playHead >= _current->start())
+  {
+    return _current->pull(channel);
+  }
+  return nullptr;
+}
+
+void Track::setup()
+{
+  if (first == nullptr)
+  {
+    _current = nullptr;
+  }
+  else if (_playHead < first->start())
+  {
+    _current = nullptr;
+  }
+  else if (_playHead > last->end())
+  {
+    _current = nullptr;
+  }
+  else
+  {
+    Clip *prevclip = nullptr;
+    for (auto clip = first; clip != nullptr; clip = clip->next())
+    {
+      if (clip->start() <= _playHead && clip->end() > _playHead)
+      {
+        _current = clip;
+        break;
+      }
+      prevclip = clip;
+    }
+  }
 }
