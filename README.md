@@ -11,7 +11,7 @@ FreeBSD build
 ```
 git clone https://github.com/maolan/devops
 cd devops
-echo echo 'DEVEL_MODE=YES' > vars.mk
+echo 'DEVEL_MODE=YES' > vars.mk
 make devel
 cd /usr/src/libmaolan
 autoconf
