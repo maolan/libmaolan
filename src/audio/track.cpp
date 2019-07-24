@@ -7,6 +7,7 @@ using namespace maolan::audio;
 Track::Track() : IO(0, true), _current{nullptr}, first{nullptr}, last{nullptr}
 {
 
+  addClip(0,30000,0,"data/session.wav");
   _type = "Track";
 }
 
@@ -25,7 +26,8 @@ void Track::process() {}
 void Track::addClip(const uint64_t &start, const uint64_t &end,
                     const uint64_t &offset, const std::string &path)
 {
-  new Clip(start, end, offset, path, this);
+    Clip::create(start, end, offset, path, this);
+
 }
 
 std::size_t Track::channels() const
@@ -67,7 +69,7 @@ void Track::setup()
   else
   {
     Clip *prevclip = nullptr;
-    for (auto clip = first; clip != nullptr; clip = clip->next())
+    for (auto clip = last; clip != nullptr; clip = clip->previous())
     {
       if (clip->start() <= _playHead && clip->end() > _playHead)
       {

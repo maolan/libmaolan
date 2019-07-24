@@ -1,7 +1,6 @@
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <sndfile.hh>
-#include <iostream>
 
 using namespace maolan::audio;
 
@@ -12,20 +11,6 @@ Clip::Clip(const uint64_t &start, const uint64_t &end, const uint64_t &offset,
       _previous{nullptr}, _next{nullptr}, file(path, offset)
 {
   _type = "Clip";
-  _parrent = parrent;
-  if (_parrent != nullptr)
-  {
-    if (_parrent->last != nullptr)
-    {
-      _parrent->last->_next = this;
-    }
-    this->_previous = _parrent->last;
-    _parrent->last = this;
-    if (_parrent->first == nullptr)
-    {
-      _parrent->first = this;
-    }
-  }
 }
 
 Clip::~Clip()
@@ -94,4 +79,48 @@ Buffer Clip::pull(const unsigned &channel)
     return file.pull(channel);
   }
   return nullptr;
+}
+
+bool Clip::create(const uint64_t &start, const uint64_t &end,
+                  const uint64_t &offset, const std::string &path,
+                  Track *parrent)
+{
+  if (start > end or offset > (end - start))
+  {
+    return false;
+  }
+  Clip *clip = new Clip(start, end, offset, path);
+  if (clip->check())
+  {
+    clip->parrent(parrent);
+    return true;
+  }
+  return false;
+}
+
+bool Clip::check()
+{
+  if (file.audioFile().error() != 0)
+  {
+    return false;
+  }
+  return true;
+}
+
+void Clip::parrent(Track *p)
+{
+  _parrent = p;
+  if (_parrent != nullptr)
+  {
+    if (_parrent->last != nullptr)
+    {
+      _parrent->last->_next = this;
+    }
+    _previous = _parrent->last;
+    _parrent->last = this;
+    if (_parrent->first == nullptr)
+    {
+      _parrent->first = this;
+    }
+  }
 }

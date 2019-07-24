@@ -23,8 +23,10 @@ public:
   void offset(const uint64_t &argOffset);
   std::size_t channels() const;
 
+  SndfileHandle audioFile();
+
 protected:
-  SndfileHandle audioFile;
+  SndfileHandle _audioFile;
   uint64_t _offset;
 
 private:
