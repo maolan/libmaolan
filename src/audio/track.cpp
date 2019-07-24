@@ -7,8 +7,6 @@ using namespace maolan::audio;
 Track::Track() : IO(0, true), _current{nullptr}, first{nullptr}, last{nullptr}
 {
 
-  addClip(0, 650000, 0, "data/session.wav");
-  addClip(600000, 12000000, 0, "data/session.wav");
   _type = "Track";
 }
 
