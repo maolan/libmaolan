@@ -33,6 +33,7 @@ public:
   void name(const std::string &);
   std::string name();
 
+  virtual void setup();
   static void playHead(const uint64_t &argPlayHead);
   static uint64_t playHead();
 

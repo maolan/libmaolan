@@ -91,25 +91,16 @@ int main(int argc, char **argv)
   */
 
 
-  pugi::xml_document doc;
-  pugi::xml_parse_result result = doc.load_file(
-      "data/test.xml", pugi::parse_default | pugi::parse_declaration);
-  if (!result)
-  {
-    std::cout << "Parse error: " << result.description()
-              << ", character pos= " << result.offset;
-  }
-  pugi::xml_node root =
-      doc.document_element(); // treba da je 1 ( Single root node )
-  auto file =
-      doc.child("track").child("clips").child("clip").attribute("file").value();
-
   OSSOut out("/dev/dsp", 2);
-  Clip clip(0, 150000, file);
-  out.connect(&clip);
+  Track track;
+  out.connect(&track);
 
   while (1)
   {
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->setup();
+    }
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->fetch();

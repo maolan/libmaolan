@@ -1,30 +1,33 @@
 /* vim: set syntax=cpp: */
 #pragma once
-#include <maolan/audio/file.h>
-#include <maolan/audio/input.h>
 #include <maolan/audio/io.h>
-#include <string>
-
 
 namespace maolan
 {
 namespace audio
 {
+class Clip;
 class Track : public IO
 {
 public:
-  Track(const std::size_t &size);
-  ~Track();
+  Track();
 
-  void connect(IO *to);
   void fetch();
-  std::size_t channels() const;
   void process();
-  void addFile(const std::string &filePath);
+  void addClip(const uint64_t &start, const uint64_t &end,
+               const uint64_t &offset, const std::string &path);
+  std::size_t channels() const;
+  Buffer pull(const unsigned &channel);
+
+  void setup();
+
+  friend class Clip;
 
 protected:
-  std::vector<Input> inputs;
-  std::vector<File> files;
+  bool initialized = false;
+  Clip *first;
+  Clip *_current;
+  Clip *last;
 };
 } // namespace audio
 } // namespace maolan

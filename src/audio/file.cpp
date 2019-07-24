@@ -6,9 +6,9 @@
 using namespace maolan::audio;
 
 File::File(const std::string &path, const uint64_t &offset)
-    : IO(0, true, false), audioFile(path)
+    : IO(0, true, false), _audioFile(path)
 {
-  audioFile.seek(offset, SEEK_SET);
+  _audioFile.seek(offset, SEEK_SET);
   if (Config::audioBufferSize == 0)
   {
     std::cerr << "Loding order error. Load some hardware IO first!"
@@ -16,7 +16,7 @@ File::File(const std::string &path, const uint64_t &offset)
     exit(1);
   }
   _type = "File";
-  outputs.resize(audioFile.channels(), nullptr);
+  outputs.resize(_audioFile.channels(), nullptr);
   frame = new float[Config::audioBufferSize * channels()];
 }
 
@@ -40,12 +40,12 @@ void File::split()
 
 void File::fetch()
 {
-  int bytesRead = audioFile.read(frame, channels() * Config::audioBufferSize);
+  int bytesRead = _audioFile.read(frame, channels() * Config::audioBufferSize);
   split();
 }
 
 
-size_t File::channels() const { return audioFile.channels(); }
+size_t File::channels() const { return _audioFile.channels(); }
 
 
 void File::process() {}
@@ -54,3 +54,5 @@ void File::process() {}
 uint64_t File::offset() { return _offset; };
 
 void File::offset(const uint64_t &argOffset) { _offset = argOffset; };
+
+SndfileHandle File::audioFile(){ return _audioFile; }
