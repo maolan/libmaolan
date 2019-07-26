@@ -8,6 +8,7 @@
 #include <maolan/config.h>
 #include <maolan/constants.h>
 #include <maolan/io.h>
+#include <maolan/utils.h>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/clip.h>
 #include <pugixml.hpp>
@@ -92,8 +93,11 @@ int main(int argc, char **argv)
 
 
   OSSOut out("/dev/dsp", 2);
-  Track track;
-  out.connect(&track);
+  // Track track("ime");
+  // out.connect(&track);
+  auto a = maolan::loadXml();
+  maolan::IO::loadFromNode(&a);
+
 
   while (1)
   {

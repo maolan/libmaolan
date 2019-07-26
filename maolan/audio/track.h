@@ -10,7 +10,7 @@ class Clip;
 class Track : public IO
 {
 public:
-  Track();
+  Track(const std::string &name);
 
   void fetch();
   void process();

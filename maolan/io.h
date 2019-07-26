@@ -1,5 +1,6 @@
 /* vim: set syntax=cpp: */
 #pragma once
+#include <pugixml.hpp>
 #include <string>
 #include <vector>
 
@@ -17,6 +18,8 @@ public:
 
   virtual void fetch() = 0;
   virtual void process() = 0;
+  virtual void parrent(IO *p);
+
   void work();
 
   void next(IO *);
@@ -36,6 +39,8 @@ public:
   virtual void setup();
   static void playHead(const uint64_t &argPlayHead);
   static uint64_t playHead();
+
+  static IO *loadFromNode(pugi::xml_node *n);
 
 protected:
   static IO *ios;

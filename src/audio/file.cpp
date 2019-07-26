@@ -55,4 +55,4 @@ uint64_t File::offset() { return _offset; };
 
 void File::offset(const uint64_t &argOffset) { _offset = argOffset; };
 
-SndfileHandle File::audioFile(){ return _audioFile; }
+SndfileHandle File::audioFile() { return _audioFile; }

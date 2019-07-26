@@ -1,4 +1,5 @@
 #include <maolan/io.h>
+#include <maolan/utils.h>
 
 using namespace maolan;
 
@@ -115,3 +116,15 @@ uint64_t IO::playHead() { return _playHead; }
 void IO::playHead(const uint64_t &argPlayHead) { _playHead = argPlayHead; }
 
 void IO::setup() {}
+
+IO *IO::loadFromNode(pugi::xml_node *n)
+{
+  auto io = node2IO(n);
+  for (auto node = n->first_child(); node != nullptr;
+       node = node.next_sibling())
+  {
+    io->loadFromNode(&node);
+  }
+  return io;
+}
+void IO::parrent(IO *p){};
