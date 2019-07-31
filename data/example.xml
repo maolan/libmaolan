@@ -13,6 +13,6 @@
 		</clips>
 	</track>
     <connections>
-        <connection name="first_connection" to="prva_traka" channels="2" />
+        <connection from="OSSOut" to="prva_traka" fromCh="2" toCh="2"/>
     </connections>
 </tracks>
