@@ -10,7 +10,6 @@ Track::Track(const std::string &name)
 {
   _type = "Track";
   _name = name;
-  addClip(0, 30000, 0, "data/session.wav");
 }
 
 void Track::fetch()

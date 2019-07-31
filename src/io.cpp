@@ -103,7 +103,6 @@ IO *IO::begin() { return ios; }
 
 std::string IO::type() { return _type; }
 
-
 void IO::type(const std::string &argType) { _type = argType; }
 
 std::string IO::name() { return _name; }
@@ -127,4 +126,4 @@ IO *IO::loadFromNode(pugi::xml_node *n)
   }
   return io;
 }
-void IO::parrent(IO *p){};
+void IO::parrent(IO *p){}

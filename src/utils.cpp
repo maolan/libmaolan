@@ -12,13 +12,14 @@ namespace maolan
 {
 IO *node2IO(pugi::xml_node *n)
 {
-  IO *io = nullptr;
+  audio::IO *io = nullptr;
 
   std::string name = n->name();
   if (name == "track")
   {
     std::cout << "nova traka" << std::endl;
     io = new audio::Track(n->attribute("name").value());
+    return io;
   }
   else if (name == "clip")
   {
@@ -26,35 +27,36 @@ IO *node2IO(pugi::xml_node *n)
     io = new audio::Clip(
         n->attribute("start").as_uint(), n->attribute("end").as_uint(),
         n->attribute("offset").as_uint(), n->attribute("path").value());
-    for (auto thing = IO::begin(); thing != nullptr; thing = thing->next())
+    for (auto parent = IO::begin(); parent != nullptr; parent = parent->next())
     {
-
-      if (thing->name() == n->parent().parent().attribute("name").value())
+      if (parent->name() == n->parent().parent().attribute("name").value())
       {
-        io->parrent(thing);
+        io->parrent(parent);
         break;
       }
     }
+    return io;
   }
   else if (name == "input")
   {
     std::cout << "novi input" << std::endl;
     io = new audio::OSSIn(n->attribute("device").value(),
                           n->attribute("channels").as_int());
+    return io;
   }
   else if (name == "output")
   {
     std::cout << "novi output" << std::endl;
     io = new audio::OSSOut(n->attribute("device").value(),
                            n->attribute("channels").as_int());
+    return io;
   }
   else if (name == "connection")
   {
     std::cout << "novi connection" << std::endl;
-    // io = new audio::(n->attribute("device").value(),
-    // n->attribute("channels").as_int());
+    return io;
   }
-  return io;
+  return nullptr;
 }
 
 pugi::xml_node loadXml(const char *path)

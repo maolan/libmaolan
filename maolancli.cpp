@@ -14,6 +14,7 @@
 #include <pugixml.hpp>
 
 using namespace maolan::audio;
+
 int main(int argc, char **argv)
 {
   /* MIDI file input
@@ -92,12 +93,13 @@ int main(int argc, char **argv)
   */
 
 
-  OSSOut out("/dev/dsp", 2);
-  // Track track("ime");
+  // OSSOut out("/dev/dsp", 2);
+  // Track track("name");
+  // Clip clip(0,30000,0,"data/session.wav");
+  // clip.parrent(&track);
   // out.connect(&track);
   auto a = maolan::loadXml();
   maolan::IO::loadFromNode(&a);
-
 
   while (1)
   {

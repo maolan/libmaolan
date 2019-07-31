@@ -1,18 +1,18 @@
 <?xml?>
 <tracks>
+    <outputs>
+        <output device="/dev/dsp" channels="2" />
+    </outputs>
+    <inputs>
+        <input device="/dev/dsp" channels="2" />
+    </inputs>
 	<track name="prva_traka">
 		<clips>
 			<clip name="first_clip" file="data/session.wav" start="0" end="630000" offset="0" />
 			<clip name="second_clip" file="data/session.wav" start="630000" end="1260000" offset="0" />
 		</clips>
-		<connections>
-			<connection name="first_connection" />
-		</connections>
-		<inputs>
-			<input device="/dev/dsp" channels="2" />
-		</inputs>
-		<outputs>
-			<output device="/dev/dsp" channels="2" />
-		</outputs>
 	</track>
+    <connections>
+        <connection name="first_connection" to="prva_traka" channels="2" />
+    </connections>
 </tracks>
