@@ -35,7 +35,7 @@ public:
   Clip *next();
   void previous(Clip *n);
   Clip *previous();
-  void parrent(maolan::audio::IO *p);
+  void parrent(maolan::IO *p);
 
 protected:
   uint64_t _offset;

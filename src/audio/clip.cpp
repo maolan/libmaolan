@@ -108,7 +108,7 @@ bool Clip::check()
   return true;
 }
 
-void Clip::parrent(maolan::audio::IO *p)
+void Clip::parrent(maolan::IO *p)
 {
   _parrent = (Track *)p;
   if (_parrent != nullptr)

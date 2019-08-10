@@ -1,4 +1,5 @@
 #include <maolan/io.h>
+#include <maolan/audio/io.h>
 #include <pugixml.hpp>
 
 namespace maolan

@@ -3,9 +3,6 @@
     <outputs>
         <output device="/dev/dsp" channels="2" />
     </outputs>
-    <inputs>
-        <input device="/dev/dsp" channels="2" />
-    </inputs>
 	<track name="prva_traka">
 		<clips>
 			<clip name="first_clip" file="data/session.wav" start="0" end="630000" offset="0" />

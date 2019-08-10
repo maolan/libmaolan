@@ -2,6 +2,7 @@
 #include <pugixml.hpp>
 
 #include <maolan/audio/clip.h>
+#include <maolan/io.h>
 #include <maolan/audio/connection.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/audio/ossout.h>
@@ -17,13 +18,11 @@ IO *node2IO(pugi::xml_node *n)
   std::string name = n->name();
   if (name == "track")
   {
-    std::cout << "nova traka" << std::endl;
     io = new audio::Track(n->attribute("name").value());
     return io;
   }
   else if (name == "clip")
   {
-    std::cout << "novi clip" << std::endl;
     io = new audio::Clip(
         n->attribute("start").as_uint(), n->attribute("end").as_uint(),
         n->attribute("offset").as_uint(), n->attribute("path").value());
@@ -39,24 +38,34 @@ IO *node2IO(pugi::xml_node *n)
   }
   else if (name == "input")
   {
-    std::cout << "novi input" << std::endl;
     io = new audio::OSSIn(n->attribute("device").value(),
                           n->attribute("channels").as_int());
     return io;
   }
   else if (name == "output")
   {
-    std::cout << "novi output" << std::endl;
     io = new audio::OSSOut(n->attribute("device").value(),
                            n->attribute("channels").as_int());
     return io;
   }
   else if (name == "connection")
   {
-    std::cout << "novi connection" << std::endl;
-    return io;
+    maolan::audio::OSSOut *from = nullptr;
+    maolan::audio::Track *to = nullptr;
+    for (auto item = IO::begin(); item != nullptr; item = item->next())
+    {
+      if (item->type() == n->attribute("from").value())
+      {
+        from = (maolan::audio::OSSOut *) item;
+      }
+      if (item->name() == n->attribute("to").value())
+      {
+        to = dynamic_cast<maolan::audio::Track *>(item);
+      }
+    }
+    from->connect(to);
   }
-  return nullptr;
+  return io;
 }
 
 pugi::xml_node loadXml(const char *path)
