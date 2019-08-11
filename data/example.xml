@@ -1,16 +1,15 @@
 <?xml?>
-<track name="ime_trake">
-	<clips>
-		<clip name="first_clip" file="data/session.wav" start="0" end="630000" offset="0" />
-		<clip name="second_clip" file="data/session.wav" start="630000" end="1260000" offset="0" />
-	</clips>
-	<connections>
-		<connection name="first_connection" />
-	</connections>
-	<inputs>
-		<input type="input_type" />
-	</inputs>
-	<outputs>
-		<output type="output_type" />
-	</outputs>
-</track>
+<tracks>
+    <outputs>
+        <output device="/dev/dsp" channels="2" />
+    </outputs>
+	<track name="prva_traka">
+		<clips>
+			<clip name="first_clip" file="data/session.wav" start="0" end="630000" offset="0" />
+			<clip name="second_clip" file="data/session.wav" start="630000" end="1260000" offset="0" />
+		</clips>
+	</track>
+    <connections>
+        <connection from="OSSOut" to="prva_traka" fromCh="2" toCh="2"/>
+    </connections>
+</tracks>

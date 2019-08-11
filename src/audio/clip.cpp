@@ -2,6 +2,7 @@
 #include <maolan/audio/track.h>
 #include <sndfile.hh>
 
+
 using namespace maolan::audio;
 
 
@@ -107,9 +108,9 @@ bool Clip::check()
   return true;
 }
 
-void Clip::parrent(Track *p)
+void Clip::parrent(maolan::IO *p)
 {
-  _parrent = p;
+  _parrent = (Track *)p;
   if (_parrent != nullptr)
   {
     if (_parrent->last != nullptr)

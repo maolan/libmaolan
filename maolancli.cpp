@@ -8,11 +8,15 @@
 #include <maolan/config.h>
 #include <maolan/constants.h>
 #include <maolan/io.h>
+#include <maolan/audio/io.h>
+#include <maolan/utils.h>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/clip.h>
 #include <pugixml.hpp>
 
 using namespace maolan::audio;
+
+
 int main(int argc, char **argv)
 {
   /* MIDI file input
@@ -92,8 +96,12 @@ int main(int argc, char **argv)
 
 
   OSSOut out("/dev/dsp", 2);
-  Track track;
+  Track track("name");
+  Clip clip(0,30000,0,"data/session.wav");
+  clip.parrent(&track);
   out.connect(&track);
+  // auto a = maolan::loadXml();
+  // maolan::IO::loadFromNode(&a);
 
   while (1)
   {
