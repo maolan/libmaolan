@@ -30,7 +30,7 @@ IO *node2IO(pugi::xml_node *n)
     {
       if (parent->name() == n->parent().parent().attribute("name").value())
       {
-        io->parrent(parent);
+        io->parent(parent);
         break;
       }
     }

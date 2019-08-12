@@ -7,7 +7,7 @@ using namespace maolan::audio;
 
 
 Clip::Clip(const uint64_t &start, const uint64_t &end, const uint64_t &offset,
-           const std::string &path, Track *parrent)
+           const std::string &path, Track *parent)
     : IO(0, true, false), _offset{offset}, _start{start}, _end{end},
       _previous{nullptr}, _next{nullptr}, file(path, offset)
 {
@@ -16,7 +16,7 @@ Clip::Clip(const uint64_t &start, const uint64_t &end, const uint64_t &offset,
 
 Clip::~Clip()
 {
-  if (_parrent != nullptr)
+  if (_parent != nullptr)
   {
     if (this->_previous != nullptr)
     {
@@ -24,7 +24,7 @@ Clip::~Clip()
     }
     else
     {
-      _parrent->first = this->_next;
+      _parent->first = this->_next;
     }
     if (this->_next != nullptr)
     {
@@ -32,7 +32,7 @@ Clip::~Clip()
     }
     else
     {
-      _parrent->last = this->_previous;
+      _parent->last = this->_previous;
     }
   }
 }
@@ -84,7 +84,7 @@ Buffer Clip::pull(const unsigned &channel)
 
 bool Clip::create(const uint64_t &start, const uint64_t &end,
                   const uint64_t &offset, const std::string &path,
-                  Track *parrent)
+                  Track *parent)
 {
   if (start > end or offset > (end - start))
   {
@@ -93,7 +93,7 @@ bool Clip::create(const uint64_t &start, const uint64_t &end,
   Clip *clip = new Clip(start, end, offset, path);
   if (clip->check())
   {
-    clip->parrent(parrent);
+    clip->parent(parent);
     return true;
   }
   return false;
@@ -108,20 +108,20 @@ bool Clip::check()
   return true;
 }
 
-void Clip::parrent(maolan::IO *p)
+void Clip::parent(maolan::IO *p)
 {
-  _parrent = (Track *)p;
-  if (_parrent != nullptr)
+  _parent = (Track *)p;
+  if (_parent != nullptr)
   {
-    if (_parrent->last != nullptr)
+    if (_parent->last != nullptr)
     {
-      _parrent->last->_next = this;
+      _parent->last->_next = this;
     }
-    _previous = _parrent->last;
-    _parrent->last = this;
-    if (_parrent->first == nullptr)
+    _previous = _parent->last;
+    _parent->last = this;
+    if (_parent->first == nullptr)
     {
-      _parrent->first = this;
+      _parent->first = this;
     }
   }
 }
