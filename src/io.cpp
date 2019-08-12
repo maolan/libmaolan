@@ -128,4 +128,4 @@ IO *IO::loadFromNode(pugi::xml_node *n)
   return io;
 }
 
-void IO::parrent(IO *p){}
+void IO::parent(IO *p){}

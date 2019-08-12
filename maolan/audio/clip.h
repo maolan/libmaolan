@@ -13,7 +13,7 @@ class Clip : public IO
 public:
   Clip(const uint64_t &start = 0, const uint64_t &end = 0,
        const uint64_t &offset = 0, const std::string &path = "",
-       Track *parrent = nullptr);
+       Track *parent = nullptr);
   ~Clip();
 
   void fetch();
@@ -28,14 +28,14 @@ public:
   Buffer pull(const unsigned &channel);
   static bool create(const uint64_t &start = 0, const uint64_t &end = 0,
        const uint64_t &offset = 0, const std::string &path = "",
-       Track *parrent = nullptr);
+       Track *parent = nullptr);
   bool check();
 
   void next(Clip *n);
   Clip *next();
   void previous(Clip *n);
   Clip *previous();
-  void parrent(maolan::IO *p);
+  void parent(maolan::IO *p);
 
 protected:
   uint64_t _offset;
@@ -43,7 +43,7 @@ protected:
   uint64_t _end;
   bool initialized = false;
   File file;
-  Track *_parrent;
+  Track *_parent;
   Clip *_next;
   Clip *_previous;
 };
