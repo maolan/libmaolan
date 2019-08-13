@@ -2,16 +2,16 @@
 #include <pugixml.hpp>
 
 #include <maolan/audio/clip.h>
-#include <maolan/io.h>
 #include <maolan/audio/connection.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/audio/ossout.h>
 #include <maolan/audio/track.h>
+#include <maolan/io.h>
 #include <maolan/utils.h>
 
 namespace maolan
 {
-IO *node2IO(pugi::xml_node *n)
+IO *xmlElement2IO(pugi::xml_node *n)
 {
   audio::IO *io = nullptr;
 
@@ -56,7 +56,7 @@ IO *node2IO(pugi::xml_node *n)
     {
       if (item->type() == n->attribute("from").value())
       {
-        from = (maolan::audio::OSSOut *) item;
+        from = (maolan::audio::OSSOut *)item;
       }
       if (item->name() == n->attribute("to").value())
       {

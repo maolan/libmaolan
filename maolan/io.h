@@ -40,7 +40,7 @@ public:
   static void playHead(const uint64_t &argPlayHead);
   static uint64_t playHead();
 
-  static IO *loadFromNode(pugi::xml_node *n);
+  static IO *loadFromXml(pugi::xml_node *n);
 
 protected:
   static IO *ios;
