@@ -72,39 +72,41 @@ int main(int argc, char **argv)
   */
 
 
-  /* Audio device and file input and output
-   *
-  OSSIn in("/dev/dsp", 2);
-  OSSOut out("/dev/dsp", 2);
-  FileInput infile(argv[1]);
-  out.connect(&in);
-  out.connect(&infile);
-  std::cout << "Playing ..." << std::endl;
-  while (true)
-  {
-    for (auto &io : IO::ios)
-    {
-      io->fetch();
-    }
-    for (auto &io : IO::ios)
-    {
-      io->process();
-    }
-  }
-  std::cout << std::endl;
-  */
+  // Audio device and file input and output
+
+  // OSSIn in("/dev/dsp", 2);
+  // OSSOut out("/dev/dsp", 2);
+  // Clip infile(0,30000,0,"data/session.wav");
+  // out.connect(&in);
+  // out.connect(&infile);
+  // std::cout << "Playing ..." << std::endl;
+  // while (1)
+  // {
+    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    // {
+      // item->setup();
+    // }
+    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    // {
+      // item->fetch();
+    // }
+    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    // {
+      // item->process();
+    // }
+  // }
+  // std::cout << std::endl;
 
 
   OSSOut out("/dev/dsp", 2);
   Track track("name");
   Clip clip(0,30000,0,"data/session.wav");
-  clip.parrent(&track);
+  clip.parent(&track);
   out.connect(&track);
-  // auto a = maolan::loadXml();
-  // maolan::IO::loadFromNode(&a);
+  // // auto a = maolan::loadXml();
+  // // maolan::IO::loadFromNode(&a);
 
-  while (1)
-  {
+  while (1) {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->setup();

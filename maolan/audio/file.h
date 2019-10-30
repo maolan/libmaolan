@@ -19,6 +19,7 @@ public:
   void fetch();
   void split();
   void process();
+  void write();
   uint64_t offset();
   void offset(const uint64_t &argOffset);
   std::size_t channels() const;

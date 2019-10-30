@@ -14,6 +14,7 @@ public:
 
   void fetch();
   void process();
+  void record();
   void addClip(const uint64_t &start, const uint64_t &end,
                const uint64_t &offset, const std::string &path);
   std::size_t channels() const;

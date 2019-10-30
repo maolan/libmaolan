@@ -6,6 +6,7 @@ using namespace maolan;
 IO *IO::ios = nullptr;
 IO *last = nullptr;
 bool IO::_stage = true;
+bool IO::_rec = false;
 uint64_t IO::_playHead = 0;
 
 
@@ -129,3 +130,6 @@ IO *IO::loadFromXml(pugi::xml_node *n)
 }
 
 void IO::parent(IO *p) {}
+
+void IO::rec(bool record) { _rec = record; }
+bool IO::rec(){return _rec;}

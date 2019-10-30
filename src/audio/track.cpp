@@ -80,3 +80,5 @@ void Track::setup()
     }
   }
 }
+
+void Track::record(){}
