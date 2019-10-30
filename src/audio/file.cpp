@@ -55,4 +55,9 @@ uint64_t File::offset() { return _offset; };
 
 void File::offset(const uint64_t &argOffset) { _offset = argOffset; };
 
+void File::write()
+{
+  int bytesRead = _audioFile.write(frame, channels() * Config::audioBufferSize);
+};
+
 SndfileHandle File::audioFile() { return _audioFile; }

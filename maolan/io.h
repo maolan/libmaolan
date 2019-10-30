@@ -19,6 +19,7 @@ public:
   virtual void fetch() = 0;
   virtual void process() = 0;
   virtual void parent(IO *p);
+  void record();
 
   void work();
 
@@ -26,6 +27,9 @@ public:
   IO *next();
   void previous(IO *);
   IO *previous();
+
+  void rec(bool record);
+  bool rec();
 
   void stage(const bool &s);
   bool stage();
@@ -45,6 +49,7 @@ public:
 protected:
   static IO *ios;
   static bool _stage;
+  static bool _rec;
   static uint64_t _playHead;
 
   std::string _type;
