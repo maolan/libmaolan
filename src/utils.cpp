@@ -18,14 +18,17 @@ IO *xmlElement2IO(pugi::xml_node *n)
   std::string name = n->name();
   if (name == "track")
   {
-    io = new audio::Track(n->attribute("name").value());
+    io = new audio::Track(n->attribute("name").value(), 1);
     return io;
   }
   else if (name == "clip")
   {
     io = new audio::Clip(
-        n->attribute("start").as_uint(), n->attribute("end").as_uint(),
-        n->attribute("offset").as_uint(), n->attribute("path").value());
+      n->attribute("path").value(),
+      n->attribute("start").as_uint(),
+      n->attribute("end").as_uint(),
+      n->attribute("offset").as_uint()
+    );
     for (auto parent = IO::begin(); parent != nullptr; parent = parent->next())
     {
       if (parent->name() == n->parent().parent().attribute("name").value())

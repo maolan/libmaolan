@@ -2,11 +2,7 @@
 #pragma once
 
 
-namespace maolan
-{
-namespace audio
-{
-namespace State
+namespace maolan::audio::State
 {
 enum
 {
@@ -14,6 +10,4 @@ enum
   solo = 2,
   record = 3
 };
-};
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio::State

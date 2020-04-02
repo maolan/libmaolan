@@ -1,5 +1,5 @@
 clang++
-%h -std=c++11
+%h -std=c++17
 %c -std=c11
-%cpp -std=c++11
--I/usr/local/include
+%cpp -std=c++17
+-I.

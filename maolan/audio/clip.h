@@ -3,17 +3,20 @@
 #include <maolan/audio/file.h>
 #include <maolan/audio/io.h>
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class Track;
 class Clip : public IO
 {
 public:
-  Clip(const uint64_t &start = 0, const uint64_t &end = 0,
-       const uint64_t &offset = 0, const std::string &path = "",
-       Track *parent = nullptr);
+  Clip(Track *parent, const std::size_t &channels);
+  Clip(
+    const std::string &path,
+    const uint64_t &start,
+    const uint64_t &end,
+    const uint64_t &offset = 0,
+    Track *parent = nullptr
+  );
   ~Clip();
 
   void fetch();
@@ -26,11 +29,8 @@ public:
   uint64_t end();
   void end(const uint64_t &argEnd);
   Buffer pull(const unsigned &channel);
-  static bool create(const uint64_t &start = 0, const uint64_t &end = 0,
-       const uint64_t &offset = 0, const std::string &path = "",
-       Track *parent = nullptr);
   bool check();
-
+  void write(const std::vector<Buffer> &frame);
   void next(Clip *n);
   Clip *next();
   void previous(Clip *n);
@@ -47,5 +47,4 @@ protected:
   Clip *_next;
   Clip *_previous;
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

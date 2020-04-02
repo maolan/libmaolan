@@ -4,9 +4,7 @@
 #include <string>
 
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class OSSIn : public OSS
 {
@@ -16,5 +14,4 @@ public:
   void fetch();
   void process();
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

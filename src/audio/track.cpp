@@ -1,46 +1,61 @@
+#include <iostream>
+#include <maolan/config.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <maolan/utils.h>
 #include <pugixml.hpp>
 
+
 using namespace maolan::audio;
 
-Track::Track(const std::string &name)
-    : IO(0, true), _current{nullptr}, first{nullptr}, last{nullptr}
+
+Track::Track(const std::string &name, const std::size_t &ch)
+    : IO(0, true)
+    , Connectable(ch)
+    , _current(nullptr)
+    , first(nullptr)
+    , last(nullptr)
+    , armed(false)
+    , muted(false)
+    , soloed(false)
 {
   _type = "Track";
   _name = name;
 }
 
+
 void Track::fetch()
 {
-  auto clip = _current;
-  if (clip != nullptr)
+  if (_current != nullptr)
   {
-    clip->fetch();
-    clip->process();
+    _current->fetch();
+    _current->process();
   }
 }
 
-void Track::process() {}
 
-void Track::addClip(const uint64_t &start, const uint64_t &end,
-                    const uint64_t &offset, const std::string &path)
+void Track::process()
 {
-  Clip::create(start, end, offset, path, this);
-}
-
-std::size_t Track::channels() const
-{
-  if (_current == nullptr)
+  if (armed)
   {
-    return 0;
+    std::vector<Buffer> frame;
+    auto const chs = channels();
+    frame.resize(chs);
+    for (std::size_t channel = 0; channel < chs; ++channel)
+    {
+      frame[channel] = inputs[channel].pull();
+    }
+    recording->write(frame);
   }
-  return _current->channels();
 }
+
 
 Buffer Track::pull(const unsigned &channel)
 {
+  if (armed)
+  {
+    return nullptr;
+  }
   if (_current == nullptr)
   {
     return nullptr;
@@ -52,9 +67,18 @@ Buffer Track::pull(const unsigned &channel)
   return nullptr;
 }
 
+
 void Track::setup()
 {
-  if (first == nullptr)
+  if (armed && recording == nullptr) {
+    recording = new Clip(this, channels());
+    recording->start(_playHead);
+    recording->end(_playHead + Config::audioBufferSize);
+    _current = recording;
+    first = _current;
+    last = _current;
+  }
+  else if (first == nullptr)
   {
     _current = nullptr;
   }
@@ -62,7 +86,7 @@ void Track::setup()
   {
     _current = nullptr;
   }
-  else if (_playHead > last->end())
+  else if (!armed && _playHead > last->end())
   {
     _current = nullptr;
   }
@@ -81,4 +105,33 @@ void Track::setup()
   }
 }
 
-void Track::record(){}
+
+void Track::add(Clip *clip)
+{
+  if (first == nullptr)
+  {
+    first = clip;
+    last = clip;
+  }
+  else
+  {
+    for (auto cl = first; cl != nullptr; cl = cl->next())
+    {
+      if (clip->start() < cl->start())
+      {
+        clip->next(cl);
+        clip->previous(cl->previous());
+        cl->previous()->next(clip);
+        cl->previous(clip);
+        if (clip->previous() == nullptr) { first = clip; }
+        if (clip->next() == nullptr) { last->next(clip); }
+        break;
+      }
+    }
+
+  }
+}
+std::size_t Track::channels() const { return inputs.size(); }
+void Track::mute() { muted = !muted; }
+void Track::arm() { armed = !armed; }
+void Track::solo() { soloed = !soloed; }

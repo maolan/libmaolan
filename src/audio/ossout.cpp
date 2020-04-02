@@ -7,10 +7,10 @@
 
 using namespace maolan::audio;
 
-OSSOut::OSSOut(const std::string &device, const size_t &chs) : OSS(device)
+OSSOut::OSSOut(const std::string &device, const size_t &chs)
+  : OSS(device), Connectable(chs)
 {
   _type = "OSSOut";
-  inputs.resize(chs);
 }
 
 
@@ -66,19 +66,4 @@ void OSSOut::process()
 void OSSOut::play(int *frame, size_t dataSize)
 {
   write(device->fd, frame, dataSize);
-}
-
-
-void OSSOut::connect(IO *to)
-{
-  for (auto channel = 0; channel < channels(); ++channel)
-  {
-    connect(to, channel, channel);
-  }
-}
-
-
-void OSSOut::connect(IO *to, std::size_t inCh, std::size_t outCh)
-{
-  inputs[inCh].add(to, outCh);
 }

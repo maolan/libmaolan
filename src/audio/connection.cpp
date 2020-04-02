@@ -7,10 +7,13 @@ using namespace maolan::audio;
 Connection::Connection() {}
 
 
-Connection::Connection(IO *connectTo, size_t &ch) { target(connectTo, ch); }
+Connection::Connection(IO *connectTo, const std::size_t &ch)
+{
+  target(connectTo, ch);
+}
 
 
-void Connection::target(IO *connectTo, size_t &ch)
+void Connection::target(IO *connectTo, const std::size_t &ch)
 {
   to = connectTo;
   channel = ch;

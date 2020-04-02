@@ -2,9 +2,7 @@
 #pragma once
 #include <memory>
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class BufferData
 {
@@ -17,5 +15,4 @@ public:
 
 
 typedef std::shared_ptr<BufferData> Buffer;
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

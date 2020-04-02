@@ -11,6 +11,3 @@ beforeinstall:
 
 distclean: clean cleandepend
 	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
-
-cvrc:
-	echo ${.CURDIR}

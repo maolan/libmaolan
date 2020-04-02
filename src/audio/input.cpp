@@ -12,7 +12,7 @@ Input::Input() : IO(1, true)
 }
 
 
-void Input::add(IO *to, size_t ch)
+void Input::connect(IO *to, const std::size_t &ch)
 {
   auto it = connections.emplace(connections.end());
   it->target(to, ch);
@@ -49,10 +49,6 @@ void Input::fetch()
       for (auto channel : channels)
       {
         if (channel == nullptr)
-        {
-          continue;
-        }
-        if (channel->data[i] == 0.0)
         {
           continue;
         }

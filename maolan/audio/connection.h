@@ -3,23 +3,20 @@
 #include <maolan/audio/io.h>
 
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class Connection
 {
 public:
   Connection();
-  Connection(IO *connectTo, std::size_t &ch);
+  Connection(IO *connectTo, const std::size_t &ch);
 
   IO *get();
-  void target(IO *connectTo, std::size_t &ch);
+  void target(IO *connectTo, const std::size_t &ch);
   Buffer pull();
 
 protected:
   IO *to;
   std::size_t channel;
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

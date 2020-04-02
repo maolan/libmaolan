@@ -1,6 +1,5 @@
-CXXFLAGS += -I . -std=c++14
+CXXFLAGS += -I. -std=c++17 -fPIC -g
 PREFIX ?= /usr/local
-CXXFLAGS += -fPIC
 LIB_CXX = maolan
 SHLIB_MAJOR=0
 SHLIB_MINOR=0
