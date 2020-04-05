@@ -3,12 +3,41 @@
 #include <maolan/audio/file.h>
 #include <maolan/config.h>
 
+
 using namespace maolan::audio;
 
-File::File(const std::string &path, const uint64_t &offset)
-    : IO(0, true, false), _audioFile(path)
+
+File::File(const std::size_t &ch)
+  : IO(0, true, false)
+  , recording(true)
 {
-  _audioFile.seek(offset, SEEK_SET);
+  std::string path = "recording.wav";
+  _audioFile = SndfileHandle(
+    path,
+    SFM_RDWR,
+    SF_FORMAT_WAV | SF_FORMAT_FLOAT,
+    ch,
+    Config::samplerate
+  );
+  _type = "File";
+  const auto chs = _audioFile.channels();
+  outputs.resize(chs, nullptr);
+  frame = new float[Config::audioBufferSize * chs];
+  std::cout << "constructor " << frame << ' ' << Config::audioBufferSize * chs << std::endl;
+}
+
+
+File::File(const std::string &path, const uint64_t &offset)
+  : IO(0, true, false)
+  , recording(false)
+{
+  _audioFile = SndfileHandle(path);
+  if (_audioFile.error())
+  {
+    std::cerr << "_audiofile error " << _audioFile.strError() << std::endl;
+    exit(1);
+  }
+  if (offset) { _audioFile.seek(offset, SEEK_SET); }
   if (Config::audioBufferSize == 0)
   {
     std::cerr << "Loading order error. Load some hardware IO first!"
@@ -16,21 +45,19 @@ File::File(const std::string &path, const uint64_t &offset)
     exit(1);
   }
   _type = "File";
-  outputs.resize(_audioFile.channels(), nullptr);
-  frame = new float[Config::audioBufferSize * channels()];
+  const auto chs = _audioFile.channels();
+  outputs.resize(chs, nullptr);
+  frame = new float[Config::audioBufferSize * chs];
 }
-
-
-File::~File() { delete[] frame; }
 
 
 void File::split()
 {
   const auto chs = channels();
-  for (size_t channel = 0; channel < channels(); ++channel)
+  for (std::size_t channel = 0; channel < chs; ++channel)
   {
     outputs[channel] = Buffer(new BufferData(Config::audioBufferSize));
-    for (size_t i = 0; i < Config::audioBufferSize; ++i)
+    for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
     {
       outputs[channel]->data[i] = frame[i * chs + channel];
     }
@@ -40,24 +67,50 @@ void File::split()
 
 void File::fetch()
 {
-  int bytesRead = _audioFile.read(frame, channels() * Config::audioBufferSize);
-  split();
+  if (!recording)
+  {
+    int bytesRead = _audioFile.read(frame, channels() * Config::audioBufferSize);
+    split();
+  }
+}
+
+
+void File::write(const std::vector<Buffer> &fr)
+{
+  const auto chs = fr.size();
+  std::size_t i;
+  std::size_t channel;
+  float sample;
+  for (channel = 0; channel < chs; ++channel)
+  {
+    for (i = 0; i < Config::audioBufferSize; ++i)
+    {
+      auto buffer = fr[channel];
+      if (buffer)
+      {
+        auto data = buffer->data;
+        sample = data[i];
+      }
+      else
+      {
+        sample = 0.0;
+      }
+      frame[i * chs + channel] = sample;
+    }
+  }
+  int bytesWritten = _audioFile.writef(frame, Config::audioBufferSize);
+};
+
+
+File::~File()
+{
+  std::cout << "Destroying file" << std::endl;
+  delete[] frame;
 }
 
 
 size_t File::channels() const { return _audioFile.channels(); }
-
-
 void File::process() {}
-
-
-uint64_t File::offset() { return _offset; };
-
-void File::offset(const uint64_t &argOffset) { _offset = argOffset; };
-
-void File::write()
-{
-  int bytesRead = _audioFile.write(frame, channels() * Config::audioBufferSize);
-};
-
+uint64_t File::offset() { return _offset; }
+void File::offset(const uint64_t &argOffset) { _offset = argOffset; }
 SndfileHandle File::audioFile() { return _audioFile; }

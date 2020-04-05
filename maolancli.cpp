@@ -33,7 +33,7 @@ int main(int argc, char **argv)
   // MIDIChunk *chunk;
   // while ((chunk = clip->next()) != nullptr)
   // {
-  // std::cout << *chunk << std::endl;
+  //   std::cout << *chunk << std::endl;
   // }
 
 
@@ -72,41 +72,17 @@ int main(int argc, char **argv)
   */
 
 
-  // Audio device and file input and output
-
-  // OSSIn in("/dev/dsp", 2);
-  // OSSOut out("/dev/dsp", 2);
-  // Clip infile(0,30000,0,"data/session.wav");
-  // out.connect(&in);
-  // out.connect(&infile);
-  // std::cout << "Playing ..." << std::endl;
-  // while (1)
-  // {
-    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-    // {
-      // item->setup();
-    // }
-    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-    // {
-      // item->fetch();
-    // }
-    // for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-    // {
-      // item->process();
-    // }
-  // }
-  // std::cout << std::endl;
-
-
+  OSSIn in("/dev/dsp", 2);
   OSSOut out("/dev/dsp", 2);
-  Track track("name");
-  Clip clip(0,30000,0,"data/session.wav");
-  clip.parent(&track);
-  out.connect(&track);
-  // // auto a = maolan::loadXml();
-  // // maolan::IO::loadFromNode(&a);
-
-  while (1) {
+  Track trackp("play", 2);
+  Clip clip("data/session.wav", 0, 10000000, 0, &trackp);
+  out.connect(&trackp);
+  Track trackr("record", 2);
+  trackr.connect(&trackp);
+  trackr.arm();
+  std::cout << "Playing ..." << std::endl;
+  while (1)
+  {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
       item->setup();

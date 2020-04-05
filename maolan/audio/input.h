@@ -5,23 +5,20 @@
 #include <vector>
 
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class Input : public IO
 {
 public:
   Input();
 
-  void add(IO *to, std::size_t ch);
   void fetch();
   void process();
+  void connect(IO *to, const std::size_t &ch = 0);
   std::size_t channels() const;
   Buffer pull();
 
 protected:
   std::vector<Connection> connections;
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

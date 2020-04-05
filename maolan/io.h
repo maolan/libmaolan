@@ -19,7 +19,6 @@ public:
   virtual void fetch() = 0;
   virtual void process() = 0;
   virtual void parent(IO *p);
-  void record();
 
   void work();
 

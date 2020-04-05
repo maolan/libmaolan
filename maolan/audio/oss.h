@@ -5,9 +5,7 @@
 #include <string>
 
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class OSS : public IO
 {
@@ -23,5 +21,4 @@ protected:
   int *frame;
   OSSConfig *device;
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio

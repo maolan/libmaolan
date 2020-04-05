@@ -4,9 +4,7 @@
 #include <string>
 
 
-namespace maolan
-{
-namespace audio
+namespace maolan::audio
 {
 class OSSConfig : public Config
 {
@@ -21,5 +19,4 @@ public:
   std::size_t count;
   std::string device;
 };
-} // namespace audio
-} // namespace maolan
+} // namespace maolan::audio
