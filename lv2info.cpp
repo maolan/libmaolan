@@ -452,4 +452,3 @@ main(int argc, char** argv)
 	lilv_world_free(world);
 	return ret;
 }
-

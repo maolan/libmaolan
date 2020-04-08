@@ -24,4 +24,4 @@ applylv2: applylv2.cpp
 	${CXX} ${CXXFLAGS} ${LDFLAGS} applylv2.cpp -o applylv2
 
 plugininfo: plugininfo.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} plugininfo.cpp -o plugininfo
+	${CXX} ${CXXFLAGS} ${LDFLAGS} -lmaolan -lpugixml plugininfo.cpp -o plugininfo

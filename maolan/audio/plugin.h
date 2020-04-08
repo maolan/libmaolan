@@ -4,6 +4,8 @@
 #include <lilv/lilv.h>
 
 
+namespace maolan::audio
+{
 class Author
 {
   public:
@@ -18,6 +20,8 @@ class Plugin
   public:
     Plugin(const std::string &argUri);
     ~Plugin();
+
+    static void destroyWorld();
 
     void uri(const LilvNode *argUri);
     const LilvNode * uri() const;
@@ -36,3 +40,4 @@ class Plugin
     LilvPlugin *rawPlugin;
     Author _author;
 };
+} // namespace maolan::audio
