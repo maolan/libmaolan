@@ -37,32 +37,36 @@ PluginPort::PluginPort(
     lv2_OutputPort = lilv_new_uri(world, LILV_URI_OUTPUT_PORT);
     lv2_ConnectionOptional = lilv_new_uri(world, LV2_CORE__connectionOptional);
   }
+  rawPort = (LilvPort *)p;
 
-  if (lilv_port_is_a(rawPlugin, p, lv2_InputPort))
+  if (lilv_port_is_a(rawPlugin, rawPort, lv2_InputPort))
   {
     _direction = PluginPortDirection::input;
   }
-  else if (lilv_port_is_a(rawPlugin, p, lv2_OutputPort))
+  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_OutputPort))
   {
     _direction = PluginPortDirection::output;
   }
 
-  if (lilv_port_is_a(rawPlugin, p, lv2_AudioPort))
+  if (lilv_port_is_a(rawPlugin, rawPort, lv2_AudioPort))
   {
     _type = PluginPortType::audio;
   }
-  else if (lilv_port_is_a(rawPlugin, p, lv2_ControlPort))
+  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_ControlPort))
   {
     _type = PluginPortType::control;
   }
-  else if (lilv_port_is_a(rawPlugin, p, lv2_AtomPort))
+  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_AtomPort))
   {
-    _type = PluginPortType::atom;
+    if (lilv_port_supports_event(rawPlugin, rawPort, lv2_MidiEvent))
+    {
+      _type = PluginPortType::midi;
+    }
   }
 
-	const LilvNode *sym = lilv_port_get_symbol(rawPlugin, p);
+	const LilvNode *sym = lilv_port_get_symbol(rawPlugin, rawPort);
 	_symbol = lilv_node_as_string(sym);
-	sym = lilv_port_get_name(rawPlugin, p);
+	sym = lilv_port_get_name(rawPlugin, rawPort);
 	_name = lilv_node_as_string(sym);
 }
 

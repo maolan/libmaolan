@@ -54,9 +54,9 @@ Plugin::Plugin(const std::string &argUri)
       );
       if (port->direction() == PluginPortDirection::input)
       {
-        if (port->type() == PluginPortType::atom)
+        if (port->type() == PluginPortType::midi)
         {
-          input.atom.push_back(port);
+          input.midi.push_back(port);
         }
         else if (port->type() == PluginPortType::audio)
         {
@@ -69,9 +69,9 @@ Plugin::Plugin(const std::string &argUri)
       }
       else if (port->direction() == PluginPortDirection::output)
       {
-        if (port->type() == PluginPortType::atom)
+        if (port->type() == PluginPortType::midi)
         {
-          output.atom.push_back(port);
+          output.midi.push_back(port);
         }
         else if (port->type() == PluginPortType::audio)
         {
@@ -106,10 +106,10 @@ void Plugin::print() const
   }
   std::cout << ", " << _author.homepage << "\n\n";
 
-  if (input.atom.size() > 0)
+  if (input.midi.size() > 0)
   {
-    std::cout << "Input atom ports:" << '\n';
-    for (const auto &port : input.atom) { port->print(); }
+    std::cout << "Input MIDI ports:" << '\n';
+    for (const auto &port : input.midi) { port->print(); }
     std::cout << '\n';
   }
   if (input.audio.size() > 0)
@@ -124,10 +124,10 @@ void Plugin::print() const
     for (const auto &port : input.control) { port->print(); }
     std::cout << '\n';
   }
-  if (output.atom.size() > 0)
+  if (output.midi.size() > 0)
   {
-    std::cout << "Output atom ports:" << '\n';
-    for (const auto &port : output.atom) { port->print(); }
+    std::cout << "Output MIDI ports:" << '\n';
+    for (const auto &port : output.midi) { port->print(); }
     std::cout << '\n';
   }
   if (output.audio.size() > 0)
