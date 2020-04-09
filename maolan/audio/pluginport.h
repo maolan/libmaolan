@@ -13,12 +13,9 @@ enum class PluginPortDirection
 
 enum class PluginPortType
 {
-  atom,
   audio,
   control,
-  cv,
-  event,
-  midiEvent,
+  midi,
 };
 
 
@@ -58,5 +55,6 @@ class PluginPort
     bool _optional;
     std::string _symbol;
     std::string _name;
+    LilvPort *rawPort;
 };
 } // namespace maolan::audio

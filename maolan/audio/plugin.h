@@ -18,9 +18,9 @@ class PluginPort;
 class Ports
 {
   public:
-    std::vector<PluginPort *> atom;
     std::vector<PluginPort *> audio;
     std::vector<PluginPort *> control;
+    std::vector<PluginPort *> midi;
 };
 
 
