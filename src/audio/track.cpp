@@ -1,9 +1,7 @@
-#include <iostream>
 #include <maolan/config.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <maolan/utils.h>
-#include <pugixml.hpp>
 
 
 using namespace maolan::audio;

@@ -1,13 +1,27 @@
 MK_PROFILE=no
 CFLAGS += -I${.CURDIR}
+CXXFLAGS += -I${.CURDIR}
 SRCS_AUDIO != ls -1 src/audio/*.cpp
 SRCS_MIDI != ls -1 src/midi/*.cpp
 SRCS_CORE != ls -1 src/*.cpp
 SRCS = $(SRCS_CORE) $(SRCS_AUDIO) $(SRCS_MIDI)
 LIBDIR = ${PREFIX}/lib
+LILV_CXXFLAGS != pkg-config --cflags lilv-0
+LILV_LDFLAGS != pkg-config --libs lilv-0
+CXXFLAGS += ${LILV_CXXFLAGS}
+LDFLAGS += ${LILV_LDFLAGS} -lsndfile
 
 beforeinstall:
 	cp -r maolan $(DESTDIR)$(PREFIX)/include
 
 distclean: clean cleandepend
 	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
+
+listlv2: listlv2.cpp
+	${CXX} ${CXXFLAGS} ${LDFLAGS} listlv2.cpp -o listlv2
+
+applylv2: applylv2.cpp
+	${CXX} ${CXXFLAGS} ${LDFLAGS} applylv2.cpp -o applylv2
+
+plugininfo: plugininfo.cpp
+	${CXX} ${CXXFLAGS} ${LDFLAGS} -lmaolan -lpugixml plugininfo.cpp -o plugininfo
