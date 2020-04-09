@@ -1,3 +1,4 @@
+#include <string>
 #include <lilv/lilv.h>
 
 
@@ -36,6 +37,7 @@ class PluginPort
 
     PluginPortDirection direction() { return _direction; }
     PluginPortType type() { return _type; }
+    void print() const;
 
   protected:
     static LilvNode *lv2_AtomPort;
@@ -54,5 +56,7 @@ class PluginPort
     PluginPortDirection _direction;
     PluginPortType _type;
     bool _optional;
+    std::string _symbol;
+    std::string _name;
 };
 } // namespace maolan::audio

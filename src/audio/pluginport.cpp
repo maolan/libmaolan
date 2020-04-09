@@ -1,5 +1,5 @@
-#include <maolan/audio/pluginport.h>
 #include <iostream>
+#include <maolan/audio/pluginport.h>
 
 
 using namespace maolan::audio;
@@ -59,4 +59,21 @@ PluginPort::PluginPort(
   {
     _type = PluginPortType::atom;
   }
+
+	const LilvNode *sym = lilv_port_get_symbol(rawPlugin, p);
+	_symbol = lilv_node_as_string(sym);
+	sym = lilv_port_get_name(rawPlugin, p);
+	_name = lilv_node_as_string(sym);
+}
+
+
+void PluginPort::print() const
+{
+  std::cout << "Port " << _name << '\n';
+  std::cout << "\tSymbol " << _symbol<< '\n';
+}
+
+
+PluginPort::~PluginPort()
+{
 }

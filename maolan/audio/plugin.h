@@ -1,6 +1,5 @@
 #include <vector>
 #include <string>
-#include <iostream>
 #include <lilv/lilv.h>
 
 
@@ -12,6 +11,16 @@ class Author
     std::string name;
     std::string homepage;
     std::string email;
+};
+
+
+class PluginPort;
+class Ports
+{
+  public:
+    std::vector<PluginPort *> atom;
+    std::vector<PluginPort *> audio;
+    std::vector<PluginPort *> control;
 };
 
 
@@ -39,5 +48,7 @@ class Plugin
     std::string _name;
     LilvPlugin *rawPlugin;
     Author _author;
+    Ports input;
+    Ports output;
 };
 } // namespace maolan::audio
