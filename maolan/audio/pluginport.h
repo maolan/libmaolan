@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <lilv/lilv.h>
 
@@ -28,7 +29,8 @@ class PluginPort
       const LilvPort *p,
       const float &minimum,
       const float &maximum,
-      const float &defaultValue
+      const float &defaultValue,
+      const uint32_t &index
     );
     ~PluginPort();
 
@@ -56,5 +58,6 @@ class PluginPort
     std::string _symbol;
     std::string _name;
     LilvPort *rawPort;
+    uint32_t _index;
 };
 } // namespace maolan::audio

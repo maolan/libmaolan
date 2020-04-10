@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <maolan/config.h>
 #include <maolan/audio/plugin.h>
 #include <maolan/audio/pluginport.h>
 
@@ -20,7 +22,7 @@ Plugin::Plugin(const std::string &argUri)
     plugins = (LilvPlugins *)lilv_world_get_all_plugins(world);
   }
   _uri = lilv_new_uri(world, _identifier.data());
-  rawPlugin = (LilvPlugin *)lilv_plugins_get_by_uri(plugins, _uri);
+  rawPlugin = lilv_plugins_get_by_uri(plugins, _uri);
   if (rawPlugin != nullptr)
   {
     auto val = lilv_plugin_get_name(rawPlugin);
@@ -50,7 +52,8 @@ Plugin::Plugin(const std::string &argUri)
         p,
         mins[index],
         maxes[index],
-        defaults[index]
+        defaults[index],
+        index
       );
       if (port->direction() == PluginPortDirection::input)
       {
@@ -88,6 +91,8 @@ Plugin::Plugin(const std::string &argUri)
   {
     std::cerr << "No such plugin " << _identifier << std::endl;
   }
+	instance = lilv_plugin_instantiate(rawPlugin, Config::samplerate, nullptr);
+	lilv_instance_activate(instance);
 }
 
 
@@ -145,8 +150,28 @@ void Plugin::print() const
 }
 
 
-Plugin::~Plugin() { lilv_node_free((LilvNode *)_uri); }
-void Plugin::destroyWorld() { lilv_world_free(Plugin::world); }
+Buffer Plugin::process(Buffer in_buf)
+{
+  float value = -30.0;
+  auto buf_size = Config::audioBufferSize;
+  auto out_buf = maolan::audio::Buffer(new maolan::audio::BufferData(buf_size));
+  lilv_instance_connect_port(instance, 0, &value);
+  lilv_instance_connect_port(instance, 1, in_buf->data);
+  lilv_instance_connect_port(instance, 2, out_buf->data);
+  lilv_instance_run(instance, buf_size);
+  return out_buf;
+}
+
+
+Plugin::~Plugin()
+{
+	lilv_instance_deactivate(instance);
+  lilv_node_free((LilvNode *)_uri);
+  lilv_instance_free(instance);
+}
+
+
+void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
 const LilvNode * Plugin::uri() const { return _uri; }
 const std::string Plugin::identifier() const { return _identifier; }

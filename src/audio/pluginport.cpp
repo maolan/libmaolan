@@ -22,8 +22,13 @@ PluginPort::PluginPort(
   const LilvPort *p,
   const float &argMinimum,
   const float &argMaximum,
-  const float &argDdefault
+  const float &argDefault,
+  const uint32_t &argIndex
 )
+  : _minimum{argMinimum}
+  , _maximum{argMaximum}
+  , _default{argDefault}
+  , _index{argIndex}
 {
   if (lv2_AtomPort == nullptr)
   {
@@ -74,7 +79,11 @@ PluginPort::PluginPort(
 void PluginPort::print() const
 {
   std::cout << "Port " << _name << '\n';
-  std::cout << "\tSymbol " << _symbol<< '\n';
+  std::cout << "\tIndex: " << _index << '\n';
+  std::cout << "\tSymbol: " << _symbol<< '\n';
+  std::cout << "\tMinimum: " << _minimum << '\n';
+  std::cout << "\tMaximum: " << _maximum << '\n';
+  std::cout << "\tDefault: " << _default << '\n';
 }
 
 

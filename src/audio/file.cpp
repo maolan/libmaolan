@@ -23,7 +23,6 @@ File::File(const std::size_t &ch)
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
   frame = new float[Config::audioBufferSize * chs];
-  std::cout << "constructor " << frame << ' ' << Config::audioBufferSize * chs << std::endl;
 }
 
 
@@ -102,13 +101,7 @@ void File::write(const std::vector<Buffer> &fr)
 };
 
 
-File::~File()
-{
-  std::cout << "Destroying file" << std::endl;
-  delete[] frame;
-}
-
-
+File::~File() { delete[] frame; }
 size_t File::channels() const { return _audioFile.channels(); }
 void File::process() {}
 uint64_t File::offset() { return _offset; }

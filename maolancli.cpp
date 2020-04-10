@@ -2,6 +2,7 @@
 #include <fstream>
 #include <iostream>
 #include <maolan/audio/clip.h>
+#include <maolan/audio/plugin.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/audio/ossout.h>
 #include <maolan/audio/track.h>
@@ -72,10 +73,11 @@ int main(int argc, char **argv)
   */
 
 
+  /* Record
   OSSIn in("/dev/dsp", 2);
   OSSOut out("/dev/dsp", 2);
   Track trackp("play", 2);
-  Clip clip("data/session.wav", 0, 10000000, 0, &trackp);
+  Clip clip("data/stereo.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
   Track trackr("record", 2);
   trackr.connect(&trackp);
@@ -98,5 +100,44 @@ int main(int argc, char **argv)
     auto playhead = maolan::IO::playHead();
     maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }
+  */
+
+
+  if (argc < 2)
+  {
+    std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
+    return 1;
+  }
+  auto p = new maolan::audio::Plugin(argv[1]);
+  p->print();
+  OSSOut out("/dev/dsp", 1);
+  Track trackp("play", 1);
+  Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
+  out.connect(&trackp);
+  std::cout << "Playing ..." << std::endl;
+  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+  {
+    item->setup();
+  }
+  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+  {
+    item->fetch();
+  }
+  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+  {
+    item->process();
+  }
+  auto playhead = maolan::IO::playHead();
+  maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+  auto in_buf = trackp.pull(0);
+  auto out_buf = p->process(in_buf);
+  auto f = new File(1);
+  std::vector<Buffer> frame;
+  frame.push_back(out_buf);
+  f->write(frame);
+
+  delete f;
+  delete p;
+  maolan::audio::Plugin::destroyWorld();
   return 0;
 }

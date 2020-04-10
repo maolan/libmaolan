@@ -1,11 +1,10 @@
-/* vim: set syntax=cpp: */
 #pragma once
+#include <maolan/audio/clip.h>
 #include <maolan/audio/connectable.h>
 
 
 namespace maolan::audio
 {
-class Clip;
 class Track : public IO, public Connectable
 {
 public:

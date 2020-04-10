@@ -1,4 +1,3 @@
-/* vim: set syntax=cpp: */
 #pragma once
 #include <maolan/audio/io.h>
 #include <maolan/audio/ossconfig.h>
