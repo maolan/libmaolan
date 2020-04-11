@@ -15,5 +15,9 @@ Frame::Frame(std::size_t audioSize, std::size_t controlSize)
 Frame::~Frame()
 {
   audioBuffer.resize(0);
-  if (controls != nullptr) { delete []controls; }
+  if (controls != nullptr)
+  {
+    delete []controls;
+    controls = nullptr;
+  }
 }

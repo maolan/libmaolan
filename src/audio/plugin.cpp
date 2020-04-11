@@ -150,20 +150,29 @@ void Plugin::print() const
 }
 
 
-maolan::Frame & Plugin::process(const Frame &inputs)
+maolan::Frame Plugin::process(const Frame &inputs)
 {
-  maolan::Frame outputs(0, output.audio.size());
-  for (uint32_t i = 0; i < input.control.size(); ++i)
+  auto size = input.control.size();
+  auto &controlResult  = input.control;
+  auto &controlBuffer  = inputs.controls;
+  for (uint32_t i = 0; i < size; ++i)
   {
-    input.control[i]->buffer(instance, inputs.controls[i]);
+    controlResult[i]->buffer(instance, controlBuffer[i]);
   }
-  for (uint32_t i = 0; i < input.audio.size(); ++i)
+  size = input.audio.size();
+  auto &inputResult = input.audio;
+  auto &inputBuffer = inputs.audioBuffer;
+  for (uint32_t i = 0; i < size; ++i)
   {
-    input.audio[i]->buffer(instance, inputs.audioBuffer[i]);
+    inputResult[i]->buffer(instance, inputBuffer[i]);
   }
-  for (uint32_t i = 0; i < output.audio.size(); ++i)
+  size = output.audio.size();
+  maolan::Frame outputs(size, 0);
+  auto &outputResult = output.audio;
+  auto &outputBuffer = outputs.audioBuffer;
+  for (uint32_t i = 0; i < size; ++i)
   {
-    outputs.audioBuffer[i] = output.audio[i]->buffer(instance);
+    outputBuffer[i] = outputResult[i]->buffer(instance);
   }
   lilv_instance_run(instance, Config::audioBufferSize);
   return outputs;

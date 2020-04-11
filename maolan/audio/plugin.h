@@ -41,7 +41,7 @@ class Plugin
     const std::string name() const;
     const Author author() const;
     void print() const;
-    Frame & process(const Frame &inputs);
+    Frame process(const Frame &inputs);
 
   protected:
     static LilvWorld *world;

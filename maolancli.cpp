@@ -124,7 +124,7 @@ int main(int argc, char **argv)
     }
     maolan::Frame frame(1, 1);
     frame.audioBuffer[0] = trackp.pull(0);
-    frame.controls[0] = -20.0;
+    frame.controls[0] = 0.0;
     auto out_bufs = p->process(frame);
     f->write(out_bufs.audioBuffer);
     auto playhead = maolan::IO::playHead();
