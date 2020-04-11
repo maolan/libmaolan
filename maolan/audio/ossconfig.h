@@ -1,6 +1,6 @@
 #pragma once
-#include <maolan/config.h>
 #include <string>
+#include <maolan/config.h>
 
 
 namespace maolan::audio

@@ -12,13 +12,14 @@ using namespace maolan::audio;
 std::vector<OSSConfig *> OSS::devices;
 
 
-OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
+OSS::OSS(const std::string &deviceName, const std::size_t &argFrag)
+  : IO(0, true)
+  , device{nullptr}
 {
   const int chs = 2;
   outputs.resize(chs);
 
   bool found = false;
-  auto it = devices.begin();
   for (auto iter = devices.begin(); iter < devices.end(); ++iter)
   {
     if (*iter == device)
@@ -26,7 +27,6 @@ OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
       found = true;
       device = *iter;
       ++(device->count);
-      it = iter;
     }
   }
 
@@ -36,6 +36,7 @@ OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
     int tmp;
     int devcaps;
     device = new OSSConfig;
+    device->frag = argFrag;
     device->device = deviceName;
     if ((device->fd = open(deviceName.data(), O_RDWR, 0)) == -1)
     {
@@ -70,6 +71,7 @@ OSS::OSS(const std::string &deviceName) : IO(0, true), device{nullptr}
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
+    std::cout << "fragSize = " << device->fragSize << '\n';
 
     tmp = channels();
     if (ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
