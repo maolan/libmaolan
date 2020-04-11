@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <lilv/lilv.h>
+#include <maolan/audio/buffer.h>
 
 
 namespace maolan::audio
@@ -37,6 +38,8 @@ class PluginPort
     PluginPortDirection direction() { return _direction; }
     PluginPortType type() { return _type; }
     void print() const;
+    void buffer(LilvInstance *instance, const Buffer buf);
+    Buffer buffer(LilvInstance *instance);
 
   protected:
     static LilvNode *lv2_AtomPort;

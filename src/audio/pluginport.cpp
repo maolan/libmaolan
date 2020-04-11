@@ -1,4 +1,5 @@
 #include <iostream>
+#include <maolan/config.h>
 #include <maolan/audio/pluginport.h>
 
 
@@ -86,6 +87,19 @@ void PluginPort::print() const
   std::cout << "\tDefault: " << _default << '\n';
 }
 
+
+void PluginPort::buffer(LilvInstance *instance, const Buffer buf)
+{
+  lilv_instance_connect_port(instance, _index, buf->data);
+}
+
+
+Buffer PluginPort::buffer(LilvInstance *instance)
+{
+  Buffer buf(new BufferData(Config::audioBufferSize));
+  lilv_instance_connect_port(instance, _index, buf->data);
+  return buf;
+}
 
 PluginPort::~PluginPort()
 {

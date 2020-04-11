@@ -3,6 +3,7 @@
 #include <string>
 #include <lilv/lilv.h>
 #include <maolan/audio/buffer.h>
+#include <maolan/audio/pluginport.h>
 
 
 namespace maolan::audio
@@ -16,7 +17,6 @@ class Author
 };
 
 
-class PluginPort;
 class Ports
 {
   public:
@@ -40,7 +40,7 @@ class Plugin
     const std::string name() const;
     const Author author() const;
     void print() const;
-    Buffer process(Buffer in_buf);
+    std::vector<Buffer> process(const std::vector<Buffer> &in_buf);
 
   protected:
     static LilvWorld *world;

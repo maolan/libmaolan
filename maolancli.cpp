@@ -114,27 +114,29 @@ int main(int argc, char **argv)
   Track trackp("play", 1);
   Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
-  std::cout << "Playing ..." << std::endl;
-  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-  {
-    item->setup();
-  }
-  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-  {
-    item->fetch();
-  }
-  for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
-  {
-    item->process();
-  }
-  auto playhead = maolan::IO::playHead();
-  maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
-  auto in_buf = trackp.pull(0);
-  auto out_buf = p->process(in_buf);
   auto f = new File(1);
-  std::vector<Buffer> frame;
-  frame.push_back(out_buf);
-  f->write(frame);
+  std::cout << "Playing ..." << std::endl;
+  for (int i = 0; i < 96; ++i)
+  {
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->setup();
+    }
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->fetch();
+    }
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->process();
+    }
+    auto in_buf = trackp.pull(0);
+    std::vector<Buffer> in_bufs = {in_buf};
+    auto out_bufs = p->process(in_bufs);
+    f->write(out_bufs);
+    auto playhead = maolan::IO::playHead();
+    maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+  }
 
   delete f;
   delete p;
