@@ -1,19 +1,11 @@
-#include <fcntl.h>
-#include <fstream>
 #include <iostream>
+#include <maolan/config.h>
+#include <maolan/frame.h>
 #include <maolan/audio/clip.h>
-#include <maolan/audio/plugin.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/audio/ossout.h>
+#include <maolan/audio/plugin.h>
 #include <maolan/audio/track.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
-#include <maolan/io.h>
-#include <maolan/audio/io.h>
-#include <maolan/utils.h>
-#include <maolan/midi/chunk.h>
-#include <maolan/midi/clip.h>
-#include <pugixml.hpp>
 
 using namespace maolan::audio;
 
@@ -130,10 +122,11 @@ int main(int argc, char **argv)
     {
       item->process();
     }
-    auto in_buf = trackp.pull(0);
-    std::vector<Buffer> in_bufs = {in_buf};
-    auto out_bufs = p->process(in_bufs);
-    f->write(out_bufs);
+    maolan::Frame frame(1, 1);
+    frame.audioBuffer[0] = trackp.pull(0);
+    frame.controls[0] = -20.0;
+    auto out_bufs = p->process(frame);
+    f->write(out_bufs.audioBuffer);
     auto playhead = maolan::IO::playHead();
     maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }

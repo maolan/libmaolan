@@ -39,6 +39,7 @@ class PluginPort
     PluginPortType type() { return _type; }
     void print() const;
     void buffer(LilvInstance *instance, const Buffer buf);
+    void buffer(LilvInstance *instance, const float &control);
     Buffer buffer(LilvInstance *instance);
 
   protected:

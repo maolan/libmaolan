@@ -94,6 +94,12 @@ void PluginPort::buffer(LilvInstance *instance, const Buffer buf)
 }
 
 
+void PluginPort::buffer(LilvInstance *instance, const float &control)
+{
+  lilv_instance_connect_port(instance, _index, (void *)&control);
+}
+
+
 Buffer PluginPort::buffer(LilvInstance *instance)
 {
   Buffer buf(new BufferData(Config::audioBufferSize));

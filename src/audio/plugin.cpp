@@ -150,22 +150,23 @@ void Plugin::print() const
 }
 
 
-std::vector<Buffer> Plugin::process(const std::vector<Buffer> &in_bufs)
+maolan::Frame & Plugin::process(const Frame &inputs)
 {
-  float value = -30.0;
-  auto buf_size = Config::audioBufferSize;
-  std::vector<Buffer> out_bufs(output.audio.size());
+  maolan::Frame outputs(0, output.audio.size());
+  for (uint32_t i = 0; i < input.control.size(); ++i)
+  {
+    input.control[i]->buffer(instance, inputs.controls[i]);
+  }
   for (uint32_t i = 0; i < input.audio.size(); ++i)
   {
-    input.audio[i]->buffer(instance, in_bufs[i]);
+    input.audio[i]->buffer(instance, inputs.audioBuffer[i]);
   }
   for (uint32_t i = 0; i < output.audio.size(); ++i)
   {
-    out_bufs[i] = output.audio[i]->buffer(instance);
+    outputs.audioBuffer[i] = output.audio[i]->buffer(instance);
   }
-  lilv_instance_connect_port(instance, 0, &value);
-  lilv_instance_run(instance, buf_size);
-  return out_bufs;
+  lilv_instance_run(instance, Config::audioBufferSize);
+  return outputs;
 }
 
 

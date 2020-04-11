@@ -2,6 +2,7 @@
 #include <vector>
 #include <string>
 #include <lilv/lilv.h>
+#include <maolan/frame.h>
 #include <maolan/audio/buffer.h>
 #include <maolan/audio/pluginport.h>
 
@@ -40,7 +41,7 @@ class Plugin
     const std::string name() const;
     const Author author() const;
     void print() const;
-    std::vector<Buffer> process(const std::vector<Buffer> &in_buf);
+    Frame & process(const Frame &inputs);
 
   protected:
     static LilvWorld *world;
