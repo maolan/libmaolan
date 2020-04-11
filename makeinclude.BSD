@@ -9,13 +9,10 @@ LIBDIR = ${PREFIX}/lib
 LILV_CXXFLAGS != pkg-config --cflags lilv-0
 LILV_LDFLAGS != pkg-config --libs lilv-0
 CXXFLAGS += ${LILV_CXXFLAGS}
-LDFLAGS += ${LILV_LDFLAGS} -lsndfile
+LDFLAGS += ${LILV_LDFLAGS}
 
 beforeinstall:
 	cp -r maolan $(DESTDIR)$(PREFIX)/include
 
 distclean: clean cleandepend
 	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
-
-maolancli: maolancli.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -L. -lmaolan -lpugixml maolancli.cpp -o maolancli
