@@ -1,6 +1,10 @@
+#pragma once
 #include <vector>
 #include <string>
 #include <lilv/lilv.h>
+#include <maolan/frame.h>
+#include <maolan/audio/buffer.h>
+#include <maolan/audio/pluginport.h>
 
 
 namespace maolan::audio
@@ -14,7 +18,6 @@ class Author
 };
 
 
-class PluginPort;
 class Ports
 {
   public:
@@ -38,15 +41,17 @@ class Plugin
     const std::string name() const;
     const Author author() const;
     void print() const;
+    Frame process(const Frame &inputs);
 
   protected:
     static LilvWorld *world;
     static LilvPlugins *plugins;
 
     const LilvNode *_uri;
+    const LilvPlugin *rawPlugin;
+    LilvInstance *instance;
     const std::string _identifier;
     std::string _name;
-    LilvPlugin *rawPlugin;
     Author _author;
     Ports input;
     Ports output;

@@ -1,4 +1,6 @@
 #include <iostream>
+#include <algorithm>
+#include <maolan/config.h>
 #include <maolan/audio/plugin.h>
 #include <maolan/audio/pluginport.h>
 
@@ -20,7 +22,7 @@ Plugin::Plugin(const std::string &argUri)
     plugins = (LilvPlugins *)lilv_world_get_all_plugins(world);
   }
   _uri = lilv_new_uri(world, _identifier.data());
-  rawPlugin = (LilvPlugin *)lilv_plugins_get_by_uri(plugins, _uri);
+  rawPlugin = lilv_plugins_get_by_uri(plugins, _uri);
   if (rawPlugin != nullptr)
   {
     auto val = lilv_plugin_get_name(rawPlugin);
@@ -50,7 +52,8 @@ Plugin::Plugin(const std::string &argUri)
         p,
         mins[index],
         maxes[index],
-        defaults[index]
+        defaults[index],
+        index
       );
       if (port->direction() == PluginPortDirection::input)
       {
@@ -88,6 +91,8 @@ Plugin::Plugin(const std::string &argUri)
   {
     std::cerr << "No such plugin " << _identifier << std::endl;
   }
+	instance = lilv_plugin_instantiate(rawPlugin, Config::samplerate, nullptr);
+	lilv_instance_activate(instance);
 }
 
 
@@ -145,8 +150,44 @@ void Plugin::print() const
 }
 
 
-Plugin::~Plugin() { lilv_node_free((LilvNode *)_uri); }
-void Plugin::destroyWorld() { lilv_world_free(Plugin::world); }
+maolan::Frame Plugin::process(const Frame &inputs)
+{
+  auto size = input.control.size();
+  auto &controlResult  = input.control;
+  auto &controlBuffer  = inputs.controls;
+  for (uint32_t i = 0; i < size; ++i)
+  {
+    controlResult[i]->buffer(instance, controlBuffer[i]);
+  }
+  size = input.audio.size();
+  auto &inputResult = input.audio;
+  auto &inputBuffer = inputs.audioBuffer;
+  for (uint32_t i = 0; i < size; ++i)
+  {
+    inputResult[i]->buffer(instance, inputBuffer[i]);
+  }
+  size = output.audio.size();
+  maolan::Frame outputs(size, 0);
+  auto &outputResult = output.audio;
+  auto &outputBuffer = outputs.audioBuffer;
+  for (uint32_t i = 0; i < size; ++i)
+  {
+    outputBuffer[i] = outputResult[i]->buffer(instance);
+  }
+  lilv_instance_run(instance, Config::audioBufferSize);
+  return outputs;
+}
+
+
+Plugin::~Plugin()
+{
+	lilv_instance_deactivate(instance);
+  lilv_node_free((LilvNode *)_uri);
+  lilv_instance_free(instance);
+}
+
+
+void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
 const LilvNode * Plugin::uri() const { return _uri; }
 const std::string Plugin::identifier() const { return _identifier; }

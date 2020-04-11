@@ -3,5 +3,7 @@ clang++
 %c -std=c11
 %cpp -std=c++17
 -I.
+-I..
+-I../..
 -I/usr/local/include
 -I/usr/local/include/lilv-0

@@ -17,11 +17,5 @@ beforeinstall:
 distclean: clean cleandepend
 	rm -rf config.log config.status configure makeinclude.configured autom4te.cache
 
-listlv2: listlv2.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} listlv2.cpp -o listlv2
-
-applylv2: applylv2.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} applylv2.cpp -o applylv2
-
-plugininfo: plugininfo.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -L. -lmaolan -lpugixml plugininfo.cpp -o plugininfo
+maolancli: maolancli.cpp
+	${CXX} ${CXXFLAGS} ${LDFLAGS} -L. -lmaolan -lpugixml maolancli.cpp -o maolancli

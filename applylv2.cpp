@@ -330,13 +330,15 @@ main(int argc, char** argv)
 	for (uint32_t p = 0, i = 0, o = 0; p < n_ports; ++p) {
 		if (self.ports[p].type == TYPE_CONTROL) {
 			lilv_instance_connect_port(self.instance, p, &self.ports[p].value);
-		} else if (self.ports[p].type == TYPE_AUDIO) {
+		}
+    else if (self.ports[p].type == TYPE_AUDIO) {
 			if (self.ports[p].is_input) {
 				lilv_instance_connect_port(self.instance, p, in_buf + i++);
 			} else {
 				lilv_instance_connect_port(self.instance, p, out_buf + o++);
 			}
-		} else {
+		}
+    else {
 			lilv_instance_connect_port(self.instance, p, NULL);
 		}
 	}

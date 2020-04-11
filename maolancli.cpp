@@ -1,18 +1,11 @@
-#include <fcntl.h>
-#include <fstream>
 #include <iostream>
+#include <maolan/config.h>
+#include <maolan/frame.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/ossin.h>
 #include <maolan/audio/ossout.h>
+#include <maolan/audio/plugin.h>
 #include <maolan/audio/track.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
-#include <maolan/io.h>
-#include <maolan/audio/io.h>
-#include <maolan/utils.h>
-#include <maolan/midi/chunk.h>
-#include <maolan/midi/clip.h>
-#include <pugixml.hpp>
 
 using namespace maolan::audio;
 
@@ -72,10 +65,11 @@ int main(int argc, char **argv)
   */
 
 
+  /* Record
   OSSIn in("/dev/dsp", 2);
   OSSOut out("/dev/dsp", 2);
   Track trackp("play", 2);
-  Clip clip("data/session.wav", 0, 10000000, 0, &trackp);
+  Clip clip("data/stereo.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
   Track trackr("record", 2);
   trackr.connect(&trackp);
@@ -98,5 +92,47 @@ int main(int argc, char **argv)
     auto playhead = maolan::IO::playHead();
     maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }
+  */
+
+
+  if (argc < 2)
+  {
+    std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
+    return 1;
+  }
+  auto p = new maolan::audio::Plugin(argv[1]);
+  p->print();
+  OSSOut out("/dev/dsp", 1);
+  Track trackp("play", 1);
+  Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
+  out.connect(&trackp);
+  auto f = new File(1);
+  std::cout << "Playing ..." << std::endl;
+  for (int i = 0; i < 96; ++i)
+  {
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->setup();
+    }
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->fetch();
+    }
+    for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
+    {
+      item->process();
+    }
+    maolan::Frame frame(1, 1);
+    frame.audioBuffer[0] = trackp.pull(0);
+    frame.controls[0] = 0.0;
+    auto out_bufs = p->process(frame);
+    f->write(out_bufs.audioBuffer);
+    auto playhead = maolan::IO::playHead();
+    maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+  }
+
+  delete f;
+  delete p;
+  maolan::audio::Plugin::destroyWorld();
   return 0;
 }

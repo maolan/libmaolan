@@ -1,4 +1,5 @@
 #include <iostream>
+#include <maolan/config.h>
 #include <maolan/audio/pluginport.h>
 
 
@@ -22,8 +23,13 @@ PluginPort::PluginPort(
   const LilvPort *p,
   const float &argMinimum,
   const float &argMaximum,
-  const float &argDdefault
+  const float &argDefault,
+  const uint32_t &argIndex
 )
+  : _minimum{argMinimum}
+  , _maximum{argMaximum}
+  , _default{argDefault}
+  , _index{argIndex}
 {
   if (lv2_AtomPort == nullptr)
   {
@@ -74,9 +80,32 @@ PluginPort::PluginPort(
 void PluginPort::print() const
 {
   std::cout << "Port " << _name << '\n';
-  std::cout << "\tSymbol " << _symbol<< '\n';
+  std::cout << "\tIndex: " << _index << '\n';
+  std::cout << "\tSymbol: " << _symbol<< '\n';
+  std::cout << "\tMinimum: " << _minimum << '\n';
+  std::cout << "\tMaximum: " << _maximum << '\n';
+  std::cout << "\tDefault: " << _default << '\n';
 }
 
+
+void PluginPort::buffer(LilvInstance *instance, const Buffer buf)
+{
+  lilv_instance_connect_port(instance, _index, buf->data);
+}
+
+
+void PluginPort::buffer(LilvInstance *instance, const float &control)
+{
+  lilv_instance_connect_port(instance, _index, (void *)&control);
+}
+
+
+Buffer PluginPort::buffer(LilvInstance *instance)
+{
+  Buffer buf(new BufferData(Config::audioBufferSize));
+  lilv_instance_connect_port(instance, _index, buf->data);
+  return buf;
+}
 
 PluginPort::~PluginPort()
 {
