@@ -1,7 +1,11 @@
-SRCS = $(wildcard src/*.cpp)
+SRCS = $(wildcard src/*.cpp src/audio/*.cpp src/midi/*.cpp)
 OBJECTS = $(SRCS:.cpp=.o)
 LIBNAME = lib$(LIB_CXX).so
 LIBNAME_VERSIONED = $(LIBNAME).$(SHLIB_MAJOR)
+LILV_CXXFLAGS := $(shell pkg-config --cflags lilv-0)
+LILV_LDFLAGS := $(shell pkg-config --libs lilv-0)
+CXXFLAGS += ${LILV_CXXFLAGS}
+LDFLAGS += ${LILV_LDFLAGS}
 .DEFAULT_GOAL := all
 
 all: $(LIBNAME)
