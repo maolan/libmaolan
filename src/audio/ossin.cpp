@@ -4,7 +4,8 @@
 
 using namespace maolan::audio;
 
-OSSIn::OSSIn(const std::string &device, const size_t &chs) : OSS(device)
+OSSIn::OSSIn(const std::string &device, const std::size_t &chs, const std::size_t &frag)
+  : OSS(device, frag)
 {
   _type = "OSSIn";
 }

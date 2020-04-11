@@ -4,8 +4,6 @@
 
 namespace maolan
 {
-
 IO *xmlElement2IO(pugi::xml_node *n);
 pugi::xml_node loadXml(const char *path = "data/example.xml");
-
 } // namespace maolan

@@ -1,6 +1,6 @@
 #pragma once
-#include <maolan/audio/oss.h>
 #include <string>
+#include <maolan/audio/oss.h>
 
 
 namespace maolan::audio
@@ -8,7 +8,7 @@ namespace maolan::audio
 class OSSIn : public OSS
 {
 public:
-  OSSIn(const std::string &device, const std::size_t &channels);
+  OSSIn(const std::string &device, const std::size_t &channels, const std::size_t &frag = defaultFrag);
 
   void fetch();
   void process();

@@ -102,13 +102,13 @@ int main(int argc, char **argv)
   }
   auto p = new maolan::audio::Plugin(argv[1]);
   p->print();
-  OSSOut out("/dev/dsp", 1);
+  OSSOut out("/dev/dsp", 1, 8);
   Track trackp("play", 1);
   Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
   auto f = new File(1);
   std::cout << "Playing ..." << std::endl;
-  for (int i = 0; i < 96; ++i)
+  for (int i = 0; i < 9600000; ++i)
   {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
