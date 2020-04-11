@@ -122,11 +122,13 @@ int main(int argc, char **argv)
     {
       item->process();
     }
-    maolan::Frame frame(1, 1);
-    frame.audioBuffer[0] = trackp.pull(0);
-    frame.controls[0] = 0.0;
+    auto frame = new maolan::Frame(1, 1);
+    frame->audioBuffer[0] = trackp.pull(0);
+    frame->controls[0] = 0.0;
     auto out_bufs = p->process(frame);
-    f->write(out_bufs.audioBuffer);
+    f->write(out_bufs->audioBuffer);
+    delete frame;
+    delete out_bufs;
     auto playhead = maolan::IO::playHead();
     maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }

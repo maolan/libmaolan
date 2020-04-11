@@ -150,26 +150,26 @@ void Plugin::print() const
 }
 
 
-maolan::Frame Plugin::process(const Frame &inputs)
+const maolan::Frame * const Plugin::process(const maolan::Frame * const inputs)
 {
   auto size = input.control.size();
   auto &controlResult  = input.control;
-  auto &controlBuffer  = inputs.controls;
+  auto &controlBuffer  = inputs->controls;
   for (uint32_t i = 0; i < size; ++i)
   {
     controlResult[i]->buffer(instance, controlBuffer[i]);
   }
   size = input.audio.size();
   auto &inputResult = input.audio;
-  auto &inputBuffer = inputs.audioBuffer;
+  auto &inputBuffer = inputs->audioBuffer;
   for (uint32_t i = 0; i < size; ++i)
   {
     inputResult[i]->buffer(instance, inputBuffer[i]);
   }
   size = output.audio.size();
-  maolan::Frame outputs(size, 0);
+  auto outputs = new maolan::Frame(size, 0);
   auto &outputResult = output.audio;
-  auto &outputBuffer = outputs.audioBuffer;
+  auto &outputBuffer = outputs->audioBuffer;
   for (uint32_t i = 0; i < size; ++i)
   {
     outputBuffer[i] = outputResult[i]->buffer(instance);
