@@ -34,6 +34,7 @@ class Plugin
     Plugin(const std::string &argUri);
     ~Plugin();
 
+    static void init();
     static void destroyWorld();
 
     void uri(const LilvNode *argUri);
@@ -49,6 +50,7 @@ class Plugin
   protected:
     static LilvWorld *world;
     static LilvPlugins *plugins;
+    static Buffer emptyBuffer;
 
     const LilvNode *_uri;
     const LilvPlugin *rawPlugin;

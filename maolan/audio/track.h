@@ -22,8 +22,7 @@ public:
   void add(Plugin *);
   void remove(Plugin *);
   std::size_t channels() const;
-
-  friend class Clip;
+  virtual Buffer pull(const std::size_t &channel);
 
 protected:
   bool muted;

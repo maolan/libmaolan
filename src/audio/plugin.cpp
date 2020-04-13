@@ -22,6 +22,7 @@ static const char * id_to_uri (LV2_URID_Unmap_Handle unused, LV2_URID urid)
 
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
+Buffer Plugin::emptyBuffer = Buffer(new BufferData(Config::audioBufferSize));
 
 
 Plugin::Plugin(const std::string &argUri)
@@ -176,7 +177,9 @@ const maolan::Frame * const Plugin::process(const maolan::Frame * const inputs)
   auto &inputBuffer = inputs->audioBuffer;
   for (uint32_t i = 0; i < size; ++i)
   {
-    inputResult[i]->buffer(instance, inputBuffer[i]);
+    auto &buffer = inputBuffer[i];
+    if (buffer == nullptr) { inputResult[i]->buffer(instance, emptyBuffer); }
+    else { inputResult[i]->buffer(instance, inputBuffer[i]); }
   }
   size = output.audio.size();
   auto outputs = new maolan::Frame(size, 0);
@@ -222,6 +225,7 @@ Plugin::~Plugin()
 }
 
 
+void Plugin::init() { emptyBuffer = Buffer(new BufferData(Config::audioBufferSize)); }
 void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
 const LilvNode * Plugin::uri() const { return _uri; }

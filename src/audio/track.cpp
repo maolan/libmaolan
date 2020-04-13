@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/config.h>
 #include <maolan/frame.h>
 #include <maolan/audio/clip.h>
@@ -141,6 +142,7 @@ void Track::remove(Clip *clip)
       if (cl == recording) { recording = nullptr; }
       if (cl == first) { first = cl->next(); }
       if (cl == last) { last = cl->previous(); }
+      cl->parent(nullptr);
       return;
     }
   }
@@ -157,6 +159,13 @@ void Track::remove(Plugin *plugin)
       return;
     }
   }
+}
+
+
+Buffer Track::pull(const std::size_t &channel)
+{
+  if (muted) { return nullptr; }
+  return IO::pull(channel);
 }
 
 

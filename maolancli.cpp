@@ -101,7 +101,6 @@ int main(int argc, char **argv)
     return 1;
   }
   auto p = new maolan::audio::Plugin(argv[1]);
-  p->print();
   OSSOut out("/dev/dsp", 1, 8);
   Track trackp("play", 1);
   Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
