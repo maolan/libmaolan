@@ -1,4 +1,5 @@
 #include <maolan/config.h>
+#include <maolan/frame.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <maolan/utils.h>
@@ -19,6 +20,7 @@ Track::Track(const std::string &name, const std::size_t &ch)
 {
   _type = "Track";
   _name = name;
+  outputs.resize(ch);
 }
 
 
@@ -34,35 +36,33 @@ void Track::fetch()
 
 void Track::process()
 {
+  auto const chs = channels();
+  auto frame = new Frame(chs, 0);
   if (armed)
   {
-    std::vector<Buffer> frame;
-    auto const chs = channels();
-    frame.resize(chs);
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
-      frame[channel] = inputs[channel].pull();
+      frame->audioBuffer[channel] = inputs[channel].pull();
     }
     recording->write(frame);
   }
-}
-
-
-Buffer Track::pull(const unsigned &channel)
-{
-  if (armed)
+  else if (muted || _current == nullptr || _playHead < _current->start())
   {
-    return nullptr;
+    for (std::size_t channel = 0; channel < chs; ++channel)
+    {
+      frame->audioBuffer[channel] = nullptr;
+    }
   }
-  if (_current == nullptr)
+  else
   {
-    return nullptr;
+    for (std::size_t channel = 0; channel < chs; ++channel)
+    {
+      frame->audioBuffer[channel] = _current->pull(channel);
+    }
   }
-  if (_playHead >= _current->start())
-  {
-    return _current->pull(channel);
-  }
-  return nullptr;
+  // process plugins
+  outputs = frame->audioBuffer;
+  delete frame;
 }
 
 
@@ -122,13 +122,49 @@ void Track::add(Clip *clip)
         cl->previous()->next(clip);
         cl->previous(clip);
         if (clip->previous() == nullptr) { first = clip; }
+
+        // This will never happen, so it's a bug
         if (clip->next() == nullptr) { last->next(clip); }
         break;
       }
     }
-
   }
 }
+
+
+void Track::remove(Clip *clip)
+{
+  if (first == nullptr) { return; }
+  for (auto cl = first; cl != nullptr; cl = cl->next())
+  {
+    if (cl == clip)
+    {
+      if (cl->next() != nullptr) { cl->next()->previous(cl->previous()); }
+      if (cl->previous() != nullptr) { cl->previous()->next(cl->next()); }
+      if (cl == _current) { _current = nullptr; }
+      if (cl == recording) { recording = nullptr; }
+      if (cl == first) { first = cl->next(); }
+      if (cl == last) { last = cl->previous(); }
+      return;
+    }
+  }
+}
+
+
+void Track::remove(Plugin *plugin)
+{
+  for (int i = 0; i < _plugins.size(); ++i)
+  {
+    if (_plugins[i] == plugin)
+    {
+      _plugins.erase(_plugins.begin() + i);
+      return;
+    }
+  }
+}
+
+
+void Track::add(Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return inputs.size(); }
 void Track::mute() { muted = !muted; }
 void Track::arm() { armed = !armed; }

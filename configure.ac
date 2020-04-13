@@ -39,5 +39,4 @@ AC_CHECK_LIB(
   AC_MSG_ERROR([Could not find libsnd])
 )
 
-
 AC_OUTPUT(makeinclude.configured)

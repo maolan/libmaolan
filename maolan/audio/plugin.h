@@ -4,6 +4,7 @@
 #include <lilv/lilv.h>
 #include <maolan/frame.h>
 #include <maolan/audio/buffer.h>
+#include <maolan/audio/plugininfo.h>
 #include <maolan/audio/pluginport.h>
 
 
@@ -42,6 +43,8 @@ class Plugin
     const Author author() const;
     void print() const;
     const Frame * const process(const Frame * const inputs);
+    const PluginInfo info() const;
+    void saveSession() const;
 
   protected:
     static LilvWorld *world;

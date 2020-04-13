@@ -14,6 +14,7 @@ Clip::Clip(Track *parent, const std::size_t &ch)
   _type = "Clip";
 }
 
+
 Clip::Clip(
   const std::string &path,
   const uint64_t &start,
@@ -33,6 +34,7 @@ Clip::Clip(
   _type = "Clip";
   parent->add(this);
 }
+
 
 Clip::~Clip()
 {
@@ -97,13 +99,14 @@ void Clip::parent(maolan::IO *p)
 }
 
 
-void Clip::write(const std::vector<Buffer> &fr)
+void Clip::write(const Frame &fr)
 {
   file.write(fr);
   _end += Config::audioBufferSize;
 }
 
 
+void Clip::write(const Frame * const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
 void Clip::previous(Clip *p) { _previous = p; }

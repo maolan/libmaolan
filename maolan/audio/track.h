@@ -1,6 +1,7 @@
 #pragma once
 #include <maolan/audio/clip.h>
 #include <maolan/audio/connectable.h>
+#include <maolan/audio/plugin.h>
 
 
 namespace maolan::audio
@@ -17,8 +18,10 @@ public:
   void arm();
   void solo();
   void add(Clip *);
+  void remove(Clip *);
+  void add(Plugin *);
+  void remove(Plugin *);
   std::size_t channels() const;
-  Buffer pull(const unsigned &channel);
 
   friend class Clip;
 
@@ -30,5 +33,6 @@ protected:
   Clip *_current;
   Clip *last;
   Clip *recording = nullptr;
+  std::vector<Plugin *> _plugins;
 };
 } // namespace maolan::audio

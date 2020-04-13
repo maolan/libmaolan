@@ -8,6 +8,18 @@
 using namespace maolan::audio;
 
 
+static LV2_URID uri_to_id (LV2_URID_Map_Handle unused, const char* uri)
+{
+  return 4;
+}
+
+
+static const char * id_to_uri (LV2_URID_Unmap_Handle unused, LV2_URID urid)
+{
+  return "http://lv2plug.in/plugins/eg-amp";
+}
+
+
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
 
@@ -176,6 +188,29 @@ const maolan::Frame * const Plugin::process(const maolan::Frame * const inputs)
   }
   lilv_instance_run(instance, Config::audioBufferSize);
   return outputs;
+}
+
+
+const PluginInfo Plugin::info() const
+{
+  PluginInfo info;
+  info.input.audio = input.audio.size();
+  info.input.control = input.control.size();
+  info.input.midi = input.midi.size();
+  info.output.audio = output.audio.size();
+  info.output.control = output.control.size();
+  info.output.midi = output.midi.size();
+  return info;
+}
+
+
+void Plugin::saveSession() const
+{
+  LV2_URID_Map uridMap = { NULL, &uri_to_id };
+  LV2_URID_Unmap uridUnmap = { NULL, &id_to_uri };
+  auto state = lilv_state_new_from_world(world, &uridMap, _uri);
+  // auto result = lilv_state_save(world, &uridMap, &uridUnmap, state, _identifier.data(), "/tmp", "amp.ttl");
+  // std::cout << result << '\n';
 }
 
 

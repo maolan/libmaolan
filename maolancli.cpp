@@ -108,7 +108,7 @@ int main(int argc, char **argv)
   out.connect(&trackp);
   auto f = new File(1);
   std::cout << "Playing ..." << std::endl;
-  for (int i = 0; i < 9600000; ++i)
+  for (int i = 0; i < 1; ++i)
   {
     for (auto item = maolan::IO::begin(); item != nullptr; item = item->next())
     {
@@ -126,12 +126,13 @@ int main(int argc, char **argv)
     frame->audioBuffer[0] = trackp.pull(0);
     frame->controls[0] = 0.0;
     auto out_bufs = p->process(frame);
-    f->write(out_bufs->audioBuffer);
+    f->write(out_bufs);
     delete frame;
     delete out_bufs;
     auto playhead = maolan::IO::playHead();
     maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   }
+  p->saveSession();
 
   delete f;
   delete p;
