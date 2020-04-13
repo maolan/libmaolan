@@ -37,32 +37,28 @@ void Track::fetch()
 void Track::process()
 {
   auto const chs = channels();
-  auto frame = new Frame(chs, 0);
   if (armed)
   {
+    auto frame = new Frame(chs, 0);
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
       frame->audioBuffer[channel] = inputs[channel].pull();
     }
     recording->write(frame);
+    if (!muted) { outputs = frame->audioBuffer; }
+    delete frame;
   }
-  else if (muted || _current == nullptr || _playHead < _current->start())
+  else if (!muted && _current == nullptr && _playHead >= _current->start())
   {
-    for (std::size_t channel = 0; channel < chs; ++channel)
-    {
-      frame->audioBuffer[channel] = nullptr;
-    }
-  }
-  else
-  {
+    auto frame = new Frame(chs, 0);
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
       frame->audioBuffer[channel] = _current->pull(channel);
     }
+    // process plugins
+    outputs = frame->audioBuffer;
+    delete frame;
   }
-  // process plugins
-  outputs = frame->audioBuffer;
-  delete frame;
 }
 
 
