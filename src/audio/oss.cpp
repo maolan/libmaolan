@@ -45,11 +45,7 @@ OSS::OSS(const std::string &deviceName, const std::size_t &argFrag)
       exit(1);
     }
     ai.dev = -1;
-    if (ioctl(device->fd, SNDCTL_ENGINEINFO, &ai) != -1)
-    {
-      std::cout << "Using OSS audio engine " << ai.dev;
-      std::cout << " = " << ai.name << std::endl;
-    }
+    ioctl(device->fd, SNDCTL_ENGINEINFO, &ai);
 
     if (ioctl(device->fd, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
     {
@@ -71,7 +67,6 @@ OSS::OSS(const std::string &deviceName, const std::size_t &argFrag)
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
-    std::cout << "fragSize = " << device->fragSize << '\n';
 
     tmp = channels();
     if (ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)

@@ -68,15 +68,16 @@ void File::fetch()
 {
   if (!recording)
   {
-    int bytesRead = _audioFile.read(frame, channels() * Config::audioBufferSize);
+    auto size = channels() * Config::audioBufferSize;
+    int bytesRead = _audioFile.read(frame, size);
     split();
   }
 }
 
 
-void File::write(const std::vector<Buffer> &fr)
+void File::write(const Frame &fr)
 {
-  const auto chs = fr.size();
+  const auto chs = fr.audioBuffer.size();
   std::size_t i;
   std::size_t channel;
   float sample;
@@ -84,25 +85,23 @@ void File::write(const std::vector<Buffer> &fr)
   {
     for (i = 0; i < Config::audioBufferSize; ++i)
     {
-      auto buffer = fr[channel];
+      auto &buffer = fr.audioBuffer[channel];
       if (buffer)
       {
         auto data = buffer->data;
         sample = data[i];
       }
-      else
-      {
-        sample = 0.0;
-      }
+      else { sample = 0.0; }
       frame[i * chs + channel] = sample;
     }
   }
   int bytesWritten = _audioFile.writef(frame, Config::audioBufferSize);
-};
+}
 
 
 File::~File() { delete[] frame; }
-size_t File::channels() const { return _audioFile.channels(); }
+void File::write(const Frame * const fr) { write(*fr); }
+std::size_t File::channels() const { return _audioFile.channels(); }
 void File::process() {}
 uint64_t File::offset() { return _offset; }
 void File::offset(const uint64_t &argOffset) { _offset = argOffset; }

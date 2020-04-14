@@ -14,6 +14,7 @@ Clip::Clip(Track *parent, const std::size_t &ch)
   _type = "Clip";
 }
 
+
 Clip::Clip(
   const std::string &path,
   const uint64_t &start,
@@ -34,27 +35,10 @@ Clip::Clip(
   parent->add(this);
 }
 
+
 Clip::~Clip()
 {
-  if (_parent != nullptr)
-  {
-    if (this->_previous != nullptr)
-    {
-      this->_previous->next(this->_next);
-    }
-    else
-    {
-      _parent->first = this->_next;
-    }
-    if (this->_next != nullptr)
-    {
-      this->_next->previous(this->_previous);
-    }
-    else
-    {
-      _parent->last = this->_previous;
-    }
-  }
+  if (_parent != nullptr) { _parent->remove(this); }
 }
 
 
@@ -80,30 +64,20 @@ Buffer Clip::pull(const unsigned &channel)
 
 void Clip::parent(maolan::IO *p)
 {
+  if (_parent != nullptr) { _parent->remove(this); }
   _parent = (Track *)p;
-  if (_parent != nullptr)
-  {
-    if (_parent->last != nullptr)
-    {
-      _parent->last->_next = this;
-    }
-    _previous = _parent->last;
-    _parent->last = this;
-    if (_parent->first == nullptr)
-    {
-      _parent->first = this;
-    }
-  }
+  if (_parent != nullptr) { _parent->add(this); }
 }
 
 
-void Clip::write(const std::vector<Buffer> &fr)
+void Clip::write(const Frame &fr)
 {
   file.write(fr);
   _end += Config::audioBufferSize;
 }
 
 
+void Clip::write(const Frame * const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
 void Clip::previous(Clip *p) { _previous = p; }

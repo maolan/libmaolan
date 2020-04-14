@@ -1,5 +1,6 @@
 #pragma once
 #include <cstdint>
+#include <maolan/frame.h>
 #include <maolan/audio/file.h>
 #include <maolan/audio/io.h>
 
@@ -30,7 +31,8 @@ public:
   void end(const uint64_t &argEnd);
   Buffer pull(const unsigned &channel);
   bool check();
-  void write(const std::vector<Buffer> &frame);
+  void write(const Frame &frame);
+  void write(const Frame * const frame);
   void next(Clip *n);
   Clip *next();
   void previous(Clip *n);
