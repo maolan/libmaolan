@@ -5,23 +5,12 @@ Dependencies:
 * libsndfile
 * zita resampler  
 
-For FreeBSD build in jailed environment [reggae](https://github.com/cbsd/reggae) is required.
-
-FreeBSD build
+Build
 ```
-git clone https://github.com/maolan/devops
-cd devops
-echo 'DEVEL_MODE=YES' > vars.mk
-make devel
-cd /usr/src/libmaolan
-autoconf
-env CFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib ./configure
-make
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make VERBOSE=1 -j4
 ```
 
-Linux build
-```
-autoconf
-./configure
-make
-```
+It assumes you have 4 cores and you want `Release` build. If you're developing, you probably want `Debug`.
