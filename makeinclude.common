@@ -1,9 +1,0 @@
-CXXFLAGS += -I. -std=c++17 -fPIC -g
-PREFIX ?= /usr/local
-LIB_CXX = maolan
-SHLIB_MAJOR = 0
-SHLIB_MINOR = 0
-LDFLAGS += -lpugixml -lsndfile
-
-maolancli: maolancli.cpp
-	${CXX} ${CXXFLAGS} ${LDFLAGS} -L. -lmaolan maolancli.cpp -o maolancli
