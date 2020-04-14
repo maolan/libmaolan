@@ -1,9 +1,10 @@
 # Maolan
-DAW written in C++
+DAW written in C++17
 
 Dependencies:
 * libsndfile
-* zita resampler  
+* pugixml
+* lilv
 
 Build
 ```
