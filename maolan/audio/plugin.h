@@ -36,6 +36,7 @@ class Plugin
 
     static void init();
     static void destroyWorld();
+    static const void * portValue(const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type);
 
     void uri(const LilvNode *argUri);
     const LilvNode * uri() const;
@@ -60,5 +61,6 @@ class Plugin
     Author _author;
     Ports input;
     Ports output;
+    LV2_URID_Map _lv2_urid_map;
 };
 } // namespace maolan::audio

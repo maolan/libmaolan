@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <lv2/state/state.h>
 #include <maolan/config.h>
 #include <maolan/audio/plugin.h>
 #include <maolan/audio/pluginport.h>
@@ -23,6 +24,42 @@ static const char * id_to_uri (LV2_URID_Unmap_Handle unused, LV2_URID urid)
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
 Buffer Plugin::emptyBuffer = Buffer(new BufferData(Config::audioBufferSize));
+
+
+float val = 0.0;
+
+
+const void * Plugin::portValue(const char *port_symbol, void *user_data, uint32_t *size, uint32_t *type)
+{
+  auto plugin = (Plugin *)user_data;
+  assert(plugin != nullptr);
+  std::cout << port_symbol << '\n';
+  // std::map<QString, size_t>::iterator it = state->controlsSymMap.find(QString::fromUtf8(port_symbol).toLower());
+  // *size = *type = 0;
+  // if(it != state->controlsSymMap.end())
+  // {
+      // size_t ctrlNum = it->second;
+      // MusECore::Port *controls = NULL;
+
+      // if(state->plugInst != NULL)
+      // {
+          // controls = state->plugInst->controls;
+
+      // }
+      // else if(state->sif != NULL)
+      // {
+          // controls = state->sif->_controls;
+      // }
+
+      // if(controls != NULL)
+      // {
+          // *size = sizeof(float);
+          // *type = state->atomForge.Float;
+          // return &controls [ctrlNum].val;
+      // }
+  // }
+  return nullptr;
+}
 
 
 Plugin::Plugin(const std::string &argUri)
@@ -209,11 +246,35 @@ const PluginInfo Plugin::info() const
 
 void Plugin::saveSession() const
 {
-  LV2_URID_Map uridMap = { NULL, &uri_to_id };
-  LV2_URID_Unmap uridUnmap = { NULL, &id_to_uri };
-  auto state = lilv_state_new_from_world(world, &uridMap, _uri);
-  // auto result = lilv_state_save(world, &uridMap, &uridUnmap, state, _identifier.data(), "/tmp", "amp.ttl");
-  // std::cout << result << '\n';
+  // LilvState * const lilvState = lilv_state_new_from_instance(
+    // state->synth->_handle,
+    // state->handle,
+    // &state->synth->_lv2_urid_map,
+    // cPlugFileDirName,
+    // cPresetDir,
+    // cPresetDir,
+    // cPresetDir,
+    // LV2Synth::lv2state_getPortValue,
+    // state,
+    // LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE,
+    // NULL
+  // );
+  std::string plugfiledirname;
+  std::string presetdir;
+  LilvState * const lilvState = lilv_state_new_from_instance(
+    rawPlugin,
+    instance,
+    (LV2_URID_Map *)&_lv2_urid_map,
+    plugfiledirname.data(),
+    presetdir.data(),
+    presetdir.data(),
+    presetdir.data(),
+    portValue,
+    (void *)this,
+    LV2_STATE_IS_POD | LV2_STATE_IS_PORTABLE,
+    nullptr
+  );
+  std::cout << "lilvState = " << lilvState << '\n';
 }
 
 

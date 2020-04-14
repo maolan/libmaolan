@@ -3,6 +3,7 @@
 *.core
 *.po
 *.pico
+build/
 libmaolan*
 maolan-cli
 makeinclude
