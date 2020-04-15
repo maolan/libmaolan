@@ -13,8 +13,8 @@ public:
   int fd;
   int format;
   std::size_t audioChannels;
-  std::size_t frag;
-  std::size_t fragSize;
+  int frag;
+  int fragSize;
   std::size_t count;
   std::string device;
 };

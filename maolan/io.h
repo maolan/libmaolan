@@ -1,8 +1,9 @@
-/* vim: set syntax=cpp: */
 #pragma once
-#include <pugixml.hpp>
 #include <string>
 #include <vector>
+#include <mutex>
+#include <condition_variable>
+#include <pugixml.hpp>
 
 
 namespace maolan
@@ -42,14 +43,20 @@ public:
   virtual void setup();
   static void playHead(const uint64_t &argPlayHead);
   static uint64_t playHead();
-
-  static IO *loadFromXml(pugi::xml_node *n);
+  static IO * loadFromXml(pugi::xml_node *n);
+  static IO * task();
 
 protected:
   static IO *ios;
-  static bool _stage;
+  static IO *last;
+  static IO *_current;
+  static unsigned _stage;
   static bool _rec;
   static uint64_t _playHead;
+  static std::atomic_size_t _count;
+  static std::mutex m;
+  static std::condition_variable cv;
+  static bool check();
 
   std::string _type;
   std::string _name;

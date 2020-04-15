@@ -12,7 +12,7 @@ using namespace maolan::audio;
 std::vector<OSSConfig *> OSS::devices;
 
 
-OSS::OSS(const std::string &deviceName, const std::size_t &argFrag)
+OSS::OSS(const std::string &deviceName, const int &argFrag)
   : IO(0, true)
   , device{nullptr}
 {
@@ -61,6 +61,7 @@ OSS::OSS(const std::string &deviceName, const std::size_t &argFrag)
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
+
     if (ioctl(device->fd, SNDCTL_DSP_GETBLKSIZE, &(device->fragSize)) == -1)
     {
       std::cerr << "SNDCTL_DSP_GETBLKSIZE: ";
