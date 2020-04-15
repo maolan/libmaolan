@@ -31,3 +31,22 @@ add_library(
     ${SRCS}
 )
 target_link_libraries(maolan ${MY_LIBRARIES})
+
+set(MAOLANCLI_COMPILE_COMMAND ${CMAKE_CXX_COMPILER} -I${CMAKE_CURRENT_SOURCE_DIR} -std=gnu++${CMAKE_CXX_STANDARD} ${SNDFILE_CFLAGS} ${PUGIXML_CFLAGS} ${LILV_CFLAGS} ${SNDFLE_LDFLAGS} ${PUGIXML_LDFLAGS} ${LILV_LDFLAGS} -L${CMAKE_CURRENT_BINARY_DIR} -lmaolan ../maolancli.cpp -o maolancli)
+set(MAOLANCLI_DEBUG_LLDB_COMMAND env LD_PRELOAD=./libmaolan.so lldb ./maolancli -- http://lv2plug.in/plugins/eg-amp)
+set(MAOLANCLI_DEBUG_GDB_COMMAND env LD_PRELOAD=./libmaolan.so gdb ./maolancli http://lv2plug.in/plugins/eg-amp)
+add_custom_target(
+    maolancli
+    COMMAND ${MAOLANCLI_COMPILE_COMMAND}
+    COMMAND env LD_PRELOAD=./libmaolan.so ./maolancli http://lv2plug.in/plugins/eg-amp
+)
+add_custom_target(
+    maolancli-debug
+    COMMAND ${MAOLANCLI_COMPILE_COMMAND} -g
+    COMMAND  env LD_PRELOAD=./libmaolan.so lldb ./maolancli -- http://lv2plug.in/plugins/eg-amp
+)
+add_custom_target(
+    maolancli-debug-gdb
+    COMMAND ${MAOLANCLI_COMPILE_COMMAND} -g
+    COMMAND  env LD_PRELOAD=./libmaolan.so gdb --args ./maolancli http://lv2plug.in/plugins/eg-amp
+)

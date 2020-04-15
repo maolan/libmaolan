@@ -103,7 +103,7 @@ int main(int argc, char **argv)
   auto p = new maolan::audio::Plugin(argv[1]);
   OSSOut out("/dev/dsp", 1, 8);
   Track trackp("play", 1);
-  Clip clip("data/mono.wav", 0, 10000000, 0, &trackp);
+  Clip clip("../data/mono.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
   auto f = new File(1);
   std::cout << "Playing ..." << std::endl;
