@@ -3,6 +3,7 @@ project(maolan VERSION 0.0.1 DESCRIPTION "Low level Maolan library")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
+set(CMAKE_SHARED_LINKER_FLAGS "-pthread")
 
 find_package(PkgConfig REQUIRED)
 

@@ -1,5 +1,8 @@
+#include <iostream>
 #include <maolan/io.h>
 #include <maolan/utils.h>
+#include <thread>
+
 
 
 using namespace maolan;
@@ -10,6 +13,8 @@ IO *IO::last = nullptr;
 IO *IO::_current = nullptr;
 unsigned IO::_stage = 0;
 bool IO::_rec = false;
+bool IO::_playing = false;
+bool IO::_quit = false;
 uint64_t IO::_playHead = 0;
 std::atomic_size_t IO::_count = 0;
 std::mutex IO::m;
@@ -119,11 +124,11 @@ IO *IO::loadFromXml(pugi::xml_node *n)
 
 IO * IO::task()
 {
-  if (ios == nullptr) { return nullptr; }
   std::unique_lock<std::mutex> lk(m);
   cv.wait(lk, []{ return IO::check(); });
+  if (_quit) { return nullptr; }
   ++_count;
-  IO *result = _current;
+  auto result = _current;
   if (_current != nullptr) { _current = _current->next(); }
   lk.unlock();
   cv.notify_one();
@@ -133,7 +138,9 @@ IO * IO::task()
 
 bool IO::check()
 {
+  if (_quit) { return true; }
   if (ios == nullptr) { return false; }
+  if (!_playing) { return false; }
   if (_current == nullptr)
   {
     if (_count == 0)
@@ -148,9 +155,27 @@ bool IO::check()
 }
 
 
+void IO::play() {
+  _playing = true;
+  cv.notify_all();
+}
+
+
+void IO::stop() {
+  _playing = false;
+  cv.notify_all();
+}
+
+
+void IO::quit() {
+  _quit = true;
+  cv.notify_all();
+}
+
+
 void IO::parent(IO *p) {}
 void IO::rec(bool record) { _rec = record; }
-bool IO::rec(){return _rec;}
+bool IO::rec() { return _rec; }
 void IO::stage(const bool &s) { _stage = s; }
 bool IO::stage() { return _stage; }
 IO *IO::begin() { return ios; }
