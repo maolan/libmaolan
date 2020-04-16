@@ -1,5 +1,6 @@
 #include <cstring>
 #include <fcntl.h>
+#include <iostream>
 #include <maolan/audio/ossout.h>
 #include <maolan/constants.h>
 #include <sys/soundcard.h>
@@ -12,15 +13,13 @@ OSSOut::OSSOut(const std::string &device, const std::size_t &chs, const std::siz
   , Connectable(chs)
 {
   _type = "OSSOut";
+  outputs.resize(chs);
 }
 
 
 void OSSOut::fetch()
 {
-  for (size_t i = 0; i < channels(); ++i)
-  {
-    outputs[i] = inputs[i].pull();
-  }
+  for (size_t i = 0; i < channels(); ++i) { outputs[i] = inputs[i].pull(); }
 }
 
 
@@ -41,15 +40,13 @@ void OSSOut::convertToRaw()
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        float sample = buffer->data[i];
-        if (sample <= -1.0)
-        {
-          sample = -1.0;
-        }
-        else if (sample >= 1.0)
-        {
-          sample = 1.0;
-        }
+        auto &data = buffer->data;
+        float sample;
+        if (data.size() == 0) { sample = 0.0; }
+        else { sample = buffer->data[i]; }
+
+        if (sample <= -1.0) { sample = -1.0; }
+        else if (sample >= 1.0) { sample = 1.0; }
         frame[i * chs + channel] = sample * maxInt;
       }
     }

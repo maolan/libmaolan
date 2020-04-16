@@ -1,3 +1,4 @@
+#include <iostream>
 #include <thread>
 #include <maolan/engine.h>
 #include <maolan/io.h>
@@ -17,13 +18,14 @@ void Engine::init()
   {
     _workers[i] = new Worker();
   }
+  std::cout << "created " << maxWorkers << " workers\n";
 }
 
 
 void Engine::quit()
 {
   IO::quit();
-  for (auto &worker : _workers) { delete worker; }
+  _workers.resize(0);
 }
 
 void Engine::play() { IO::play(); }

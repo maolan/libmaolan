@@ -56,7 +56,7 @@ void Track::process()
     {
       frame->audioBuffer[channel] = _current->pull(channel);
     }
-    auto result = frame;
+    auto &result = frame;
     if (_plugins.size() > 0)
     {
       bool inInput = true;
@@ -76,6 +76,7 @@ void Track::process()
         inInput = !inInput;
       }
     }
+
     outputs = result->audioBuffer;
     delete result;
   }

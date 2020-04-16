@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/audio/input.h>
 #include <maolan/config.h>
 
@@ -64,7 +65,10 @@ void Input::fetch()
 size_t Input::channels() const { return outputs.size(); }
 
 
-Buffer Input::pull() { return outputs[0]; }
+Buffer Input::pull() {
+  if (outputs.size() == 0) { return nullptr; }
+  return outputs[0];
+}
 
 
 void Input::process() {}

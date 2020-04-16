@@ -5,7 +5,7 @@
 #include <maolan/audio/track.h>
 
 
-using namespace maolan;
+using namespace maolan::audio;
 
 
 int main(int argc, char **argv)
@@ -15,21 +15,22 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
     return 1;
   }
-  audio::OSSOut out("/dev/dsp", 1, 8);
-  audio::Track trackp("play", 1);
-  audio::Clip clip("../data/mono.wav", 0, 10000000, 0, &trackp);
+  OSSOut out("/dev/dsp", 1, 8);
+  Track trackp("play", 1);
+  Clip clip("../data/mono.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
 
-  Engine::init();
-  std::this_thread::sleep_for(std::chrono::seconds(5));
+  maolan::Engine::init();
   std::cerr << "Playing ...";
-  Engine::play();
+  maolan::Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(20));
   std::cerr << " done\n";
-  Engine::stop();
-  std::this_thread::sleep_for(std::chrono::seconds(1));
+  std::cerr << "Stopping ...";
+  maolan::Engine::stop();
+  std::cerr << " done\n";
+  std::this_thread::sleep_for(std::chrono::seconds(10));
   std::cerr << "Exiting ...";
-  Engine::quit();
+  maolan::Engine::quit();
   std::cerr << " done\n";
 
 
