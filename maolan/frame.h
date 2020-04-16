@@ -9,10 +9,9 @@ class Frame
 {
   public:
     Frame(std::size_t audioSize, std::size_t controlSize);
-    ~Frame();
 
     std::vector<audio::Buffer> audioBuffer;
-    float *controls;
+    std::vector<float> controls;
 
 };
 } // namespace maolan

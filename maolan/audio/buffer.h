@@ -1,15 +1,18 @@
 #pragma once
 #include <memory>
+#include <vector>
 
 namespace maolan::audio
 {
 class BufferData
 {
-public:
-  BufferData(const size_t &size);
-  ~BufferData();
+  public:
+    BufferData(const size_t &size);
 
-  float *data;
+    std::vector<float> data;
+
+  private:
+    BufferData();
 };
 
 

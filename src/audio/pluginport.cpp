@@ -90,7 +90,7 @@ void PluginPort::print() const
 
 void PluginPort::buffer(LilvInstance *instance, const Buffer buf)
 {
-  lilv_instance_connect_port(instance, _index, buf->data);
+  lilv_instance_connect_port(instance, _index, buf->data.data());
 }
 
 
@@ -103,7 +103,7 @@ void PluginPort::buffer(LilvInstance *instance, const float &control)
 Buffer PluginPort::buffer(LilvInstance *instance)
 {
   Buffer buf(new BufferData(Config::audioBufferSize));
-  lilv_instance_connect_port(instance, _index, buf->data);
+  lilv_instance_connect_port(instance, _index, buf->data.data());
   return buf;
 }
 
