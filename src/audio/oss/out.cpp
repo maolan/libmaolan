@@ -1,15 +1,15 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/audio/ossout.h>
-#include <maolan/constants.h>
-#include <sys/soundcard.h>
 #include <unistd.h>
+#include <sys/soundcard.h>
+#include <maolan/constants.h>
+#include <maolan/audio/oss/out.h>
 
 using namespace maolan::audio;
 
-OSSOut::OSSOut(const std::string &device, const std::size_t &chs, const std::size_t &frag)
-  : OSS(device, frag)
+OSSOut::OSSOut(const std::string &device, const int &chs, const int &frag)
+  : OSS(device, frag, chs)
   , Connectable(chs)
 {
   _type = "OSSOut";
@@ -40,10 +40,7 @@ void OSSOut::convertToRaw()
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        auto &data = buffer->data;
-        float sample;
-        if (data.size() == 0) { sample = 0.0; }
-        else { sample = buffer->data[i]; }
+        float sample = buffer->data[i];
 
         if (sample <= -1.0) { sample = -1.0; }
         else if (sample >= 1.0) { sample = 1.0; }

@@ -1,23 +1,21 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/audio/oss.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
 #include <sys/soundcard.h>
 #include <unistd.h>
+#include <maolan/config.h>
+#include <maolan/constants.h>
+#include <maolan/audio/oss/base.h>
 
 using namespace maolan::audio;
 
 std::vector<OSSConfig *> OSS::devices;
 
 
-OSS::OSS(const std::string &deviceName, const int &argFrag)
-  : IO(0, true)
+OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
+  : IO(0, true, true, deviceName)
   , device{nullptr}
 {
-  const int chs = 2;
-  outputs.resize(chs);
 
   bool found = false;
   for (auto iter = devices.begin(); iter < devices.end(); ++iter)
@@ -69,20 +67,14 @@ OSS::OSS(const std::string &deviceName, const int &argFrag)
       exit(1);
     }
 
-    tmp = channels();
+    tmp = chs;
     if (ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
     {
       std::cerr << "SNDCTL_DSP_CHANNELS: ";
       std::cerr << strerror(errno) << std::endl;
       exit(1);
     }
-    if (tmp != channels())
-    {
-      std::cerr << device << " doesn't support ";
-      std::cout << channels() << " channels, but ";
-      std::cerr << tmp << " instead" << std::endl;
-      exit(1);
-    }
+    outputs.resize(tmp);
 
     tmp = device->format;
     if (ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp) == -1)

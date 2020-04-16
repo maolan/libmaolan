@@ -20,14 +20,16 @@ File::File(const std::size_t &ch)
     Config::samplerate
   );
   _type = "File";
+  _name = path;
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
   frame = new float[Config::audioBufferSize * chs];
+  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
 File::File(const std::string &path, const uint64_t &offset)
-  : IO(0, true, false)
+  : IO(0, true, false, path)
   , recording(false)
 {
   _audioFile = SndfileHandle(path);
@@ -47,6 +49,7 @@ File::File(const std::string &path, const uint64_t &offset)
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
   frame = new float[Config::audioBufferSize * chs];
+  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
@@ -57,11 +60,9 @@ void File::split()
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
     outputs[channel] = Buffer(new BufferData(Config::audioBufferSize));
-    if (outputs[channel]->data.size() == 0) { continue; }
     for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
     {
-      auto sample = frame[i * chs + channel];
-      outputs[channel]->data[i] = sample;
+      outputs[channel]->data[i] = frame[i * chs + channel];
     }
   }
 }
