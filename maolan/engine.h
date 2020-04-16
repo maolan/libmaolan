@@ -7,7 +7,7 @@ namespace maolan
 class Engine
 {
   public:
-    static void init();
+    static void init(const int &threads = -1);
     static void play();
     static void stop();
     static void quit();

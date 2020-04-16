@@ -6,10 +6,12 @@
 using namespace maolan::audio;
 
 
-Input::Input() : IO(1, true)
+Input::Input()
+  : IO(1, true)
 {
   _type = "Input";
   connections.clear();
+  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 

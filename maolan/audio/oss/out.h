@@ -2,7 +2,7 @@
 #include <string>
 #include <maolan/audio/connectable.h>
 #include <maolan/audio/input.h>
-#include <maolan/audio/oss.h>
+#include <maolan/audio/oss/base.h>
 
 
 namespace maolan::audio
@@ -10,7 +10,7 @@ namespace maolan::audio
 class OSSOut : public OSS, public Connectable
 {
 public:
-  OSSOut(const std::string &device, const std::size_t &channels, const std::size_t &frag = defaultFrag);
+  OSSOut(const std::string &device, const int &channels, const int &frag = defaultFrag);
 
   void fetch();
   void process();

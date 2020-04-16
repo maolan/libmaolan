@@ -31,7 +31,9 @@ enum Stage
 
 
 IO::IO(const std::string &argName, const bool &front, const bool &reg)
-    : _next{nullptr}, _previous{nullptr}
+    : _next{nullptr}
+    , _previous{nullptr}
+    , _name{argName}
 {
   if (reg)
   {
@@ -57,14 +59,6 @@ IO::IO(const std::string &argName, const bool &front, const bool &reg)
         ios = this;
       }
     }
-  }
-  if (argName == "")
-  {
-    name("GeneratedName");
-  }
-  else
-  {
-    name(argName);
   }
   if (_current == nullptr) { _current = ios; }
 }
@@ -157,19 +151,19 @@ bool IO::check()
 
 void IO::play() {
   _playing = true;
-  cv.notify_all();
+  cv.notify_one();
 }
 
 
 void IO::stop() {
   _playing = false;
-  cv.notify_all();
+  cv.notify_one();
 }
 
 
 void IO::quit() {
   _quit = true;
-  cv.notify_all();
+  cv.notify_one();
 }
 
 

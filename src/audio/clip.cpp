@@ -22,7 +22,7 @@ Clip::Clip(
   const uint64_t &offset,
   Track *parent
 )
-  : IO(0, true, false)
+  : IO(0, true, false, path)
   , _offset(offset)
   , _start(start)
   , _end(end)
@@ -33,6 +33,7 @@ Clip::Clip(
 {
   _type = "Clip";
   parent->add(this);
+  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 

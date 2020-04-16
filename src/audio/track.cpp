@@ -22,6 +22,7 @@ Track::Track(const std::string &name, const std::size_t &ch)
   _type = "Track";
   _name = name;
   outputs.resize(ch);
+  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 

@@ -3,8 +3,8 @@
 
 #include <maolan/audio/clip.h>
 #include <maolan/audio/connection.h>
-#include <maolan/audio/ossin.h>
-#include <maolan/audio/ossout.h>
+#include <maolan/audio/oss/in.h>
+#include <maolan/audio/oss/out.h>
 #include <maolan/audio/track.h>
 #include <maolan/io.h>
 #include <maolan/utils.h>

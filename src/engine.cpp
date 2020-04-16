@@ -10,23 +10,27 @@ using namespace maolan;
 std::vector<Worker *> Engine::_workers;
 
 
-void Engine::init()
+void Engine::init(const int &threads)
 {
   auto maxWorkers = std::thread::hardware_concurrency();
-  _workers.resize(maxWorkers);
-  for (std::size_t i = 0; i < maxWorkers; ++i)
+  auto realWorkerNumber = threads == -1 || threads > maxWorkers
+    ? maxWorkers
+    : threads;
+  _workers.resize(realWorkerNumber);
+  for (std::size_t i = 0; i < _workers.size(); ++i)
   {
     _workers[i] = new Worker();
   }
-  std::cout << "created " << maxWorkers << " workers\n";
+  std::cout << "created " << _workers.size() << " workers\n";
 }
 
 
 void Engine::quit()
 {
   IO::quit();
-  _workers.resize(0);
+  _workers.clear();
 }
+
 
 void Engine::play() { IO::play(); }
 void Engine::stop() { IO::stop(); }
