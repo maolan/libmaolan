@@ -10,6 +10,6 @@ const float floatMinInt = float(minInt);
 
 namespace audio
 {
-const std::size_t defaultFrag = 16;
+const int defaultFrag = 16;
 } // namespace audio
 } // namespace maolan

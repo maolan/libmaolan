@@ -1,8 +1,7 @@
-/* vim: set syntax=cpp: */
 #pragma once
-#include <maolan/bpm.h>
 #include <memory>
 #include <vector>
+#include <maolan/bpm.h>
 
 
 namespace maolan

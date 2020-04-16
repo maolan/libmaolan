@@ -49,7 +49,7 @@ void Track::process()
     if (!muted) { outputs = frame->audioBuffer; }
     delete frame;
   }
-  else if (!muted && _current == nullptr && _playHead >= _current->start())
+  else if (!muted && _current != nullptr && _playHead >= _current->start())
   {
     auto frame = new Frame(chs, 0);
     for (std::size_t channel = 0; channel < chs; ++channel)
