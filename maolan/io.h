@@ -57,10 +57,9 @@ protected:
   static std::mutex m;
   static std::condition_variable cv;
 
-  std::string _type;
-  std::string _name;
-  int state;
   IO *_next;
   IO *_previous;
+  std::string _type;
+  std::string _name;
 };
 } // namespace maolan

@@ -1,11 +1,11 @@
 #include <iostream>
-#include <maolan/worker.h>
+#include <maolan/engine.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/ossout.h>
 #include <maolan/audio/track.h>
 
 
-using namespace maolan::audio;
+using namespace maolan;
 
 
 int main(int argc, char **argv)
@@ -15,25 +15,22 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
     return 1;
   }
-  OSSOut out("/dev/dsp", 1, 8);
-  Track trackp("play", 1);
-  Clip clip("../data/mono.wav", 0, 10000000, 0, &trackp);
+  audio::OSSOut out("/dev/dsp", 1, 8);
+  audio::Track trackp("play", 1);
+  audio::Clip clip("../data/mono.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);
 
-  auto worker = new maolan::Worker();
-  auto worker2 = new maolan::Worker();
+  Engine::init();
   std::this_thread::sleep_for(std::chrono::seconds(5));
   std::cerr << "Playing ...";
-  IO::play();
+  Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(20));
   std::cerr << " done\n";
-  IO::stop();
+  Engine::stop();
   std::this_thread::sleep_for(std::chrono::seconds(1));
   std::cerr << "Exiting ...";
-  IO::quit();
+  Engine::quit();
   std::cerr << " done\n";
-  delete worker;
-  delete worker2;
 
 
   maolan::audio::Plugin::destroyWorld();
