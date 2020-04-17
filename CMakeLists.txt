@@ -4,7 +4,17 @@ project(maolan VERSION 0.0.1 DESCRIPTION "Low level Maolan library")
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_SHARED_LINKER_FLAGS "-pthread")
+include(GNUInstallDirs)
 file(GLOB SRCS src/*.cpp src/audio/*.cpp src/midi/*.cpp)
+file(GLOB HEADERS maolan/*.h)
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan)
+file(GLOB HEADERS maolan/audio/*.h)
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio)
+file(GLOB HEADERS maolan/midi/*.h)
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/midi)
+
+enable_testing()
+add_custom_target(build-tests)
 
 find_package(PkgConfig REQUIRED)
 
@@ -26,7 +36,15 @@ set(MY_LIBRARIES ${MY_LIBRARIES} ${LILV_LIBRARIES})
 option(OSS "Open Sound System" ON)
 if (OSS)
     file(GLOB OSS_SRCS src/audio/oss/*.cpp)
+    file(GLOB OSS_HEADERS maolan/audio/oss/*.h)
+    set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} maolan/audio/oss)
     set(SRCS ${SRCS} ${OSS_SRCS})
+    install(FILES ${OSS_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/oss)
+    add_executable(test-oss EXCLUDE_FROM_ALL tests/oss/cli.cpp)
+    target_link_directories(test-oss PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+    target_link_libraries(test-oss maolan)
+    add_test(NAME OSS COMMAND ./test-oss http://lv2plug.in/plugins/eg-amp)
+    add_dependencies(build-tests test-oss)
 endif()
 
 option(ALSA "Advance Linux Sound Architecture" ON)
@@ -36,7 +54,14 @@ if (ALSA)
     set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${ALSA_LIBRARY_DIRS})
     set(MY_LIBRARIES ${MY_LIBRARIES} ${ALSA_LIBRARIES})
     file(GLOB ALSA_SRCS src/audio/alsa/*.cpp)
+    file(GLOB ALSA_HEADERS maolan/audio/alsa/*.h)
     set(SRCS ${SRCS} ${ALSA_SRCS})
+    install(FILES ${ALSA_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/alsa)
+    add_executable(test-alsa EXCLUDE_FROM_ALL tests/alsa/cli.cpp)
+    target_link_directories(test-alsa PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
+    target_link_libraries(test-alsa maolan ${ALSA_LIBRARIES})
+    add_test(NAME ALSA COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
+    add_dependencies(build-tests test-alsa)
 endif()
 
 # option(JACK "Jack audio connection kit" ON)
@@ -55,27 +80,7 @@ link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
 add_library(
     maolan
     SHARED
-    ${SRCS}
+    ${SRCS} ${HEADERS}
 )
 target_link_libraries(maolan ${MY_LIBRARIES})
-
-
-enable_testing()
-
-add_custom_target(build-tests)
-
-if (OSS)
-    add_executable(test-oss EXCLUDE_FROM_ALL tests/oss/cli.cpp)
-    target_link_directories(test-oss PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-    target_link_libraries(test-oss maolan)
-    add_test(NAME OSS COMMAND ./test-oss http://lv2plug.in/plugins/eg-amp)
-    add_dependencies(build-tests test-oss)
-endif()
-
-if (ALSA)
-    add_executable(test-alsa EXCLUDE_FROM_ALL tests/alsa/cli.cpp)
-    target_link_directories(test-alsa PUBLIC ${CMAKE_CURRENT_BINARY_DIR})
-    target_link_libraries(test-alsa maolan ${ALSA_LIBRARIES})
-    add_test(NAME ALSA COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
-    add_dependencies(build-tests test-alsa)
-endif()
+install(TARGETS maolan)
