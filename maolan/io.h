@@ -4,6 +4,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <pugixml.hpp>
+#include <maolan/config.h>
 
 
 namespace maolan
@@ -25,6 +26,7 @@ public:
   static IO * loadFromXml(pugi::xml_node *n);
   static IO * task();
   static IO * begin();
+  static Config * devices();
 
   virtual void setup();
   virtual void fetch() = 0;
@@ -56,6 +58,7 @@ protected:
   static std::atomic_size_t _count;
   static std::mutex m;
   static std::condition_variable cv;
+  static std::vector<Config *> _devices;
 
   IO *_next;
   IO *_previous;

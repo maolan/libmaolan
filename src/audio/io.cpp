@@ -1,8 +1,13 @@
 #include <iostream>
+#include <vector>
+#include <maolan/config.h>
 #include <maolan/audio/io.h>
 
 
 using namespace maolan::audio;
+
+
+std::vector<maolan::Config *> IO::devices;
 
 
 IO::IO(const size_t &chs, const bool &front, const bool &reg, const std::string &name)

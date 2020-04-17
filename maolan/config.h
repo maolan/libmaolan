@@ -10,8 +10,9 @@ class Config
 {
 public:
   static std::size_t audioBufferSize;
-  static int samplerate;
-  static int bpm;
+  static unsigned samplerate;
+  static std::size_t bpm;
+  std::size_t count;
   static std::vector<BPM> bpms;
 };
 } // namespace maolan

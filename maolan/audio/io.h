@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <maolan/io.h>
+#include <maolan/config.h>
 #include <maolan/audio/buffer.h>
 
 
@@ -13,6 +14,7 @@ public:
 
   virtual std::size_t channels() const = 0;
   virtual Buffer pull(const std::size_t &channel);
+  static std::vector<maolan::Config *> devices;
 
 protected:
   std::vector<Buffer> outputs;

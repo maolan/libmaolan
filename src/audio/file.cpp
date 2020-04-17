@@ -41,8 +41,7 @@ File::File(const std::string &path, const uint64_t &offset)
   if (offset) { _audioFile.seek(offset, SEEK_SET); }
   if (Config::audioBufferSize == 0)
   {
-    std::cerr << "Loading order error. Load some hardware IO first!"
-              << std::endl;
+    std::cerr << "Loading order error. Load some hardware IO first!\n";
     exit(1);
   }
   _type = "File";
