@@ -1,15 +1,22 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
+#include <sstream>
 #include <sys/soundcard.h>
 #include <unistd.h>
 #include <maolan/config.h>
 #include <maolan/constants.h>
 #include <maolan/audio/oss/base.h>
 
-using namespace maolan::audio;
 
-std::vector<OSSConfig *> OSS::devices;
+static void
+checkError(int &value, const std::string &message)
+{
+  if (value == -1) {  throw std::invalid_argument(message); }
+}
+
+
+using namespace maolan::audio;
 
 
 OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
@@ -18,16 +25,17 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
 {
 
   bool found = false;
-  for (auto iter = devices.begin(); iter < devices.end(); ++iter)
+  for (const auto iter : IO::devices)
   {
-    if (*iter == device)
+    if (iter == device)
     {
       found = true;
-      device = *iter;
+      device = (OSSConfig *)iter;
       ++(device->count);
     }
   }
 
+  int error = 0;
   if (!found)
   {
     oss_audioinfo ai;
@@ -36,68 +44,55 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
     device = new OSSConfig;
     device->frag = argFrag;
     device->device = deviceName;
-    if ((device->fd = open(deviceName.data(), O_RDWR, 0)) == -1)
+    try
     {
-      std::cerr << deviceName << ": ";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
-    ai.dev = -1;
-    ioctl(device->fd, SNDCTL_ENGINEINFO, &ai);
+      error = open(deviceName.data(), O_RDWR, 0);
+      checkError(error, "open");
+      device->fd = error;
 
-    if (ioctl(device->fd, SNDCTL_DSP_GETCAPS, &devcaps) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_GETCAPS";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
+      ai.dev = -1;
+      ioctl(device->fd, SNDCTL_ENGINEINFO, &ai);
 
-    tmp = device->frag;
-    if (ioctl(device->fd, SNDCTL_DSP_SETFRAGMENT, &tmp) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_SETFRAGMENT";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
+      error = ioctl(device->fd, SNDCTL_DSP_GETCAPS, &devcaps);
+      checkError(error, "SNDCTL_DSP_GETCAPS");
 
-    if (ioctl(device->fd, SNDCTL_DSP_GETBLKSIZE, &(device->fragSize)) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_GETBLKSIZE: ";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
+      error = ioctl(device->fd, SNDCTL_DSP_SETFRAGMENT, &(device->frag));
+      checkError(error, "SNDCTL_DSP_SETFRAGMENT");
 
-    tmp = chs;
-    if (ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_CHANNELS: ";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
-    outputs.resize(tmp);
+      error = ioctl(device->fd, SNDCTL_DSP_GETBLKSIZE, &(device->fragSize));
+      checkError(error, "SNDCTL_DSP_GETBLKSIZE");
 
-    tmp = device->format;
-    if (ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_SETFMT";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
+      tmp = chs;
+      error = ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp);
+      checkError(error, "SNDCTL_DSP_CHANNELS");
+      outputs.resize(tmp);
+
+      tmp = device->format;
+      error = ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp);
+      checkError(error, "SNDCTL_DSP_SETFMT");
+      if (tmp != AFMT_S32_NE && tmp != AFMT_S32_OE)
+      {
+        std::stringstream s;
+        s << device << " doesn't support chosen sample format (";
+        s << tmp << ")";
+        error = 0;
+        int tempError = 1;
+        checkError(tempError, s.str());
+      }
+
+      tmp = device->samplerate;
+      error = ioctl(device->fd, SNDCTL_DSP_SPEED, &tmp);
+      checkError(error, "SNDCTL_DSP_SPEED");
     }
-    if (tmp != AFMT_S32_NE && tmp != AFMT_S32_OE)
+    catch (const std::invalid_argument &ex)
     {
-      std::cerr << device << " doesn't support 32 bit sample format (";
-      std::cerr << tmp << ")" << std::endl;
+      std::cerr << _type << " error: " << ex.what();
+      if (error == -1) { std::cerr << ' ' << strerror(errno); }
+      std::cerr << '\n';
       exit(1);
     }
 
-    tmp = device->samplerate;
-    if (ioctl(device->fd, SNDCTL_DSP_SPEED, &tmp) == -1)
-    {
-      std::cerr << "SNDCTL_DSP_SPEED";
-      std::cerr << strerror(errno) << std::endl;
-      exit(1);
-    }
-    device->audioBufferSize = device->fragSize / channels() / sizeof(int);
+    Config::audioBufferSize = device->fragSize / channels() / sizeof(int);
     devices.emplace(devices.begin(), device);
   }
 

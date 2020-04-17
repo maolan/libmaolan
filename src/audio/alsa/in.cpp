@@ -1,21 +1,24 @@
 #include <unistd.h>
 #include <maolan/constants.h>
-#include <maolan/audio/oss/in.h>
+#include <maolan/audio/alsa/in.h>
 
 using namespace maolan::audio;
 
-OSSIn::OSSIn(const std::string &device, const int &chs, const int &frag)
-  : OSS(device, frag, chs)
+ALSAIn::ALSAIn(const std::string &device, const int &chs, const snd_pcm_uframes_t &frames)
+  : ALSA(device, chs)
 {
-  _type = "OSSIn";
-  _name = "OSS In";
+  _type = "ALSAIn";
+  _name = "ALSA In";
 }
 
 
-void OSSIn::fetch() { read(device->fd, frame, device->fragSize); }
+void ALSAIn::fetch()
+{
+  auto err = snd_pcm_readi(device->handle, frame, device->fragSize);
+}
 
 
-void OSSIn::process()
+void ALSAIn::process()
 {
   auto chs = channels();
   int channel;
