@@ -39,3 +39,4 @@ put its own .pc file.
 ```
 env PKG_CONFIG_DATA=/some/path cmake .. -DPKG_CONFIG_INSTALL_PATH=/libdata/pkgconfig
 ```
+Note that `PKG_CONFIG_INSTALL_PATH` is relative to `PREFIX`.
