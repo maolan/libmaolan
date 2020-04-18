@@ -12,8 +12,8 @@ class ALSAOut : public ALSA, public Connectable
 public:
   ALSAOut(const std::string &device, const int &channels, const snd_pcm_uframes_t &frames = 512);
 
-  void fetch();
-  void process();
+  virtual void fetch();
+  virtual void process();
   void convertToRaw();
   void play(float *frame, std::size_t dataSize);
 };

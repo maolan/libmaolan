@@ -4,6 +4,7 @@
 #include <maolan/audio/file.h>
 #include <maolan/audio/io.h>
 
+
 namespace maolan::audio
 {
 class Track;
@@ -20,8 +21,9 @@ public:
   );
   ~Clip();
 
-  void fetch();
-  void process();
+  virtual void fetch();
+  virtual void process();
+  virtual void setup();
   std::size_t channels() const;
   uint64_t offset();
   void offset(const uint64_t &argOffset);

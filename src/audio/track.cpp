@@ -10,7 +10,7 @@ using namespace maolan::audio;
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
-    : IO(0, true)
+    : IO(0, true, true)
     , Connectable(ch)
     , _current(nullptr)
     , first(nullptr)
@@ -22,22 +22,20 @@ Track::Track(const std::string &name, const std::size_t &ch)
   _type = "Track";
   _name = name;
   outputs.resize(ch);
-  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
 void Track::fetch()
 {
-  if (_current != nullptr)
-  {
-    _current->fetch();
-    _current->process();
-  }
+  Connectable::fetch();
+  if (_current != nullptr) { _current->fetch(); }
 }
 
 
 void Track::process()
 {
+  Connectable::process();
+  if (_current != nullptr) { _current->process(); }
   auto const chs = channels();
   if (armed)
   {
@@ -93,6 +91,7 @@ void Track::setup()
     _current = recording;
     first = _current;
     last = _current;
+    _current->setup();
   }
   else if (first == nullptr)
   {
@@ -108,15 +107,14 @@ void Track::setup()
   }
   else
   {
-    Clip *prevclip = nullptr;
     for (auto clip = last; clip != nullptr; clip = clip->previous())
     {
       if (clip->start() <= _playHead && clip->end() > _playHead)
       {
         _current = clip;
+        _current->setup();
         break;
       }
-      prevclip = clip;
     }
   }
 }

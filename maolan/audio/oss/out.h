@@ -12,8 +12,8 @@ class OSSOut : public OSS, public Connectable
 public:
   OSSOut(const std::string &device, const int &channels, const int &frag = defaultFrag);
 
-  void fetch();
-  void process();
+  virtual void fetch();
+  virtual void process();
   void convertToRaw();
   void play(int *frame, std::size_t dataSize);
 };

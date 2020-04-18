@@ -1,4 +1,3 @@
-#include <iostream>
 #include <thread>
 #include <maolan/engine.h>
 #include <maolan/io.h>
@@ -21,7 +20,6 @@ void Engine::init(const int &threads)
   {
     _workers[i] = new Worker();
   }
-  std::cout << "created " << _workers.size() << " workers\n";
 }
 
 

@@ -19,6 +19,7 @@ OSSOut::OSSOut(const std::string &device, const int &chs, const int &frag)
 
 void OSSOut::fetch()
 {
+  Connectable::fetch();
   for (size_t i = 0; i < channels(); ++i) { outputs[i] = inputs[i].pull(); }
 }
 
@@ -53,6 +54,7 @@ void OSSOut::convertToRaw()
 
 void OSSOut::process()
 {
+  Connectable::process();
   convertToRaw();
   play(frame, device->fragSize);
 }

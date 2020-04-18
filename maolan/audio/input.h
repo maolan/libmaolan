@@ -11,8 +11,8 @@ class Input : public IO
 public:
   Input();
 
-  void fetch();
-  void process();
+  virtual void fetch();
+  virtual void process();
   void connect(IO *to, const std::size_t &ch = 0);
   std::size_t channels() const;
   Buffer pull();

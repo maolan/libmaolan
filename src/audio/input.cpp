@@ -1,6 +1,5 @@
-#include <iostream>
-#include <maolan/audio/input.h>
 #include <maolan/config.h>
+#include <maolan/audio/input.h>
 
 
 using namespace maolan::audio;
@@ -11,7 +10,6 @@ Input::Input()
 {
   _type = "Input";
   connections.clear();
-  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
@@ -24,15 +22,15 @@ void Input::connect(IO *to, const std::size_t &ch)
 
 void Input::fetch()
 {
-  std::vector<Buffer> channels;
+  std::vector<Buffer> channels(connections.size());
   bool empty = true;
-  for (auto &connection : connections)
+  for (std::size_t i = 0; i < connections.size(); ++i)
   {
-    const auto element = connection.pull();
+    const auto element = connections[i].pull();
+    channels[i] = element;
     if (element != nullptr)
     {
       empty = false;
-      channels.push_back(element);
     }
   }
   if (empty)
