@@ -45,7 +45,7 @@ void Input::fetch()
   }
   else
   {
-    const Buffer result = Buffer(new BufferData(Config::audioBufferSize));
+    const auto result = std::make_shared<BufferData>(Config::audioBufferSize);
     for (size_t i = 0; i < Config::audioBufferSize; ++i)
     {
       float sum = 0;
@@ -55,9 +55,9 @@ void Input::fetch()
         {
           continue;
         }
-        sum += channel->data[i];
+        sum += channel->data()[i];
       }
-      result->data[i] = sum;
+      result->data()[i] = sum;
     }
     outputs[0] = result;
   }

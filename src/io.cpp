@@ -23,8 +23,7 @@ std::condition_variable IO::cv;
 
 enum Stage
 {
-  SETUP = 0,
-  FETCH,
+  FETCH = 0,
   PROCESS,
   TOTAL
 };
@@ -87,12 +86,9 @@ IO::~IO()
 
 void IO::work()
 {
-  if (_stage == SETUP)
+  if (_stage == FETCH)
   {
     setup();
-  }
-  else if (_stage == FETCH)
-  {
     fetch();
   }
   else if (_stage == PROCESS)
