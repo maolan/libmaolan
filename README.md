@@ -40,3 +40,8 @@ put its own .pc file.
 env PKG_CONFIG_DATA=/some/path cmake .. -DPKG_CONFIG_INSTALL_PATH=/libdata/pkgconfig
 ```
 Note that `PKG_CONFIG_INSTALL_PATH` is relative to `PREFIX`.
+
+By default only shared library will be built. You can turn on/off static/shared library.
+```
+cmake .. -DBUILD_STATIC=On -DBUILD_SHARED=On
+```
