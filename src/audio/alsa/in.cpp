@@ -25,13 +25,13 @@ void ALSAIn::process()
   int index;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = Buffer(new BufferData(device->audioBufferSize));
+    outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
   auto sizeLimit = device->fragSize / sizeof(*frame);
   for (int i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data[index] = frame[i] / floatMaxInt;
+    outputs[channel]->data()[index] = frame[i] / floatMaxInt;
   }
 }

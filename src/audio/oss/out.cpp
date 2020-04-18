@@ -40,7 +40,7 @@ void OSSOut::convertToRaw()
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        float sample = buffer->data[i];
+        float sample = buffer->data()[i];
 
         if (sample <= -1.0) { sample = -1.0; }
         else if (sample >= 1.0) { sample = 1.0; }

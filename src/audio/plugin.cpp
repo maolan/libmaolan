@@ -24,7 +24,7 @@ static const char * id_to_uri (LV2_URID_Unmap_Handle unused, LV2_URID urid)
 
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
-Buffer Plugin::emptyBuffer = Buffer(new BufferData(Config::audioBufferSize));
+Buffer Plugin::emptyBuffer = std::make_shared<BufferData>(Config::audioBufferSize);
 
 
 float val = 0.0;
@@ -287,7 +287,10 @@ Plugin::~Plugin()
 }
 
 
-void Plugin::init() { emptyBuffer = Buffer(new BufferData(Config::audioBufferSize)); }
+void Plugin::init()
+{
+  emptyBuffer = std::make_shared<BufferData>(Config::audioBufferSize);
+}
 void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
 const LilvNode * Plugin::uri() const { return _uri; }

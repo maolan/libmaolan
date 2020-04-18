@@ -58,10 +58,10 @@ void File::split()
   const auto chs = channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
-    outputs[channel] = Buffer(new BufferData(Config::audioBufferSize));
+    outputs[channel] = std::make_shared<BufferData>(Config::audioBufferSize);
     for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
     {
-      outputs[channel]->data[i] = frame[i * chs + channel];
+      outputs[channel]->data()[i] = frame[i * chs + channel];
     }
   }
 }
@@ -91,7 +91,7 @@ void File::write(const Frame &fr)
       auto &buffer = fr.audioBuffer[channel];
       if (buffer)
       {
-        auto data = buffer->data;
+        auto data = buffer->data();
         sample = data[i];
       }
       else { sample = 0.0; }
