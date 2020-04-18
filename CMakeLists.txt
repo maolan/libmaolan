@@ -70,14 +70,36 @@ endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX}/include ${MY_INCLUDE_DIRS})
 link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
 
-add_library(
-    maolan
-    SHARED
-    ${SRCS} ${MY_HEADERS}
-)
 
-target_link_libraries(maolan ${MY_LIBRARIES})
-install(TARGETS maolan)
+option(BUILD_SHARED "Build shared library (libmaolan.so)" ON)
+if (BUILD_SHARED)
+    add_library(
+        maolan
+        SHARED
+        ${SRCS} ${MY_HEADERS}
+    )
+    target_link_libraries(maolan ${MY_LIBRARIES})
+    install(TARGETS maolan)
+endif()
+
+option(BUILD_STATIC "Build static library (libmaolan.a)" OFF)
+if (BUILD_STATIC)
+    add_library(
+        maolan-static
+        STATIC
+        ${SRCS} ${MY_HEADERS}
+    )
+    if (NOT ${CMAKE_SYSTEM_NAME} STREQUAL "Windows")
+        set_target_properties(maolan-static PROPERTIES OUTPUT_NAME maolan)
+    endif()
+    target_link_libraries(maolan-static ${MY_LIBRARIES})
+    install(TARGETS maolan-static)
+endif()
+
+
+if (NOT BUILD_SHARED AND NOT BUILD_STATIC)
+    message(FATAL_ERROR "You have to build at least one: SHARED or STATIC library")
+endif()
 
 
 if (OSS)
