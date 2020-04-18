@@ -8,10 +8,13 @@ include(GNUInstallDirs)
 file(GLOB SRCS src/*.cpp src/audio/*.cpp src/midi/*.cpp)
 file(GLOB HEADERS maolan/*.h)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan)
+set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 file(GLOB HEADERS maolan/audio/*.h)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio)
+set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 file(GLOB HEADERS maolan/midi/*.h)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/midi)
+set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 
 enable_testing()
 add_custom_target(build-tests)
@@ -40,6 +43,7 @@ if (OSS)
     set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} maolan/audio/oss)
     set(SRCS ${SRCS} ${OSS_SRCS})
     install(FILES ${OSS_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/oss)
+    set(MY_HEADERS ${MY_HEADEARS} ${OSS_HEADERS})
 endif()
 
 option(ALSA "Advance Linux Sound Architecture" ON)
@@ -52,6 +56,7 @@ if (ALSA)
     file(GLOB ALSA_HEADERS maolan/audio/alsa/*.h)
     set(SRCS ${SRCS} ${ALSA_SRCS})
     install(FILES ${ALSA_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/alsa)
+    set(MY_HEADERS ${MY_HEADEARS} ${ALSA_HEADERS})
 endif()
 
 if (PKG_CONFIG_INSTALL_PATH)
@@ -68,7 +73,7 @@ link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
 add_library(
     maolan
     SHARED
-    ${SRCS}
+    ${SRCS} ${MY_HEADERS}
 )
 
 target_link_libraries(maolan ${MY_LIBRARIES})

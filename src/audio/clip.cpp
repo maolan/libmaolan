@@ -33,23 +33,12 @@ Clip::Clip(
 {
   _type = "Clip";
   parent->add(this);
-  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
 Clip::~Clip()
 {
   if (_parent != nullptr) { _parent->remove(this); }
-}
-
-
-void Clip::fetch()
-{
-  if (_playHead >= _start)
-  {
-    file.fetch();
-    file.process();
-  }
 }
 
 
@@ -78,11 +67,13 @@ void Clip::write(const Frame &fr)
 }
 
 
+void Clip::setup() { if (_current != nullptr) { _current->setup(); } }
 void Clip::write(const Frame * const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
 void Clip::previous(Clip *p) { _previous = p; }
 Clip *Clip::previous() { return _previous; }
+void Clip::fetch() { if (_playHead >= _start) { file.fetch(); } }
 void Clip::process() {}
 std::size_t Clip::channels() const { return file.channels(); }
 uint64_t Clip::offset() { return _offset; }

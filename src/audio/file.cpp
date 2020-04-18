@@ -24,7 +24,6 @@ File::File(const std::size_t &ch)
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
   frame = new float[Config::audioBufferSize * chs];
-  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 
@@ -48,7 +47,6 @@ File::File(const std::string &path, const uint64_t &offset)
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
   frame = new float[Config::audioBufferSize * chs];
-  std::cout << "Created " << _type << " named " << _name << '\n';
 }
 
 

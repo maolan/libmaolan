@@ -15,9 +15,9 @@ public:
   File(const std::string &path, const uint64_t &offset = 0);
   ~File();
 
-  void fetch();
-  void split();
-  void process();
+  virtual void fetch();
+  virtual void split();
+  virtual void process();
   void write(const Frame &frame);
   void write(const Frame * const frame);
   uint64_t offset();

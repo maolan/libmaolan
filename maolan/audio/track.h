@@ -11,9 +11,9 @@ class Track : public IO, public Connectable
 public:
   Track(const std::string &name, const std::size_t &channel);
 
-  void fetch();
-  void process();
-  void setup();
+  virtual void fetch();
+  virtual void process();
+  virtual void setup();
   void mute();
   void arm();
   void solo();
@@ -21,7 +21,7 @@ public:
   void remove(Clip *);
   void add(Plugin *);
   void remove(Plugin *);
-  std::size_t channels() const;
+  virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel);
 
 protected:
