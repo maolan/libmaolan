@@ -16,7 +16,7 @@ bool IO::_rec = false;
 bool IO::_playing = false;
 bool IO::_quit = false;
 uint64_t IO::_playHead = 0;
-std::atomic_size_t IO::_count = 0;
+std::atomic_size_t IO::_count{0};
 std::mutex IO::m;
 std::condition_variable IO::cv;
 

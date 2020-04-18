@@ -1,5 +1,6 @@
 #include <fstream>
 #include <iostream>
+#include <cstring>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
@@ -94,7 +95,7 @@ void MIDIFile::skipHeaders()
   // MThd
   file.read(rawData, size);
   rawData[size] = '\0';
-  if (strncmp(rawData, "MThd", size) != 0)
+  if (std::strncmp(rawData, "MThd", size) != 0)
   {
     std::cerr << "Not a MIDI file" << std::endl;
   }

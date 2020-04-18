@@ -1,6 +1,6 @@
 #include <iostream>
 #include <algorithm>
-#include <lv2/state/state.h>
+#include <lv2/lv2plug.in/ns/ext/state/state.h>
 #include <maolan/config.h>
 #include <maolan/audio/plugin.h>
 #include <maolan/audio/pluginport.h>
