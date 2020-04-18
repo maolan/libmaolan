@@ -40,11 +40,6 @@ if (OSS)
     set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} maolan/audio/oss)
     set(SRCS ${SRCS} ${OSS_SRCS})
     install(FILES ${OSS_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/oss)
-    add_executable(test-oss EXCLUDE_FROM_ALL tests/oss/cli.cpp)
-    target_link_directories(test-oss PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-    target_link_libraries(test-oss maolan)
-    add_test(NAME OSS COMMAND ./test-oss http://lv2plug.in/plugins/eg-amp)
-    add_dependencies(build-tests test-oss)
 endif()
 
 option(ALSA "Advance Linux Sound Architecture" ON)
@@ -57,11 +52,6 @@ if (ALSA)
     file(GLOB ALSA_HEADERS maolan/audio/alsa/*.h)
     set(SRCS ${SRCS} ${ALSA_SRCS})
     install(FILES ${ALSA_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/audio/alsa)
-    add_executable(test-alsa EXCLUDE_FROM_ALL tests/alsa/cli.cpp)
-    target_link_directories(test-alsa PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-    target_link_libraries(test-alsa maolan ${ALSA_LIBRARIES})
-    add_test(NAME ALSA COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
-    add_dependencies(build-tests test-alsa)
 endif()
 
 if (PKG_CONFIG_INSTALL_PATH)
@@ -78,8 +68,26 @@ link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
 add_library(
     maolan
     SHARED
-    ${SRCS} ${HEADERS}
+    ${SRCS}
 )
 
 target_link_libraries(maolan ${MY_LIBRARIES})
 install(TARGETS maolan)
+
+
+if (OSS)
+    add_executable(test-oss EXCLUDE_FROM_ALL tests/oss/cli.cpp)
+    target_link_directories(test-oss PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
+    target_link_libraries(test-oss maolan ${MY_LIBRARIES})
+    add_test(NAME OSS COMMAND ./test-oss http://lv2plug.in/plugins/eg-amp)
+    add_dependencies(build-tests test-oss)
+endif()
+
+option(ALSA "Advance Linux Sound Architecture" ON)
+if (ALSA)
+    add_executable(test-alsa EXCLUDE_FROM_ALL tests/alsa/cli.cpp)
+    target_link_directories(test-alsa PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
+    target_link_libraries(test-alsa maolan ${MY_LIBRARIES})
+    add_test(NAME ALSA COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
+    add_dependencies(build-tests test-alsa)
+endif()
