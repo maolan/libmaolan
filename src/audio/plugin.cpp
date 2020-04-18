@@ -1,5 +1,6 @@
 #include <iostream>
 #include <algorithm>
+#include <cassert>
 #include <lv2/lv2plug.in/ns/ext/state/state.h>
 #include <maolan/config.h>
 #include <maolan/audio/plugin.h>
