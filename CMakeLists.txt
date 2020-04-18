@@ -64,15 +64,13 @@ if (ALSA)
     add_dependencies(build-tests test-alsa)
 endif()
 
-# option(JACK "Jack audio connection kit" ON)
-# if (JACK)
-    # pkg_check_modules(JACK REQUIRED jack)
-    # set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${JACK_INCLUDE_DIRS})
-    # set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${JACK_LIBRARY_DIRS})
-    # set(MY_LIBRARIES ${MY_LIBRARIES} ${JACK_LIBRARIES})
-    # file(GLOB JACK_SRCS src/audio/jack/*.cpp)
-    # set(SRCS ${SRCS} ${JACK_SRCS})
-# endif()
+if (PKG_CONFIG_PATH)
+    install(FILES libmaolan.pc DESTINATION ${CMAKE_INSTALL_PREFIX}${PKG_CONFIG_PATH})
+elseif (${CMAKE_SYSTEM_NAME} STREQUAL "FreeBSD")
+    install(FILES libmaolan.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/libdata/pkgconfig)
+else()
+    install(FILES libmaolan.pc DESTINATION ${CMAKE_INSTALL_PREFIX}/lib/pkgconfig)
+endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX}/include ${MY_INCLUDE_DIRS})
 link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
@@ -82,5 +80,6 @@ add_library(
     SHARED
     ${SRCS} ${HEADERS}
 )
+
 target_link_libraries(maolan ${MY_LIBRARIES})
 install(TARGETS maolan)
