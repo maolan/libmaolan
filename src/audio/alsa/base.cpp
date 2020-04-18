@@ -85,7 +85,10 @@ ALSA::~ALSA()
   --(device->count);
   if (device->count < 1)
   {
-    devices.erase(std::find(devices.begin(), devices.end(), device));
+    for (auto iter = IO::devices.begin(); iter != IO::devices.end(); ++iter)
+    {
+      if (*iter == device) { devices.erase(iter); }
+    }
   }
 }
 

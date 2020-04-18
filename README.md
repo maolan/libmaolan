@@ -32,3 +32,10 @@ cmake .. -D<driver>=Off
 |------|:---------------------------------:|--------------:|
 | OSS  | Open Sound System                 | -DOSS         |
 | ALSA | Advanced Linux Sound Architecture | -DALSA        |
+
+
+You can point cmake where to search for `pkg-config` .pc files and where to
+put its own .pc file.
+```
+env PKG_CONFIG_DATA=/some/path cmake .. -DPKG_CONFIG_INSTALL_PATH=/libdata/pkgconfig
+```

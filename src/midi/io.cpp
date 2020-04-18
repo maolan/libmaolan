@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstring>
 #include <maolan/midi/chunk.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/io.h>
