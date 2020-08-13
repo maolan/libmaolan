@@ -15,9 +15,9 @@ OSSMIDI::OSSMIDI(const std::string &deviceName)
 
   data = std::make_shared<BufferData>();
   bool found = false;
-  for (const auto iter : MIDIIO::devices)
+  for (const auto iter : devices)
   {
-    if (iter == device)
+    if (iter->name == "OSSMIDI" && iter->device == deviceName)
     {
       found = true;
       device = (OSSMIDIConfig *)iter;
@@ -29,11 +29,11 @@ OSSMIDI::OSSMIDI(const std::string &deviceName)
   {
     device = new OSSMIDIConfig;
     device->device = deviceName;
+    if ((device->fd = open(deviceName.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
+    {
+      std::cerr << deviceName.data() << ' ' << std::strerror(errno) << '\n';
+    }
     devices.emplace(devices.begin(), device);
-  }
-  if ((device->fd = open(deviceName.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
-  {
-    std::cerr << deviceName.data() << ' ' << std::strerror(errno) << '\n';
   }
 }
 

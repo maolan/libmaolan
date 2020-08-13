@@ -9,6 +9,9 @@
 #include <maolan/audio/oss/base.h>
 
 
+using namespace maolan::audio;
+
+
 static void
 checkError(int &value, const std::string &message)
 {
@@ -19,30 +22,28 @@ checkError(int &value, const std::string &message)
 }
 
 
-using namespace maolan::audio;
-
-
 OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
   : IO(0, true, true, deviceName)
   , device{nullptr}
 {
 
   bool found = false;
-  for (const auto iter : IO::devices)
+  for (const auto iter : devices)
   {
-    if (iter == device)
+    if (iter->name == "OSS" && iter->device == deviceName)
     {
       found = true;
       device = (OSSConfig *)iter;
       ++(device->count);
+      outputs.resize(device->channels);
       break;
     }
   }
 
-  int error = 0;
   if (!found)
   {
     oss_audioinfo ai;
+    int error = 0;
     int tmp;
     int devcaps;
     device = new OSSConfig;
@@ -70,6 +71,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
       error = ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp);
       checkError(error, "SNDCTL_DSP_CHANNELS");
       outputs.resize(tmp);
+      device->channels = tmp;
 
       tmp = device->format;
       error = ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp);

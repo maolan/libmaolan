@@ -11,6 +11,5 @@ public:
   OSSMIDIConfig();
 
   int fd;
-  std::string device;
 };
 } // namespace maolan::midi

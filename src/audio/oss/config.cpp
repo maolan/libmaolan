@@ -9,4 +9,6 @@ OSSConfig::OSSConfig()
   : format{AFMT_S32_NE}
   , frag{16}
   , fragSize{0}
-{}
+{
+  name = "OSS";
+}

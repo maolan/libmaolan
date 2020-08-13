@@ -15,6 +15,6 @@ public:
   std::size_t audioChannels;
   int frag;
   int fragSize;
-  std::string device;
+  int channels;
 };
 } // namespace maolan::audio
