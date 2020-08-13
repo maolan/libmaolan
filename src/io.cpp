@@ -4,7 +4,6 @@
 #include <thread>
 
 
-
 using namespace maolan;
 
 
@@ -19,6 +18,7 @@ uint64_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
 std::mutex IO::m;
 std::condition_variable IO::cv;
+std::vector<maolan::Config *> IO::_devices;
 
 
 enum Stage

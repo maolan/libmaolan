@@ -1,11 +1,17 @@
 #pragma once
-#include <iostream>
 #include <maolan/io.h>
-#include <maolan/midi/chunk.h>
+#include <maolan/midi/buffer.h>
 
 
+namespace maolan::midi
+{
 class MIDIIO : public maolan::IO
 {
 public:
-  MIDIChunk *get(int fd);
+  MIDIIO(const std::string &name = "", const bool &front = true, const bool &reg = false);
+
+  static std::vector<maolan::Config *> devices;
+
+  virtual Buffer pull();
 };
+} // namespace maolan::midi

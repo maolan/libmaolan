@@ -2,6 +2,8 @@
 #include <iostream>
 
 
+namespace maolan::midi
+{
 class MIDIEvent
 {
 public:
@@ -12,3 +14,4 @@ public:
   static unsigned char const CONTROLER_ON = 0xB0;
   static unsigned char const META = 0xFF;
 };
+} // namespace maolan::midi

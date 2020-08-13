@@ -1,17 +1,19 @@
 #pragma once
 #include <fstream>
 #include <maolan/io.h>
-#include <maolan/midi/chunk.h>
+#include <maolan/midi/buffer.h>
 #include <string>
 
 
+namespace maolan::midi
+{
 class MIDIFile
 {
 public:
   MIDIFile(const std::string &path);
   ~MIDIFile();
 
-  MIDIChunk *read();
+  BufferData * read();
   void skipHeaders();
   bool eof();
 
@@ -20,3 +22,4 @@ public:
 protected:
   std::ifstream file;
 };
+} // namespace maolan::midi

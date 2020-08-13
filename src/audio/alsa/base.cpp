@@ -8,7 +8,10 @@
 static void
 checkError(int &value, const std::string &message)
 {
-  if (value != 0) {  throw std::invalid_argument(message); }
+  if (value != 0)
+  {
+    throw std::invalid_argument(message);
+  }
 }
 
 

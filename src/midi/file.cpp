@@ -1,7 +1,7 @@
 #include <fstream>
 #include <iostream>
 #include <cstring>
-#include <maolan/midi/chunk.h>
+#include <maolan/midi/buffer.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
 #include <unistd.h>
@@ -42,7 +42,7 @@ int bigEndianInt(std::ifstream &file, int size, bool debug = false)
 }
 
 
-void readMetaEvent(std::ifstream &file, MIDIChunk *chunk)
+void readMetaEvent(std::ifstream &file, maolan::midi::BufferData *chunk)
 {
   unsigned char type;
   file >> type;
@@ -52,21 +52,21 @@ void readMetaEvent(std::ifstream &file, MIDIChunk *chunk)
 }
 
 
-void readNote(std::ifstream &file, MIDIChunk *chunk)
+void readNote(std::ifstream &file, maolan::midi::BufferData *chunk)
 {
   file >> chunk->note >> chunk->velocity;
 }
 
 
-MIDIFile::MIDIFile(const std::string &path) : file(path, std::ios::binary) {}
+maolan::midi::MIDIFile::MIDIFile(const std::string &path) : file(path, std::ios::binary) {}
 
 
-MIDIFile::~MIDIFile() { file.close(); }
+maolan::midi::MIDIFile::~MIDIFile() { file.close(); }
 
 
-MIDIChunk *MIDIFile::read()
+maolan::midi::BufferData * maolan::midi::MIDIFile::read()
 {
-  MIDIChunk *chunk = new MIDIChunk;
+  BufferData *chunk = new BufferData;
   chunk->channel = 0;
   chunk->note = 0;
   chunk->velocity = 0;
@@ -87,7 +87,7 @@ MIDIChunk *MIDIFile::read()
 }
 
 
-void MIDIFile::skipHeaders()
+void maolan::midi::MIDIFile::skipHeaders()
 {
   int size = 4;
   char rawData[size + 1];
@@ -110,4 +110,4 @@ void MIDIFile::skipHeaders()
 }
 
 
-bool MIDIFile::eof() { return file.eof(); }
+bool maolan::midi::MIDIFile::eof() { return file.eof(); }
