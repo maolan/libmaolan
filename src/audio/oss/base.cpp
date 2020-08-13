@@ -12,7 +12,10 @@
 static void
 checkError(int &value, const std::string &message)
 {
-  if (value == -1) {  throw std::invalid_argument(message); }
+  if (value == -1)
+  {
+    throw std::invalid_argument(message);
+  }
 }
 
 
@@ -32,6 +35,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
       found = true;
       device = (OSSConfig *)iter;
       ++(device->count);
+      break;
     }
   }
 
