@@ -8,7 +8,7 @@
 using namespace maolan::midi;
 
 
-static BufferData *lastBuffer = nullptr;
+static Buffer lastBuffer = nullptr;
 
 
 OSSMIDIIn::OSSMIDIIn(const std::string &device) : OSSMIDI(device)
@@ -29,17 +29,17 @@ void OSSMIDIIn::fetch()
 {
   static int l = -1;
   static unsigned char buf[8];
-  BufferData *chunk;
+  Buffer chunk;
 
   while ((l = read(device->fd, buf, sizeof(buf))) != -1)
   {
     if (lastBuffer == nullptr)
     {
-      chunk = data.get();
+      chunk = data;
     }
     else
     {
-      chunk = new BufferData;
+      chunk = std::make_shared<BufferData>();
       lastBuffer->next = chunk;
     }
     chunk->type = buf[0] & MIDIEvent::NOTE_MASK;
