@@ -1,5 +1,6 @@
 #include <cstring>
 #include <fcntl.h>
+#include <iostream>
 #include <maolan/midi/event.h>
 #include <maolan/midi/oss/base.h>
 #include <unistd.h>
@@ -9,8 +10,7 @@ using namespace maolan::midi;
 
 
 OSSMIDI::OSSMIDI(const std::string &deviceName)
-  : MIDIIO(deviceName, true, true)
-  , device{nullptr}
+    : MIDIIO(deviceName, true, true), device{nullptr}
 {
 
   data = std::make_shared<BufferData>();

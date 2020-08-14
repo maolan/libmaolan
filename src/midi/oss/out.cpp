@@ -1,11 +1,13 @@
-#include <iomanip>
-#include <maolan/constants.h>
+#include <iostream>
 #include <maolan/midi/event.h>
 #include <maolan/midi/oss/out.h>
 #include <unistd.h>
 
 
 using namespace maolan::midi;
+
+
+static unsigned char buf[4];
 
 
 OSSMIDIOut::OSSMIDIOut(const std::string &device) : OSSMIDI(device)
@@ -18,7 +20,30 @@ OSSMIDIOut::OSSMIDIOut(const std::string &device) : OSSMIDI(device)
 void OSSMIDIOut::fetch()
 {
   Connectable::fetch();
+  data = input.pull();
 }
 
 
-void OSSMIDIOut::process() {}
+void OSSMIDIOut::process()
+{
+  for (auto buffer = data.get(); buffer != nullptr; buffer = buffer->next)
+  {
+    if (buffer->type == 0)
+    {
+      continue;
+    }
+    buf[0] = buffer->type | buffer->channel;
+    if (buffer->type == MIDIEvent::CONTROLER_ON)
+    {
+      buf[1] = buffer->controler;
+      buf[2] = buffer->value;
+    }
+    else
+    {
+      buf[1] = buffer->note;
+      buf[2] = buffer->velocity;
+    }
+    buf[3] = '\0';
+    write(device->fd, buf, sizeof(buf));
+  }
+}

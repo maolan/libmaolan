@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 #include <maolan/midi/buffer.h>
 #include <maolan/midi/io.h>
 #include <maolan/midi/oss/config.h>

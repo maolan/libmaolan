@@ -1,9 +1,11 @@
+#include <chrono>
 #include <fcntl.h>
 #include <iostream>
 #include <maolan/audio/oss/out.h>
 #include <maolan/engine.h>
 #include <maolan/midi/oss/in.h>
 #include <maolan/midi/oss/out.h>
+#include <thread>
 
 
 int main(int argc, char **argv)
@@ -44,7 +46,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  maolan::audio::OSSOut out("/dev/dsp", 2);
+  maolan::audio::OSSOut out("/dev/dsp", 2, 4);
   maolan::midi::OSSMIDIIn midiIn(argv[1]);
   maolan::midi::OSSMIDIOut midiOut(argv[1]);
   midiOut.connect(&midiIn);

@@ -44,12 +44,7 @@ void OSSMIDIIn::fetch()
     }
     chunk->type = buf[0] & MIDIEvent::NOTE_MASK;
     chunk->channel = buf[0] & MIDIEvent::CHANNEL_MASK;
-    if (chunk->type == MIDIEvent::NOTE_ON)
-    {
-      chunk->note = buf[1];
-      chunk->velocity = buf[2];
-    }
-    else if (chunk->type == MIDIEvent::NOTE_OFF)
+    if (chunk->type == MIDIEvent::NOTE_ON || chunk->type == MIDIEvent::NOTE_OFF)
     {
       chunk->note = buf[1];
       chunk->velocity = buf[2];
