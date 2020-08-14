@@ -1,7 +1,8 @@
 #pragma once
-#include <memory>
-#include <vector>
 #include <maolan/bpm.h>
+#include <memory>
+#include <string>
+#include <vector>
 
 
 namespace maolan
@@ -14,5 +15,7 @@ public:
   static std::size_t bpm;
   std::size_t count;
   static std::vector<BPM> bpms;
+  std::string name;
+  std::string device;
 };
 } // namespace maolan

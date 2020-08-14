@@ -6,4 +6,6 @@ using namespace maolan::midi;
 
 
 OSSMIDIConfig::OSSMIDIConfig()
-{}
+{
+  name = "OSSMIDI";
+}

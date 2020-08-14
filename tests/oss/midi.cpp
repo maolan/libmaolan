@@ -3,6 +3,7 @@
 #include <maolan/audio/oss/out.h>
 #include <maolan/engine.h>
 #include <maolan/midi/oss/in.h>
+#include <maolan/midi/oss/out.h>
 
 
 int main(int argc, char **argv)
@@ -44,7 +45,9 @@ int main(int argc, char **argv)
   }
 
   maolan::audio::OSSOut out("/dev/dsp", 2);
-  maolan::midi::OSSMIDIIn midi(argv[1]);
+  maolan::midi::OSSMIDIIn midiIn(argv[1]);
+  maolan::midi::OSSMIDIOut midiOut(argv[1]);
+  midiOut.connect(&midiIn);
 
   maolan::Engine::init();
   std::cerr << "Playing ...";
