@@ -4,6 +4,9 @@
 
 namespace maolan::midi
 {
+class BufferData;
+typedef std::shared_ptr<BufferData> Buffer;
+
 class BufferData
 {
 public:
@@ -17,10 +20,9 @@ public:
   unsigned int type;
   unsigned int velocity;
   char *data;
-  BufferData *next;
+  Buffer next;
 
   void print();
 };
-typedef std::shared_ptr<BufferData> Buffer;
 } // namespace maolan::midi
 

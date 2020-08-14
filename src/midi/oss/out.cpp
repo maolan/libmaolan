@@ -26,7 +26,7 @@ void OSSMIDIOut::fetch()
 
 void OSSMIDIOut::process()
 {
-  for (auto buffer = data.get(); buffer != nullptr; buffer = buffer->next)
+  for (auto buffer = data; buffer != nullptr; buffer = buffer->next)
   {
     if (buffer->type == 0)
     {

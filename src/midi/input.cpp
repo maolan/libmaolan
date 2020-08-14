@@ -43,8 +43,8 @@ void Input::fetch()
   else
   {
     output = nullptr;
-    BufferData *lastBuffer = nullptr;
-    BufferData *chunk = nullptr;
+    Buffer lastBuffer;
+    Buffer chunk;
     for (auto channel : channels)
     {
       if (channel == nullptr)
@@ -53,9 +53,9 @@ void Input::fetch()
       }
       if (output == nullptr) {
         output = std::make_shared<BufferData>();
-        chunk = output.get();
+        chunk = output;
       } else {
-        chunk = new BufferData;
+        chunk = std::make_shared<BufferData>();
       }
       *chunk = *channel;
       chunk->next = nullptr;
@@ -71,7 +71,7 @@ void Input::fetch()
 
 Buffer Input::pull()
 {
-  for (auto buffer = output.get(); buffer != nullptr; buffer = buffer->next)
+  for (auto buffer = output; buffer != nullptr; buffer = buffer->next)
   {
     if (buffer->type == 0) { continue; }
   }
