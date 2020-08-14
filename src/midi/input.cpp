@@ -58,6 +58,7 @@ void Input::fetch()
         chunk = new BufferData;
       }
       *chunk = *channel;
+      chunk->next = nullptr;
       if (lastBuffer != nullptr)
       {
         lastBuffer->next = chunk;
@@ -70,6 +71,10 @@ void Input::fetch()
 
 Buffer Input::pull()
 {
+  for (auto buffer = output.get(); buffer != nullptr; buffer = buffer->next)
+  {
+    if (buffer->type == 0) { continue; }
+  }
   return output;
 }
 
