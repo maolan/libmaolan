@@ -10,7 +10,7 @@ using namespace maolan::midi;
 
 
 OSSMIDI::OSSMIDI(const std::string &deviceName)
-    : MIDIIO(deviceName, true, true), device{nullptr}
+    : IO(deviceName, true, true), device{nullptr}
 {
 
   data = std::make_shared<BufferData>();

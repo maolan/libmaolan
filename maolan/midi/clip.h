@@ -1,24 +1,30 @@
 #pragma once
-#include <maolan/io.h>
+#include <maolan/midi/io.h>
 #include <maolan/midi/buffer.h>
+#include <maolan/midi/file.h>
 #include <string>
-#include <vector>
 
 
 namespace maolan::midi
 {
-class MIDIClip : public maolan::IO
+class Clip : public IO
 {
 public:
-  MIDIClip();
-  ~MIDIClip();
-
-  BufferData * next();
-  void load(const std::string &filename);
-  void fetch();
-  void process();
+  Clip(const std::string &name);
+  void load();
+  virtual void fetch();
+  virtual void process();
+  virtual void print();
+  virtual Buffer pull();
 
 protected:
-  std::vector<BufferData *> data;
+  std::size_t _offset = 0;
+  std::size_t _start = 0;
+  std::size_t _end = 0;
+  std::string _name;
+  Buffer data;
+  Buffer last;
+  Buffer current;
+  File file;
 };
 } // namespace maolan::midi

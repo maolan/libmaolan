@@ -7,13 +7,13 @@ using namespace maolan::midi;
 Connection::Connection() {}
 
 
-Connection::Connection(MIDIIO *connectTo) { target(connectTo); }
+Connection::Connection(IO *connectTo) { target(connectTo); }
 
 
-void Connection::target(MIDIIO *connectTo) { to = connectTo; }
+void Connection::target(IO *connectTo) { to = connectTo; }
 
 
 Buffer Connection::pull() { return to->pull(); }
 
 
-MIDIIO *Connection::get() { return to; }
+IO *Connection::get() { return to; }

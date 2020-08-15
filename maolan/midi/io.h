@@ -5,10 +5,10 @@
 
 namespace maolan::midi
 {
-class MIDIIO : public maolan::IO
+class IO : public maolan::IO
 {
 public:
-  MIDIIO(const std::string &name = "", const bool &front = true,
+  IO(const std::string &name = "", const bool &front = true,
          const bool &reg = false);
 
   static std::vector<maolan::Config *> devices;

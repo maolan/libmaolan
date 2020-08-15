@@ -22,8 +22,8 @@ public:
   static void play();
   static void stop();
   static void quit();
-  static void playHead(const uint64_t &argPlayHead);
-  static uint64_t playHead();
+  static void playHead(const std::size_t &argPlayHead);
+  static std::size_t playHead();
   static IO * loadFromXml(pugi::xml_node *n);
   static IO * task();
   static IO * begin();
@@ -55,7 +55,7 @@ protected:
   static bool _rec;
   static bool _playing;
   static bool _quit;
-  static uint64_t _playHead;
+  static std::size_t _playHead;
   static std::atomic_size_t _count;
   static std::mutex m;
   static std::condition_variable cv;

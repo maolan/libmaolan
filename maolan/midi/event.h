@@ -3,7 +3,7 @@
 
 namespace maolan::midi
 {
-class MIDIEvent
+class Event
 {
 public:
   static unsigned const NOTE_MASK = 0xF0;

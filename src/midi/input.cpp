@@ -5,14 +5,14 @@
 using namespace maolan::midi;
 
 
-Input::Input() : MIDIIO("MIDIInput")
+Input::Input() : IO("MIDIInput")
 {
   _type = "Input";
   connections.clear();
 }
 
 
-void Input::connect(MIDIIO *to)
+void Input::connect(IO *to)
 {
   auto it = connections.emplace(connections.end());
   it->target(to);

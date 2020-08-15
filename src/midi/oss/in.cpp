@@ -42,16 +42,16 @@ void OSSMIDIIn::fetch()
       chunk = std::make_shared<BufferData>();
       lastBuffer->next = chunk;
     }
-    chunk->type = buf[0] & MIDIEvent::NOTE_MASK;
-    chunk->channel = buf[0] & MIDIEvent::CHANNEL_MASK;
-    if (chunk->type == MIDIEvent::NOTE_ON || chunk->type == MIDIEvent::NOTE_OFF)
+    chunk->type = buf[0] & Event::NOTE_MASK;
+    chunk->channel = buf[0] & Event::CHANNEL_MASK;
+    if (chunk->type == Event::NOTE_ON || chunk->type == Event::NOTE_OFF)
     {
       chunk->note = buf[1];
       chunk->velocity = buf[2];
     }
-    else if (chunk->type == MIDIEvent::CONTROLER_ON)
+    else if (chunk->type == Event::CONTROLER_ON)
     {
-      chunk->controler = buf[1];
+      chunk->controller = buf[1];
       chunk->value = buf[2];
     }
     lastBuffer = chunk;

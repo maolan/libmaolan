@@ -1,56 +1,92 @@
+#include <exception>
 #include <iostream>
 #include <maolan/midi/buffer.h>
 #include <maolan/midi/clip.h>
+#include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
 
 
-std::vector<maolan::midi::BufferData *>::iterator nextChunk;
+using namespace maolan::midi;
 
 
-maolan::midi::MIDIClip::MIDIClip() : IO() {}
-
-
-maolan::midi::MIDIClip::~MIDIClip() { data.clear(); }
-
-
-void
-maolan::midi::MIDIClip::fetch()
-{}
-
-
-void
-maolan::midi::MIDIClip::process()
-{}
-
-
-void
-maolan::midi::MIDIClip::load(const std::string &filepath)
+Clip::Clip(const std::string &name)
+  : _name{name}
+  , file{name}
 {
-  maolan::midi::MIDIFile file(filepath);
-  file.skipHeaders();
-  while (!file.eof())
+  load();
+}
+
+
+void Clip::fetch() {}
+
+
+void Clip::process() {}
+
+
+void Clip::load()
+{
+  data = nullptr;
+  last = nullptr;
+  float divisionRate;
+  try
   {
-    data.push_back(file.read());
+    file.readHeaders();
+    while (true)
+    {
+      Buffer chunk = file.read();
+      if (chunk->type == Event::META)
+      {
+        if (chunk->meta == 0x2f)
+        {
+          break;
+        }
+      }
+      else
+      {
+        if (data == nullptr)
+        {
+          data = chunk;
+          current = data;
+        }
+        else
+        {
+          last->next = chunk;
+        }
+        last = chunk;
+      }
+    }
+    _end = last->time;
   }
-  if (!data.empty())
+  catch (std::exception &e)
   {
-    nextChunk = data.begin();
-  }
-  else
-  {
-    nextChunk = data.end();
+    std::cerr << "Error loading file " << _name << ": ";
+    std::cerr << e.what() << '\n';
+    std::cerr << "Read bytes so far: " << file.tellg() << '\n';
   }
 }
 
 
-maolan::midi::BufferData *
-maolan::midi::MIDIClip::next()
+void Clip::print()
 {
-  if (data.empty() || nextChunk == data.end())
+  for (auto buffer = data; buffer != nullptr; buffer = buffer->next)
+  {
+    buffer->print();
+  }
+}
+
+
+Buffer Clip::pull()
+{
+  // std::cout << "Playhead: " << _playHead << " buffer size: ";
+  // std::cout << Config::audioBufferSize << '\n';
+  if (data == nullptr || current == nullptr)
   {
     return nullptr;
   }
-  BufferData *m = *nextChunk;
-  ++nextChunk;
-  return m;
+  Buffer result = std::make_shared<BufferData>();
+  Buffer lastBuffer;
+  *result = *current;
+  result->next = nullptr;
+  current = current->next;
+  return result;
 }

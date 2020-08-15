@@ -1,6 +1,5 @@
 #include <iostream>
 #include <maolan/config.h>
-#include <maolan/frame.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <maolan/utils.h>

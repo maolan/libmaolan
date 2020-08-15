@@ -5,6 +5,6 @@
 using namespace maolan::midi;
 
 
-void Connectable::connect(MIDIIO *to) { input.connect(to); }
+void Connectable::connect(IO *to) { input.connect(to); }
 void Connectable::fetch() { input.fetch(); }
 void Connectable::process() { input.process(); }
