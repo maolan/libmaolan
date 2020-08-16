@@ -1,5 +1,5 @@
 #pragma once
-#include <maolan/bpm.h>
+#include <maolan/tempo.h>
 #include <memory>
 #include <string>
 #include <vector>
@@ -12,8 +12,8 @@ class Config
 public:
   static std::size_t audioBufferSize;
   static unsigned samplerate;
-  static std::size_t bpm;
-  static std::vector<BPM> bpms;
+  static std::size_t tempoIndex;
+  static std::vector<Tempo> tempos;
   static unsigned division;
   std::size_t count;
   std::string name;
