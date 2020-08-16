@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <maolan/audio/alsa/base.h>
+#include <string>
 
 
 namespace maolan::audio
@@ -8,7 +8,8 @@ namespace maolan::audio
 class ALSAIn : public ALSA
 {
 public:
-  ALSAIn(const std::string &device, const int &channels, const snd_pcm_uframes_t &frames = 512);
+  ALSAIn(const std::string &device, const int &channels,
+         const snd_pcm_uframes_t &frames = 512);
 
   void fetch();
   void process();

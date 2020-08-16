@@ -1,6 +1,6 @@
 #include <iostream>
-#include <maolan/config.h>
 #include <maolan/audio/pluginport.h>
+#include <maolan/config.h>
 
 
 using namespace maolan::audio;
@@ -17,19 +17,12 @@ LilvNode *PluginPort::lv2_OutputPort = nullptr;
 LilvNode *PluginPort::lv2_ConnectionOptional = nullptr;
 
 
-PluginPort::PluginPort(
-  LilvWorld *world,
-  const LilvPlugin *rawPlugin,
-  const LilvPort *p,
-  const float &argMinimum,
-  const float &argMaximum,
-  const float &argDefault,
-  const uint32_t &argIndex
-)
-  : _minimum{argMinimum}
-  , _maximum{argMaximum}
-  , _default{argDefault}
-  , _index{argIndex}
+PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
+                       const LilvPort *p, const float &argMinimum,
+                       const float &argMaximum, const float &argDefault,
+                       const uint32_t &argIndex)
+    : _minimum{argMinimum}, _maximum{argMaximum}, _default{argDefault},
+      _index{argIndex}
 {
   if (lv2_AtomPort == nullptr)
   {
@@ -70,10 +63,10 @@ PluginPort::PluginPort(
     }
   }
 
-	const LilvNode *sym = lilv_port_get_symbol(rawPlugin, rawPort);
-	_symbol = lilv_node_as_string(sym);
-	sym = lilv_port_get_name(rawPlugin, rawPort);
-	_name = lilv_node_as_string(sym);
+  const LilvNode *sym = lilv_port_get_symbol(rawPlugin, rawPort);
+  _symbol = lilv_node_as_string(sym);
+  sym = lilv_port_get_name(rawPlugin, rawPort);
+  _name = lilv_node_as_string(sym);
 }
 
 
@@ -81,7 +74,7 @@ void PluginPort::print() const
 {
   std::cout << "Port " << _name << '\n';
   std::cout << "\tIndex: " << _index << '\n';
-  std::cout << "\tSymbol: " << _symbol<< '\n';
+  std::cout << "\tSymbol: " << _symbol << '\n';
   std::cout << "\tMinimum: " << _minimum << '\n';
   std::cout << "\tMaximum: " << _maximum << '\n';
   std::cout << "\tDefault: " << _default << '\n';
@@ -107,6 +100,4 @@ Buffer PluginPort::buffer(LilvInstance *instance)
   return buf;
 }
 
-PluginPort::~PluginPort()
-{
-}
+PluginPort::~PluginPort() {}

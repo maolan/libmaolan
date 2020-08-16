@@ -9,12 +9,7 @@
 using namespace maolan::midi;
 
 
-Clip::Clip(const std::string &name)
-  : _name{name}
-  , file{name}
-{
-  load();
-}
+Clip::Clip(const std::string &name) : _name{name}, file{name} { load(); }
 
 
 void Clip::fetch() {}

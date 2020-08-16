@@ -1,7 +1,7 @@
 #include <iostream>
-#include <maolan/config.h>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
+#include <maolan/config.h>
 #include <maolan/utils.h>
 
 
@@ -9,14 +9,8 @@ using namespace maolan::audio;
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
-    : IO(0, true, true)
-    , Connectable(ch)
-    , _current(nullptr)
-    , first(nullptr)
-    , last(nullptr)
-    , armed(false)
-    , muted(false)
-    , soloed(false)
+    : IO(0, true, true), Connectable(ch), _current(nullptr), first(nullptr),
+      last(nullptr), armed(false), muted(false), soloed(false)
 {
   _type = "Track";
   _name = name;
@@ -27,14 +21,20 @@ Track::Track(const std::string &name, const std::size_t &ch)
 void Track::fetch()
 {
   Connectable::fetch();
-  if (_current != nullptr) { _current->fetch(); }
+  if (_current != nullptr)
+  {
+    _current->fetch();
+  }
 }
 
 
 void Track::process()
 {
   Connectable::process();
-  if (_current != nullptr) { _current->process(); }
+  if (_current != nullptr)
+  {
+    _current->process();
+  }
   auto const chs = channels();
   if (armed)
   {
@@ -44,7 +44,10 @@ void Track::process()
       frame->audioBuffer[channel] = inputs[channel].pull();
     }
     recording->write(frame);
-    if (!muted) { outputs = frame->audioBuffer; }
+    if (!muted)
+    {
+      outputs = frame->audioBuffer;
+    }
     delete frame;
   }
   else if (!muted && _current != nullptr && _playHead >= _current->start())
@@ -83,7 +86,8 @@ void Track::process()
 
 void Track::setup()
 {
-  if (armed && recording == nullptr) {
+  if (armed && recording == nullptr)
+  {
     recording = new Clip(this, channels());
     recording->start(_playHead);
     recording->end(_playHead + Config::audioBufferSize);
@@ -136,10 +140,16 @@ void Track::add(Clip *clip)
         clip->previous(cl->previous());
         cl->previous()->next(clip);
         cl->previous(clip);
-        if (clip->previous() == nullptr) { first = clip; }
+        if (clip->previous() == nullptr)
+        {
+          first = clip;
+        }
 
         // This will never happen, so it's a bug
-        if (clip->next() == nullptr) { last->next(clip); }
+        if (clip->next() == nullptr)
+        {
+          last->next(clip);
+        }
         break;
       }
     }
@@ -149,17 +159,38 @@ void Track::add(Clip *clip)
 
 void Track::remove(Clip *clip)
 {
-  if (first == nullptr) { return; }
+  if (first == nullptr)
+  {
+    return;
+  }
   for (auto cl = first; cl != nullptr; cl = cl->next())
   {
     if (cl == clip)
     {
-      if (cl->next() != nullptr) { cl->next()->previous(cl->previous()); }
-      if (cl->previous() != nullptr) { cl->previous()->next(cl->next()); }
-      if (cl == _current) { _current = nullptr; }
-      if (cl == recording) { recording = nullptr; }
-      if (cl == first) { first = cl->next(); }
-      if (cl == last) { last = cl->previous(); }
+      if (cl->next() != nullptr)
+      {
+        cl->next()->previous(cl->previous());
+      }
+      if (cl->previous() != nullptr)
+      {
+        cl->previous()->next(cl->next());
+      }
+      if (cl == _current)
+      {
+        _current = nullptr;
+      }
+      if (cl == recording)
+      {
+        recording = nullptr;
+      }
+      if (cl == first)
+      {
+        first = cl->next();
+      }
+      if (cl == last)
+      {
+        last = cl->previous();
+      }
       cl->parent(nullptr);
       return;
     }
@@ -182,7 +213,10 @@ void Track::remove(Plugin *plugin)
 
 Buffer Track::pull(const std::size_t &channel)
 {
-  if (muted) { return nullptr; }
+  if (muted)
+  {
+    return nullptr;
+  }
   return IO::pull(channel);
 }
 

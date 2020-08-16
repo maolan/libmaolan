@@ -1,7 +1,7 @@
 #pragma once
-#include <maolan/midi/io.h>
 #include <maolan/midi/buffer.h>
 #include <maolan/midi/file.h>
+#include <maolan/midi/io.h>
 #include <string>
 
 

@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
-#include <maolan/constants.h>
 #include <maolan/audio/io.h>
 #include <maolan/audio/oss/config.h>
+#include <maolan/constants.h>
+#include <string>
 
 
 namespace maolan::audio
@@ -10,7 +10,8 @@ namespace maolan::audio
 class OSS : public IO
 {
 public:
-  OSS(const std::string &device, const int &fragSize = defaultFrag, const int &channels = 2);
+  OSS(const std::string &device, const int &fragSize = defaultFrag,
+      const int &channels = 2);
   ~OSS();
 
   virtual std::size_t channels() const;

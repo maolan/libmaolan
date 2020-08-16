@@ -1,9 +1,9 @@
 #pragma once
+#include <maolan/audio/io.h>
+#include <maolan/frame.h>
+#include <sndfile.hh>
 #include <string>
 #include <vector>
-#include <sndfile.hh>
-#include <maolan/frame.h>
-#include <maolan/audio/io.h>
 
 
 namespace maolan::audio
@@ -19,7 +19,7 @@ public:
   virtual void split();
   virtual void process();
   void write(const Frame &frame);
-  void write(const Frame * const frame);
+  void write(const Frame *const frame);
   uint64_t offset();
   void offset(const uint64_t &argOffset);
   std::size_t channels() const;

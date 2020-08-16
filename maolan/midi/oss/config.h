@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include <maolan/config.h>
+#include <string>
 
 
 namespace maolan::midi

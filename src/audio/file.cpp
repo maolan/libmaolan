@@ -7,18 +7,11 @@
 using namespace maolan::audio;
 
 
-File::File(const std::size_t &ch)
-  : IO(0, true, false)
-  , recording(true)
+File::File(const std::size_t &ch) : IO(0, true, false), recording(true)
 {
   std::string path = "recording.wav";
-  _audioFile = SndfileHandle(
-    path,
-    SFM_RDWR,
-    SF_FORMAT_WAV | SF_FORMAT_FLOAT,
-    ch,
-    Config::samplerate
-  );
+  _audioFile = SndfileHandle(path, SFM_RDWR, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
+                             ch, Config::samplerate);
   _type = "File";
   _name = path;
   const auto chs = _audioFile.channels();
@@ -28,8 +21,7 @@ File::File(const std::size_t &ch)
 
 
 File::File(const std::string &path, const uint64_t &offset)
-  : IO(0, true, false, path)
-  , recording(false)
+    : IO(0, true, false, path), recording(false)
 {
   _audioFile = SndfileHandle(path);
   if (_audioFile.error())
@@ -37,7 +29,10 @@ File::File(const std::string &path, const uint64_t &offset)
     std::cerr << "_audiofile error " << _audioFile.strError() << std::endl;
     exit(1);
   }
-  if (offset) { _audioFile.seek(offset, SEEK_SET); }
+  if (offset)
+  {
+    _audioFile.seek(offset, SEEK_SET);
+  }
   if (Config::audioBufferSize == 0)
   {
     std::cerr << "Loading order error. Load some hardware IO first!\n";
@@ -52,7 +47,10 @@ File::File(const std::string &path, const uint64_t &offset)
 
 void File::split()
 {
-  if (frame == nullptr) { return; }
+  if (frame == nullptr)
+  {
+    return;
+  }
   const auto chs = channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
@@ -92,7 +90,10 @@ void File::write(const Frame &fr)
         auto data = buffer->data();
         sample = data[i];
       }
-      else { sample = 0.0; }
+      else
+      {
+        sample = 0.0;
+      }
       frame[i * chs + channel] = sample;
     }
   }
@@ -101,7 +102,7 @@ void File::write(const Frame &fr)
 
 
 File::~File() { delete[] frame; }
-void File::write(const Frame * const fr) { write(*fr); }
+void File::write(const Frame *const fr) { write(*fr); }
 std::size_t File::channels() const { return _audioFile.channels(); }
 void File::process() {}
 uint64_t File::offset() { return _offset; }

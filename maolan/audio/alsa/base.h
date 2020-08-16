@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
-#include <maolan/constants.h>
-#include <maolan/audio/io.h>
 #include <maolan/audio/alsa/config.h>
+#include <maolan/audio/io.h>
+#include <maolan/constants.h>
+#include <string>
 
 
 namespace maolan::audio
@@ -10,7 +10,8 @@ namespace maolan::audio
 class ALSA : public IO
 {
 public:
-  ALSA(const std::string &device, const int &channels = 2, const snd_pcm_uframes_t &frames = 512);
+  ALSA(const std::string &device, const int &channels = 2,
+       const snd_pcm_uframes_t &frames = 512);
   ~ALSA();
 
   virtual std::size_t channels() const;
