@@ -11,5 +11,6 @@ public:
   unsigned bpm;
   float ratio;
   std::size_t time;
+  std::size_t tick;
 };
 } // namespace maolan
