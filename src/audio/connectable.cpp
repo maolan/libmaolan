@@ -5,10 +5,7 @@
 using namespace maolan::audio;
 
 
-Connectable::Connectable(const std::size_t &chs)
-{
-  inputs.resize(chs);
-}
+Connectable::Connectable(const std::size_t &chs) { inputs.resize(chs); }
 
 
 void Connectable::connect(IO *to)
@@ -26,5 +23,17 @@ void Connectable::connect(IO *to, std::size_t inCh, std::size_t outCh)
 }
 
 
-void Connectable::fetch() { for (auto &input : inputs) { input.fetch(); } }
-void Connectable::process() { for (auto &input : inputs) { input.process(); } }
+void Connectable::fetch()
+{
+  for (auto &input : inputs)
+  {
+    input.fetch();
+  }
+}
+void Connectable::process()
+{
+  for (auto &input : inputs)
+  {
+    input.process();
+  }
+}

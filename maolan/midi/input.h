@@ -20,5 +20,5 @@ public:
 protected:
   std::vector<Connection> connections;
 };
-} // namespace maolan::audio
+} // namespace maolan::midi
 

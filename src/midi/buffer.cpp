@@ -10,13 +10,12 @@ BufferData::~BufferData()
 {
   if (data != nullptr)
   {
-    delete []data;
+    delete[] data;
   }
 }
 
 
-void
-BufferData::print()
+void BufferData::print()
 {
   switch (type)
   {

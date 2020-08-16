@@ -51,10 +51,13 @@ void Input::fetch()
       {
         continue;
       }
-      if (output == nullptr) {
+      if (output == nullptr)
+      {
         output = std::make_shared<BufferData>();
         chunk = output;
-      } else {
+      }
+      else
+      {
         chunk = std::make_shared<BufferData>();
       }
       *chunk = *channel;
@@ -73,11 +76,13 @@ Buffer Input::pull()
 {
   for (auto buffer = output; buffer != nullptr; buffer = buffer->next)
   {
-    if (buffer->type == 0) { continue; }
+    if (buffer->type == 0)
+    {
+      continue;
+    }
   }
   return output;
 }
 
 
-void Input::process()
-{}
+void Input::process() {}

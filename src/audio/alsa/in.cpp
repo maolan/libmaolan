@@ -1,11 +1,12 @@
-#include <unistd.h>
-#include <maolan/constants.h>
 #include <maolan/audio/alsa/in.h>
+#include <maolan/constants.h>
+#include <unistd.h>
 
 using namespace maolan::audio;
 
-ALSAIn::ALSAIn(const std::string &device, const int &chs, const snd_pcm_uframes_t &frames)
-  : ALSA(device, chs)
+ALSAIn::ALSAIn(const std::string &device, const int &chs,
+               const snd_pcm_uframes_t &frames)
+    : ALSA(device, chs)
 {
   _type = "ALSAIn";
   _name = "ALSA In";

@@ -30,9 +30,7 @@ enum Stage
 
 
 IO::IO(const std::string &argName, const bool &front, const bool &reg)
-    : _next{nullptr}
-    , _previous{nullptr}
-    , _name{argName}
+    : _next{nullptr}, _previous{nullptr}, _name{argName}
 {
   if (reg)
   {
@@ -59,7 +57,10 @@ IO::IO(const std::string &argName, const bool &front, const bool &reg)
       }
     }
   }
-  if (_current == nullptr) { _current = ios; }
+  if (_current == nullptr)
+  {
+    _current = ios;
+  }
 }
 
 
@@ -99,7 +100,6 @@ void IO::work()
 }
 
 
-
 IO *IO::loadFromXml(pugi::xml_node *n)
 {
   auto io = xmlElement2IO(n);
@@ -112,14 +112,20 @@ IO *IO::loadFromXml(pugi::xml_node *n)
 }
 
 
-IO * IO::task()
+IO *IO::task()
 {
   std::unique_lock<std::mutex> lk(m);
-  cv.wait(lk, []{ return IO::check(); });
-  if (_quit) { return nullptr; }
+  cv.wait(lk, [] { return IO::check(); });
+  if (_quit)
+  {
+    return nullptr;
+  }
   ++_count;
   auto result = _current;
-  if (_current != nullptr) { _current = _current->next(); }
+  if (_current != nullptr)
+  {
+    _current = _current->next();
+  }
   lk.unlock();
   cv.notify_one();
   return result;
@@ -128,9 +134,18 @@ IO * IO::task()
 
 bool IO::check()
 {
-  if (_quit) { return true; }
-  if (ios == nullptr) { return false; }
-  if (!_playing) { return false; }
+  if (_quit)
+  {
+    return true;
+  }
+  if (ios == nullptr)
+  {
+    return false;
+  }
+  if (!_playing)
+  {
+    return false;
+  }
   if (_current == nullptr)
   {
     if (_count == 0)
@@ -149,20 +164,23 @@ bool IO::check()
 }
 
 
-void IO::play() {
+void IO::play()
+{
   _playing = true;
   _playHead = -Config::audioBufferSize;
   cv.notify_one();
 }
 
 
-void IO::stop() {
+void IO::stop()
+{
   _playing = false;
   cv.notify_one();
 }
 
 
-void IO::quit() {
+void IO::quit()
+{
   _quit = true;
   cv.notify_one();
 }

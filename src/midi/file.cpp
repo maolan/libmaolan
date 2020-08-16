@@ -136,7 +136,7 @@ void File::readHeaders()
   {
     throw std::invalid_argument("Error reading division from header!");
   }
-  rate =  (float)division / (float)Config::division;
+  rate = (float)division / (float)Config::division;
 
   // MTrk
   file.read(rawData, size);

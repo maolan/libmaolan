@@ -1,8 +1,8 @@
 #include <iostream>
-#include <maolan/engine.h>
 #include <maolan/audio/clip.h>
-#include <maolan/audio/track.h>
 #include <maolan/audio/oss/out.h>
+#include <maolan/audio/track.h>
+#include <maolan/engine.h>
 
 
 using namespace maolan::audio;

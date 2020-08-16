@@ -14,5 +14,5 @@ public:
 protected:
   Input input;
 };
-} // namespace maolan::audio
+} // namespace maolan::midi
 

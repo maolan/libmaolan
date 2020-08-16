@@ -9,12 +9,7 @@
 using namespace maolan::midi;
 
 
-Clip::Clip(const std::string &name)
-  : _name{name}
-  , file{name}
-{
-  load();
-}
+Clip::Clip(const std::string &name) : _name{name}, file{name} { load(); }
 
 
 void Clip::fetch() {}
@@ -77,9 +72,12 @@ void Clip::print()
 
 Buffer Clip::pull()
 {
-  // std::cout << "Playhead: " << _playHead << " buffer size: ";
-  // std::cout << Config::audioBufferSize << '\n';
   if (data == nullptr || current == nullptr)
+  {
+    return nullptr;
+  }
+  auto tempo = Config::tempos[Config::tempoIndex];
+  if (current->time * tempo.ratio > _playHead)
   {
     return nullptr;
   }
@@ -88,5 +86,6 @@ Buffer Clip::pull()
   *result = *current;
   result->next = nullptr;
   current = current->next;
+  result->channel = 2;
   return result;
 }

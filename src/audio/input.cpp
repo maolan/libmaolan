@@ -1,12 +1,11 @@
-#include <maolan/config.h>
 #include <maolan/audio/input.h>
+#include <maolan/config.h>
 
 
 using namespace maolan::audio;
 
 
-Input::Input()
-  : IO(1, true)
+Input::Input() : IO(1, true)
 {
   _type = "Input";
   connections.clear();
@@ -65,8 +64,12 @@ void Input::fetch()
 size_t Input::channels() const { return outputs.size(); }
 
 
-Buffer Input::pull() {
-  if (outputs.size() == 0) { return nullptr; }
+Buffer Input::pull()
+{
+  if (outputs.size() == 0)
+  {
+    return nullptr;
+  }
   return outputs[0];
 }
 

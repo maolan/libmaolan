@@ -16,4 +16,4 @@ protected:
   OSSMIDIConfig *device;
   Buffer data;
 };
-} // namespace maolan::midi::oss
+} // namespace maolan::midi

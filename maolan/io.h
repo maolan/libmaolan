@@ -1,11 +1,11 @@
 #pragma once
 #include <atomic>
+#include <condition_variable>
+#include <maolan/config.h>
+#include <mutex>
+#include <pugixml.hpp>
 #include <string>
 #include <vector>
-#include <mutex>
-#include <condition_variable>
-#include <pugixml.hpp>
-#include <maolan/config.h>
 
 
 namespace maolan
@@ -24,10 +24,10 @@ public:
   static void quit();
   static void playHead(const std::size_t &argPlayHead);
   static std::size_t playHead();
-  static IO * loadFromXml(pugi::xml_node *n);
-  static IO * task();
-  static IO * begin();
-  static Config * devices();
+  static IO *loadFromXml(pugi::xml_node *n);
+  static IO *task();
+  static IO *begin();
+  static Config *devices();
 
   virtual void setup();
   virtual void fetch() = 0;
@@ -35,9 +35,9 @@ public:
   virtual void parent(IO *p);
   void work();
   void next(IO *);
-  IO * next();
+  IO *next();
   void previous(IO *);
-  IO * previous();
+  IO *previous();
   void stage(const bool &s);
   bool stage();
   void type(const std::string &);

@@ -5,6 +5,4 @@
 using namespace maolan::audio;
 
 
-ALSAConfig::ALSAConfig()
-  : fragSize{0}
-{}
+ALSAConfig::ALSAConfig() : fragSize{0} {}
