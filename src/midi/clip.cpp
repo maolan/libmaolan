@@ -35,7 +35,8 @@ void Clip::process()
   }
   Buffer last;
   auto nextTime = playhead + Config::audioBufferSize;
-  while (current != nullptr && (current->time - tempo.tick) * tempo.ratio < nextTime)
+  while (current != nullptr &&
+         (current->time - tempo.tick) * tempo.ratio < nextTime)
   {
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
