@@ -6,7 +6,7 @@
 
 namespace maolan::midi
 {
-class OSSMIDI : public MIDIIO
+class OSSMIDI : public IO
 {
 public:
   OSSMIDI(const std::string &device);

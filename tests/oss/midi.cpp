@@ -3,6 +3,7 @@
 #include <iostream>
 #include <maolan/audio/oss/out.h>
 #include <maolan/engine.h>
+#include <maolan/midi/clip.h>
 #include <maolan/midi/oss/in.h>
 #include <maolan/midi/oss/out.h>
 #include <thread>
@@ -19,7 +20,7 @@ int main(int argc, char **argv)
   // return 1;
   // }
   // Config::bpms.emplace_back();
-  // MIDIClip *clip = new MIDIClip();
+  // Clip *clip = new Clip();
   // clip->load(argv[1]);
   // MIDIChunk *chunk;
   // while ((chunk = clip->next()) != nullptr)
@@ -47,9 +48,9 @@ int main(int argc, char **argv)
   }
 
   maolan::audio::OSSOut out("/dev/dsp", 2, 4);
-  maolan::midi::OSSMIDIIn midiIn(argv[1]);
-  maolan::midi::OSSMIDIOut midiOut(argv[1]);
-  midiOut.connect(&midiIn);
+  maolan::midi::Clip midiClip(argv[1]);
+  maolan::midi::OSSMIDIOut midiOut("/dev/umidi0.0");
+  midiOut.connect(&midiClip);
 
   maolan::Engine::init();
   std::cerr << "Playing ...";

@@ -1,13 +1,13 @@
 #include <fstream>
-#include <iostream>
-#include <cstring>
 #include <maolan/midi/buffer.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
-#include <unistd.h>
 
 
-unsigned int readVarLen(std::ifstream &file)
+using namespace maolan::midi;
+
+
+static unsigned int readVarLen(std::fstream &file)
 {
   unsigned int value;
   unsigned char c;
@@ -23,15 +23,15 @@ unsigned int readVarLen(std::ifstream &file)
       value += c & 0x7F;
     } while (c & 0x80);
   }
-  return (value);
+  return value;
 }
 
 
-int bigEndianInt(std::ifstream &file, int size, bool debug = false)
+static unsigned int bigEndianInt(std::fstream &file, int size)
 {
   char rawData[size];
   int shift;
-  int result = 0;
+  unsigned int result = 0;
   file.read(rawData, size);
   for (int i = 0; i < size; ++i)
   {
@@ -42,52 +42,69 @@ int bigEndianInt(std::ifstream &file, int size, bool debug = false)
 }
 
 
-void readMetaEvent(std::ifstream &file, maolan::midi::BufferData *chunk)
+static void readMetaEvent(std::fstream &file, Buffer chunk)
 {
-  unsigned char type;
-  file >> type;
-  unsigned int len = readVarLen(file);
-  chunk->data = new char[len];
-  file.read(chunk->data, len);
+  file >> chunk->meta;
+  auto len = readVarLen(file);
+  chunk->data = new unsigned char[len];
+  file.read((char *)chunk->data, len);
 }
 
 
-void readNote(std::ifstream &file, maolan::midi::BufferData *chunk)
+File::File(const std::string &path) : file(path) {}
+
+
+File::~File() { file.close(); }
+
+
+Buffer File::read()
 {
-  file >> chunk->note >> chunk->velocity;
-}
-
-
-maolan::midi::MIDIFile::MIDIFile(const std::string &path) : file(path, std::ios::binary) {}
-
-
-maolan::midi::MIDIFile::~MIDIFile() { file.close(); }
-
-
-maolan::midi::BufferData * maolan::midi::MIDIFile::read()
-{
-  BufferData *chunk = new BufferData;
-  chunk->channel = 0;
-  chunk->note = 0;
-  chunk->velocity = 0;
-  chunk->data = nullptr;
-  chunk->time = readVarLen(file);
+  Buffer chunk = std::make_shared<BufferData>();
+  chunk->time = readVarLen(file) / rate;
+  if (last != nullptr)
+  {
+    chunk->time += last->time;
+  }
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading event time!");
+  }
   file >> chunk->type;
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading event type!");
+  }
   switch (chunk->type)
   {
-    case MIDIEvent::META:
+    case Event::META:
       readMetaEvent(file, chunk);
+      if (!file.good())
+      {
+        throw std::invalid_argument("Error reading meta event!");
+      }
       break;
-    case MIDIEvent::NOTE_ON:
-    case MIDIEvent::NOTE_OFF:
-      readNote(file, chunk);
+    case Event::NOTE_ON:
+    case Event::NOTE_OFF:
+      file >> chunk->note >> chunk->velocity;
+      if (!file.good())
+      {
+        throw std::invalid_argument("Error reading note event!");
+      }
+      break;
+    case Event::CONTROLER_ON:
+      file >> chunk->controller >> chunk->value;
+      if (!file.good())
+      {
+        throw std::invalid_argument("Error reading controller event!");
+      }
       break;
   }
+  last = chunk;
   return chunk;
 }
 
 
-void maolan::midi::MIDIFile::skipHeaders()
+void File::readHeaders()
 {
   int size = 4;
   char rawData[size + 1];
@@ -97,17 +114,44 @@ void maolan::midi::MIDIFile::skipHeaders()
   rawData[size] = '\0';
   if (std::strncmp(rawData, "MThd", size) != 0)
   {
-    std::cerr << "Not a MIDI file" << std::endl;
+    throw std::invalid_argument("Not a MIDI file!");
   }
-  int headerLength = bigEndianInt(file, 4);
-  int format = bigEndianInt(file, 2);
-  int chunks = bigEndianInt(file, 2);
+  headerLength = bigEndianInt(file, 4);
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading header length!");
+  }
+  format = bigEndianInt(file, 2);
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading format from header!");
+  }
+  chunks = bigEndianInt(file, 2);
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading chunks from header!");
+  }
   division = bigEndianInt(file, 2);
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading division from header!");
+  }
+  rate =  (float)division / (float)Config::division;
 
   // MTrk
   file.read(rawData, size);
-  int length = bigEndianInt(file, 4);
+  if (std::strncmp(rawData, "MTrk", size) != 0)
+  {
+    throw std::invalid_argument("Expected track marker!");
+  }
+  length = bigEndianInt(file, 4);
+  if (!file.good())
+  {
+    throw std::invalid_argument("Error reading track length!");
+  }
 }
 
 
-bool maolan::midi::MIDIFile::eof() { return file.eof(); }
+bool File::eof() { return file.eof(); }
+bool File::good() { return file.good(); }
+std::streampos File::tellg() { return file.tellg(); }

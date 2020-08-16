@@ -14,7 +14,7 @@ unsigned IO::_stage = 0;
 bool IO::_rec = false;
 bool IO::_playing = false;
 bool IO::_quit = false;
-uint64_t IO::_playHead = 0;
+std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
 std::mutex IO::m;
 std::condition_variable IO::cv;
@@ -137,6 +137,10 @@ bool IO::check()
     {
       _current = ios;
       _stage = ++_stage % TOTAL;
+      if (_stage == FETCH)
+      {
+        _playHead += Config::audioBufferSize;
+      }
       return _current != nullptr;
     }
     return false;
@@ -147,6 +151,7 @@ bool IO::check()
 
 void IO::play() {
   _playing = true;
+  _playHead = -Config::audioBufferSize;
   cv.notify_one();
 }
 
@@ -174,7 +179,7 @@ void IO::type(const std::string &argType) { _type = argType; }
 std::string IO::name() { return _name; }
 void IO::name(const std::string &argName) { _name = argName; }
 uint64_t IO::playHead() { return _playHead; }
-void IO::playHead(const uint64_t &argPlayHead) { _playHead = argPlayHead; }
+void IO::playHead(const std::size_t &argPlayHead) { _playHead = argPlayHead; }
 void IO::setup() {}
 void IO::next(IO *n) { _next = n; }
 IO *IO::next() { return _next; }

@@ -6,33 +6,35 @@
 using namespace maolan::midi;
 
 
-BufferData::BufferData()
-  : type{0}
-  , data{nullptr}
-  , next{nullptr}
-{}
+BufferData::~BufferData()
+{
+  if (data != nullptr)
+  {
+    delete []data;
+  }
+}
 
 
 void
 BufferData::print()
 {
-  if (type == MIDIEvent::NOTE_ON)
+  switch (type)
   {
-    std::cout << "note = " << note << '\n';
-    std::cout << "channel = " << channel << '\n';
-    std::cout << "velocity = " << velocity << '\n';
-  }
-  else if (type == MIDIEvent::NOTE_OFF)
-  {
-    std::cout << "note = " << note << '\n';
-    std::cout << "channel = " << channel << '\n';
-    std::cout << "velocity = " << velocity << '\n';
-  }
-  else if (type == MIDIEvent::CONTROLER_ON)
-  {
-    std::cout << "controler = " << controler << '\n';
-    std::cout << "channel = " << channel << '\n';
-    std::cout << "value = " << value << '\n';
+    case Event::NOTE_ON:
+    case Event::NOTE_OFF:
+      std::cout << "note = " << (unsigned)note << '\n';
+      std::cout << "channel = " << (unsigned)channel << '\n';
+      std::cout << "velocity = " << (unsigned)velocity << '\n';
+      std::cout << "time = " << time << '\n';
+      break;
+    case Event::CONTROLER_ON:
+      std::cout << "controller = " << (unsigned)controller << '\n';
+      std::cout << "channel = " << (unsigned)channel << '\n';
+      std::cout << "value = " << (unsigned)value << '\n';
+      break;
+    case Event::META:
+      std::cout << "meta: " << std::hex << meta << '\n';
+      break;
   }
   std::cout << std::endl;
 }

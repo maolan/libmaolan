@@ -1,19 +1,18 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
+#include <maolan/audio/oss/base.h>
+#include <maolan/config.h>
+#include <maolan/constants.h>
 #include <sstream>
 #include <sys/soundcard.h>
 #include <unistd.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
-#include <maolan/audio/oss/base.h>
 
 
 using namespace maolan::audio;
 
 
-static void
-checkError(int &value, const std::string &message)
+static void checkError(int &value, const std::string &message)
 {
   if (value == -1)
   {
@@ -23,8 +22,7 @@ checkError(int &value, const std::string &message)
 
 
 OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
-  : IO(0, true, true, deviceName)
-  , device{nullptr}
+    : IO(0, true, true, deviceName), device{nullptr}
 {
 
   bool found = false;
@@ -93,7 +91,10 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
     catch (const std::invalid_argument &ex)
     {
       std::cerr << _type << " error: " << ex.what();
-      if (error == -1) { std::cerr << ' ' << strerror(errno); }
+      if (error == -1)
+      {
+        std::cerr << ' ' << strerror(errno);
+      }
       std::cerr << '\n';
       exit(1);
     }

@@ -33,9 +33,9 @@ void OSSMIDIOut::process()
       continue;
     }
     buf[0] = buffer->type | buffer->channel;
-    if (buffer->type == MIDIEvent::CONTROLER_ON)
+    if (buffer->type == Event::CONTROLER_ON)
     {
-      buf[1] = buffer->controler;
+      buf[1] = buffer->controller;
       buf[2] = buffer->value;
     }
     else

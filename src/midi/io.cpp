@@ -6,16 +6,16 @@
 using namespace maolan::midi;
 
 
-std::vector<maolan::Config *> MIDIIO::devices;
+std::vector<maolan::Config *> IO::devices;
 
 
-MIDIIO::MIDIIO(const std::string &name, const bool &front, const bool &reg)
+IO::IO(const std::string &name, const bool &front, const bool &reg)
   : maolan::IO(name, front, reg)
 {}
 
 
 Buffer
-MIDIIO::pull()
+IO::pull()
 {
   return nullptr;
 }

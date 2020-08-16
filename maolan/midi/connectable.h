@@ -9,7 +9,7 @@ class Connectable
 public:
   virtual void fetch();
   virtual void process();
-  void connect(MIDIIO *to);
+  void connect(IO *to);
 
 protected:
   Input input;

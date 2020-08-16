@@ -8,13 +8,13 @@ class Connection
 {
 public:
   Connection();
-  Connection(MIDIIO *connectTo);
+  Connection(IO *connectTo);
 
-  MIDIIO *get();
-  void target(MIDIIO *connectTo);
+  IO *get();
+  void target(IO *connectTo);
   Buffer pull();
 
 protected:
-  MIDIIO *to;
+  IO *to;
 };
 } // namespace maolan::midi

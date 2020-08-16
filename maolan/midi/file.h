@@ -7,19 +7,27 @@
 
 namespace maolan::midi
 {
-class MIDIFile
+class File
 {
 public:
-  MIDIFile(const std::string &path);
-  ~MIDIFile();
+  File(const std::string &path);
+  ~File();
 
-  BufferData * read();
-  void skipHeaders();
+  Buffer read();
+  void readHeaders();
   bool eof();
+  bool good();
+  std::streampos tellg();
 
-  int division;
+  float rate;
+  unsigned division;
+  unsigned headerLength;
+  unsigned format;
+  unsigned chunks;
+  unsigned length;
 
 protected:
-  std::ifstream file;
+  std::fstream file;
+  Buffer last = nullptr;
 };
 } // namespace maolan::midi
