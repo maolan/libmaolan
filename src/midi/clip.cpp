@@ -9,13 +9,52 @@
 using namespace maolan::midi;
 
 
-Clip::Clip(const std::string &name) : _name{name}, file{name} { load(); }
+// TODO: Once track is implemented, only IO(name) is needed
+Clip::Clip(const std::string &name)
+    : IO(name, true, true), _name{name}, file{name}
+{
+  load();
+}
 
 
 void Clip::fetch() {}
 
 
-void Clip::process() {}
+void Clip::process()
+{
+  output = nullptr;
+  if (data == nullptr || current == nullptr)
+  {
+    return;
+  }
+  auto tempo = Config::tempos[Config::tempoIndex];
+  auto playhead = _playHead - tempo.time;
+  if (playhead < (current->time - tempo.tick) * tempo.ratio)
+  {
+    return;
+  }
+  Buffer last;
+  auto nextTime = playhead + Config::audioBufferSize;
+  while (current != nullptr && (current->time - tempo.tick) * tempo.ratio < nextTime)
+  {
+    Buffer buffer = std::make_shared<BufferData>();
+    *buffer = *current;
+    buffer->next = nullptr;
+    // TODO: Once track is implemented, use track's channel settings
+    buffer->channel = 2;
+    if (output == nullptr)
+    {
+      output = buffer;
+      last = output;
+    }
+    else
+    {
+      last->next = buffer;
+      last = buffer;
+    }
+    current = current->next;
+  }
+}
 
 
 void Clip::load()
@@ -61,31 +100,4 @@ void Clip::load()
 }
 
 
-void Clip::print()
-{
-  for (auto buffer = data; buffer != nullptr; buffer = buffer->next)
-  {
-    buffer->print();
-  }
-}
-
-
-Buffer Clip::pull()
-{
-  if (data == nullptr || current == nullptr)
-  {
-    return nullptr;
-  }
-  auto tempo = Config::tempos[Config::tempoIndex];
-  if (current->time * tempo.ratio > _playHead)
-  {
-    return nullptr;
-  }
-  Buffer result = std::make_shared<BufferData>();
-  Buffer lastBuffer;
-  *result = *current;
-  result->next = nullptr;
-  current = current->next;
-  result->channel = 2;
-  return result;
-}
+Buffer Clip::pull() { return output; }

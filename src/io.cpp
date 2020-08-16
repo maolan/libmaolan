@@ -155,6 +155,16 @@ bool IO::check()
       if (_stage == FETCH)
       {
         _playHead += Config::audioBufferSize;
+        if (Config::tempoIndex + 1 < Config::tempos.size())
+        {
+          // TODO: move to next tempo
+          auto tempo = Config::tempos[Config::tempoIndex];
+          while (Config::tempoIndex < Config::tempos.size() &&
+                 _playHead <= tempo.time)
+          {
+            ++Config::tempoIndex;
+          }
+        }
       }
       return _current != nullptr;
     }

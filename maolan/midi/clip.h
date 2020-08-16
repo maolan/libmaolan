@@ -14,7 +14,6 @@ public:
   void load();
   virtual void fetch();
   virtual void process();
-  virtual void print();
   virtual Buffer pull();
 
 protected:
