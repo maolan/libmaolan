@@ -21,19 +21,27 @@ void BufferData::print()
   {
     case Event::NOTE_ON:
     case Event::NOTE_OFF:
+    {
+      auto typeStr = type == Event::NOTE_ON ? "note on" : "note off";
+      std::cout << "type = " << typeStr << '\n';
       std::cout << "note = " << (unsigned)note << '\n';
       std::cout << "channel = " << (unsigned)channel << '\n';
       std::cout << "velocity = " << (unsigned)velocity << '\n';
       std::cout << "time = " << time << '\n';
       break;
+    }
     case Event::CONTROLER_ON:
+    {
       std::cout << "controller = " << (unsigned)controller << '\n';
       std::cout << "channel = " << (unsigned)channel << '\n';
       std::cout << "value = " << (unsigned)value << '\n';
       break;
+    }
     case Event::META:
+    {
       std::cout << "meta: " << std::hex << meta << '\n';
       break;
+    }
   }
   std::cout << std::endl;
 }

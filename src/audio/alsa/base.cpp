@@ -39,8 +39,7 @@ ALSA::ALSA(const std::string &deviceName, const int &chs,
     device = new ALSAConfig;
     device->frames = frames;
     device->audioChannels = chs;
-    error = snd_pcm_open(&(device->handle), deviceName.data(),
-                         SND_PCM_STREAM_PLAYBACK, 0);
+    error = snd_pcm_open(&(device->handle), deviceName.data(), SND_PCM_STREAM_PLAYBACK, 0);
     checkError(error, "snd_pcm_open");
     if (device->handle == nullptr)
     {

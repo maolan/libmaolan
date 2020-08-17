@@ -1,11 +1,11 @@
 #include <chrono>
-#include <fcntl.h>
 #include <iostream>
 #include <maolan/audio/oss/out.h>
 #include <maolan/engine.h>
 #include <maolan/midi/clip.h>
 #include <maolan/midi/oss/in.h>
 #include <maolan/midi/oss/out.h>
+#include <maolan/midi/track.h>
 #include <thread>
 
 
@@ -48,9 +48,10 @@ int main(int argc, char **argv)
   }
 
   maolan::audio::OSSOut out("/dev/dsp", 2, 4);
-  maolan::midi::Clip midiClip(argv[1]);
+  maolan::midi::Track track("Something", 2);
+  maolan::midi::Clip clip(argv[1], &track);
   maolan::midi::OSSMIDIOut midiOut("/dev/umidi0.0");
-  midiOut.connect(&midiClip);
+  midiOut.connect(&track);
 
   maolan::Engine::init();
   std::cerr << "Playing ...";
@@ -64,5 +65,23 @@ int main(int argc, char **argv)
   maolan::Engine::quit();
   std::cerr << " done\n";
 
+  // No threads/background
+  // while (true)
+  // {
+    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+    // {
+      // io->setup();
+    // }
+    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+    // {
+      // io->fetch();
+    // }
+    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+    // {
+      // io->process();
+    // }
+    // auto playhead = maolan::IO::playHead();
+    // maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+  // }
   return 0;
 }

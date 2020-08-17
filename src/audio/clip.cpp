@@ -19,7 +19,10 @@ Clip::Clip(const std::string &path, const std::size_t &start,
       _previous(nullptr), _next(nullptr), file(path, offset), _parent(parent)
 {
   _type = "Clip";
-  parent->add(this);
+  if (parent != nullptr)
+  {
+    parent->add(this);
+  }
 }
 
 
