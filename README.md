@@ -69,10 +69,10 @@ a time and execute it's work() method. There are also 2 stages for every
 `IO::work()`: fetch and process. Fetch stage calls `setup()` and `fetch()` from IO.
 Setup is meant to deal with any setup track or any other IO object needs to do
 before doing actual work, like muting, soloing, ... Fetch will pull() samples
-(which are actually share_ptr to BufferData and it's called Buffer - for MIDI
+(which are actually `shared_ptr` to `BufferData` and it's called `Buffer` - for MIDI
 and audio) from all its connections, mix them and put them into inputs. The
 process() is meant to do any processing (like LV2 or mixing of inputs, if needed)
-and stores the result in the output, which is also Buffer class (or vector of
+and stores the result in the output, which is also `Buffer` class (or vector of
 Buffers in case of audio where `vector.size() == number` of output channels). To
 distribute output Buffer, every IO has pull() method which mostly returns
 processed output.
