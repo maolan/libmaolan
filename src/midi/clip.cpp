@@ -4,20 +4,56 @@
 #include <maolan/midi/clip.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
+#include <maolan/midi/track.h>
 
 
 using namespace maolan::midi;
 
 
-// TODO: Once track is implemented, only IO(name) is needed
-Clip::Clip(const std::string &name)
-    : IO(name, true, true), _name{name}, file{name}
+Clip::Clip(const std::string &name, Track *parent)
+    : IO(name), file(name), _previous{nullptr}, _next{nullptr}, _parent{parent},
+      _start{0}, _end{100000000}, _offset{0}
 {
+  _type = "MIDIClip";
   load();
+  if (parent != nullptr)
+  {
+    parent->add(this);
+  }
 }
 
 
-void Clip::fetch() {}
+Clip::Clip(const std::string &name, const std::size_t &start,
+           const std::size_t &end, const std::size_t &offset, Track *parent)
+    : IO(name), _name{name}, file{name}, _previous{nullptr}, _next{nullptr},
+      _parent{parent}, _start{start}, _end{end}, _offset{offset}
+{
+  _type = "MIDIClip";
+  load();
+  if (parent != nullptr)
+  {
+    parent->add(this);
+  }
+}
+
+
+Clip::~Clip()
+{
+  if (_parent != nullptr)
+  {
+    _parent->remove(this);
+  }
+}
+
+
+void Clip::setup()
+{
+}
+
+
+void Clip::fetch()
+{
+}
 
 
 void Clip::process()
@@ -41,8 +77,6 @@ void Clip::process()
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
     buffer->next = nullptr;
-    // TODO: Once track is implemented, use track's channel settings
-    buffer->channel = 2;
     if (output == nullptr)
     {
       output = buffer;
@@ -90,7 +124,6 @@ void Clip::load()
         last = chunk;
       }
     }
-    _end = last->time;
   }
   catch (std::exception &e)
   {
@@ -101,4 +134,34 @@ void Clip::load()
 }
 
 
-Buffer Clip::pull() { return output; }
+void Clip::parent(maolan::IO *p)
+{
+  if (_parent != nullptr)
+  {
+    _parent->remove(this);
+  }
+  _parent = (Track *)p;
+  if (_parent != nullptr)
+  {
+    _parent->add(this);
+  }
+}
+
+
+const std::size_t Clip::startSample() const
+{
+  auto tempo = Config::tempos[Config::tempoIndex];
+  return (_start - tempo.tick) * tempo.ratio + tempo.time;
+}
+const std::size_t Clip::endSample() const
+{
+  auto tempo = Config::tempos[Config::tempoIndex];
+  return (_end - tempo.tick) * tempo.ratio + tempo.time;
+}
+
+const std::size_t &Clip::start() const { return _start; }
+const std::size_t &Clip::end() const { return _end; }
+void Clip::next(Clip *n) { _next = n; }
+Clip *Clip::next() { return _next; }
+void Clip::previous(Clip *p) { _previous = p; }
+Clip *Clip::previous() { return _previous; }

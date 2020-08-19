@@ -1,4 +1,3 @@
-#include <iostream>
 #include <maolan/audio/clip.h>
 #include <maolan/audio/track.h>
 #include <maolan/config.h>
@@ -36,9 +35,9 @@ void Track::process()
     _current->process();
   }
   auto const chs = channels();
+  auto frame = new Frame(chs, 0);
   if (armed)
   {
-    auto frame = new Frame(chs, 0);
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
       frame->audioBuffer[channel] = inputs[channel].pull();
@@ -52,7 +51,6 @@ void Track::process()
   }
   else if (!muted && _current != nullptr && _playHead >= _current->start())
   {
-    auto frame = new Frame(chs, 0);
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
       frame->audioBuffer[channel] = _current->pull(channel);

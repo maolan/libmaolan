@@ -49,6 +49,8 @@ int main(int argc, char **argv)
     {
       io->process();
     }
+    auto playhead = IO::playHead();
+    IO::playHead(playhead + Config::audioBufferSize);
   }
   */
 

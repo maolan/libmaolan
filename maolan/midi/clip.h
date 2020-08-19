@@ -7,14 +7,34 @@
 
 namespace maolan::midi
 {
+class Track;
 class Clip : public IO
 {
 public:
-  Clip(const std::string &name);
+  Clip(const std::string &name, Track *parent);
+  Clip(const std::string &name, const std::size_t &start,
+       const std::size_t &end, const std::size_t &offset, Track *parent);
+  ~Clip();
+
   void load();
   virtual void fetch();
   virtual void process();
-  virtual Buffer pull();
+  virtual void setup();
+
+  const std::size_t &start() const;
+  const std::size_t &end() const;
+  const std::size_t startSample() const;
+  const std::size_t endSample() const;
+  void start(const std::size_t &);
+  void end(const std::size_t &);
+  void startSample(const std::size_t &);
+  void endSample(const std::size_t &);
+
+  void next(Clip *n);
+  Clip *next();
+  void previous(Clip *n);
+  Clip *previous();
+  void parent(maolan::IO *p);
 
 protected:
   std::size_t _offset = 0;
@@ -25,5 +45,8 @@ protected:
   Buffer last;
   Buffer current;
   File file;
+  Track *_parent;
+  Clip *_next;
+  Clip *_previous;
 };
 } // namespace maolan::midi
