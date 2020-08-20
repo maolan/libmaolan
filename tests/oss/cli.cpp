@@ -54,6 +54,6 @@ int main(int argc, char **argv)
   }
   */
 
-  maolan::audio::Plugin::destroyWorld();
+  maolan::plugin::lv2::Plugin::destroyWorld();
   return 0;
 }

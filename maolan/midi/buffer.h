@@ -20,7 +20,7 @@ public:
   std::uint8_t velocity;
   std::uint8_t type;
   std::size_t time;
-  unsigned int value;
+  std::uint8_t value;
   unsigned char *data = nullptr;
   Buffer next = nullptr;
 

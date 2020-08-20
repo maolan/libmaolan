@@ -12,6 +12,7 @@ public:
   static void play();
   static void stop();
   static void quit();
+  static void save();
 
 protected:
   static std::vector<Worker *> _workers;

@@ -13,9 +13,9 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
-  void mute();
-  void arm();
-  void solo();
+  void mute(const bool &value = true);
+  void arm(const bool &value = true);
+  void solo(const bool &value = true);
   void add(Clip *);
   void remove(Clip *);
   virtual Buffer pull();

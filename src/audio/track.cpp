@@ -196,7 +196,7 @@ void Track::remove(Clip *clip)
 }
 
 
-void Track::remove(Plugin *plugin)
+void Track::remove(plugin::lv2::Plugin *plugin)
 {
   for (int i = 0; i < _plugins.size(); ++i)
   {
@@ -219,8 +219,8 @@ Buffer Track::pull(const std::size_t &channel)
 }
 
 
-void Track::add(Plugin *plugin) { _plugins.push_back(plugin); }
+void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return inputs.size(); }
-void Track::mute() { muted = !muted; }
-void Track::arm() { armed = !armed; }
-void Track::solo() { soloed = !soloed; }
+void Track::mute(const bool &value) { muted = value; }
+void Track::arm(const bool &value) { armed = value; }
+void Track::solo(const bool &value) { soloed = value; }

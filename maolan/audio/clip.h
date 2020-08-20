@@ -29,8 +29,10 @@ public:
   std::size_t end();
   void end(const std::size_t &argEnd);
   bool check();
+
   void write(const Frame &frame);
   void write(const Frame *const frame);
+
   void next(Clip *n);
   Clip *next();
   void previous(Clip *n);

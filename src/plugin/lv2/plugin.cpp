@@ -2,12 +2,12 @@
 #include <cassert>
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/state/state.h>
-#include <maolan/audio/plugin.h>
-#include <maolan/audio/pluginport.h>
 #include <maolan/config.h>
+#include <maolan/plugin/lv2/plugin.h>
+#include <maolan/plugin/lv2/port.h>
 
 
-using namespace maolan::audio;
+using namespace maolan::plugin::lv2;
 
 
 static LV2_URID uri_to_id(LV2_URID_Map_Handle unused, const char *uri)
@@ -24,8 +24,7 @@ static const char *id_to_uri(LV2_URID_Unmap_Handle unused, LV2_URID urid)
 
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
-Buffer Plugin::emptyBuffer =
-    std::make_shared<BufferData>(Config::audioBufferSize);
+maolan::audio::Buffer Plugin::emptyBuffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
 
 
 float val = 0.0;
@@ -312,7 +311,7 @@ Plugin::~Plugin()
 
 void Plugin::init()
 {
-  emptyBuffer = std::make_shared<BufferData>(Config::audioBufferSize);
+  emptyBuffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
 }
 void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
