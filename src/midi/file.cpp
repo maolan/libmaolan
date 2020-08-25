@@ -107,7 +107,7 @@ static std::uint32_t bigEndianInt(std::fstream &file, int size)
 
 static void readMetaEvent(std::fstream &file, Buffer chunk)
 {
-  file >> chunk->meta;
+  file.read((char *)&chunk->meta, sizeof(chunk->meta));
   auto len = readVarLen(file);
   chunk->data = new unsigned char[len];
   file.read((char *)chunk->data, len);
@@ -135,7 +135,7 @@ Buffer File::read()
   {
     throw std::invalid_argument("Error reading event time!");
   }
-  file >> chunk->type;
+  file.read((char *)&chunk->type, sizeof(chunk->type));
   if (!file.good())
   {
     throw std::invalid_argument("Error reading event type!");
@@ -155,14 +155,16 @@ Buffer File::read()
     {
       case Event::NOTE_ON:
       case Event::NOTE_OFF:
-        file >> chunk->note >> chunk->velocity;
+        file.read((char *)&chunk->note, sizeof(chunk->note));
+        file.read((char *)&chunk->velocity, sizeof(chunk->velocity));
         if (!file.good())
         {
           throw std::invalid_argument("Error reading note event!");
         }
         break;
       case Event::CONTROLER_ON:
-        file >> chunk->controller >> chunk->value;
+        file.read((char *)&chunk->controller, sizeof(chunk->controller));
+        file.read((char *)&chunk->value, sizeof(chunk->value));
         if (!file.good())
         {
           throw std::invalid_argument("Error reading controller event!");
