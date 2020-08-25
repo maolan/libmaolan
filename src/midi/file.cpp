@@ -117,6 +117,7 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 File::File(const std::string &path)
     : file(path, std::ios::in | std::ios::binary), _path{path}
 {
+  file >> std::noskipws;
 }
 
 
