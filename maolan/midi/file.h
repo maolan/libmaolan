@@ -14,20 +14,21 @@ public:
   ~File();
 
   Buffer read();
+  void save(const Buffer buffer);
   void readHeaders();
   bool eof();
   bool good();
   std::streampos tellg();
 
-  float rate;
-  unsigned division;
-  unsigned headerLength;
-  unsigned format;
-  unsigned chunks;
-  unsigned length;
-
 protected:
   std::fstream file;
-  Buffer last = nullptr;
+  std::string _path;
+  Buffer last;
+  float rate;
+  std::uint16_t chunks;
+  std::uint16_t division;
+  std::uint16_t format;
+  std::uint32_t headerLength;
+  std::uint32_t length;
 };
 } // namespace maolan::midi

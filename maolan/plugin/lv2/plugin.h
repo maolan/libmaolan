@@ -1,14 +1,14 @@
 #pragma once
 #include <lilv/lilv.h>
 #include <maolan/audio/buffer.h>
-#include <maolan/audio/plugininfo.h>
-#include <maolan/audio/pluginport.h>
 #include <maolan/frame.h>
+#include <maolan/plugin/lv2/info.h>
+#include <maolan/plugin/lv2/port.h>
 #include <string>
 #include <vector>
 
 
-namespace maolan::audio
+namespace maolan::plugin::lv2
 {
 class Author
 {
@@ -52,7 +52,7 @@ public:
 protected:
   static LilvWorld *world;
   static LilvPlugins *plugins;
-  static Buffer emptyBuffer;
+  static audio::Buffer emptyBuffer;
 
   const LilvNode *_uri;
   const LilvPlugin *rawPlugin;

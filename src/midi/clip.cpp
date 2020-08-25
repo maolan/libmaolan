@@ -10,6 +10,18 @@
 using namespace maolan::midi;
 
 
+std::vector<Clip *> Clip::clips;
+
+
+void Clip::saveAll()
+{
+  for (const auto &clip : clips)
+  {
+    clip->save();
+  }
+}
+
+
 Clip::Clip(const std::string &name, Track *parent)
     : IO(name), file(name), _previous{nullptr}, _next{nullptr}, _parent{parent},
       _start{0}, _end{100000000}, _offset{0}
@@ -20,6 +32,7 @@ Clip::Clip(const std::string &name, Track *parent)
   {
     parent->add(this);
   }
+  clips.push_back(this);
 }
 
 
@@ -43,17 +56,16 @@ Clip::~Clip()
   {
     _parent->remove(this);
   }
+  auto newend = std::remove_if(clips.begin(), clips.end(),
+                               [this](const Clip *c) { return c == this; });
+  clips.erase(newend, clips.end());
 }
 
 
-void Clip::setup()
-{
-}
+void Clip::setup() {}
 
 
-void Clip::fetch()
-{
-}
+void Clip::fetch() {}
 
 
 void Clip::process()
@@ -153,11 +165,40 @@ const std::size_t Clip::startSample() const
   auto tempo = Config::tempos[Config::tempoIndex];
   return (_start - tempo.tick) * tempo.ratio + tempo.time;
 }
+
+
 const std::size_t Clip::endSample() const
 {
   auto tempo = Config::tempos[Config::tempoIndex];
   return (_end - tempo.tick) * tempo.ratio + tempo.time;
 }
+
+
+void Clip::write(const Buffer buffer)
+{
+  if (buffer == nullptr)
+  {
+    return;
+  }
+  if (data == nullptr)
+  {
+    data = buffer;
+    last = data;
+    current = data;
+    return;
+  }
+  last->next = buffer;
+  for (last = buffer; last->next != nullptr; last = last->next)
+  {
+  }
+}
+
+
+void Clip::save()
+{
+  file.save(data);
+}
+
 
 const std::size_t &Clip::start() const { return _start; }
 const std::size_t &Clip::end() const { return _end; }

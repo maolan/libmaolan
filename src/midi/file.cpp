@@ -1,4 +1,5 @@
 #include <fstream>
+#include <iostream>
 #include <maolan/midi/buffer.h>
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
@@ -7,19 +8,81 @@
 using namespace maolan::midi;
 
 
-static unsigned int readVarLen(std::fstream &file)
+static void write(std::fstream &file, const std::uint8_t &value)
 {
-  unsigned int value;
-  unsigned char c;
-  file >> c;
+  file << value;
+}
+
+
+static void write(std::fstream &file, const std::uint16_t &value)
+{
+  union {
+    std::uint8_t bytes[2];
+    std::uint32_t value;
+  } data;
+  data.value = value;
+  file << data.bytes[1];
+  file << data.bytes[0];
+}
+
+
+static void write(std::fstream &file, const std::uint32_t &value)
+{
+  union {
+    std::uint8_t bytes[4];
+    std::uint32_t value;
+  } data;
+  data.value = value;
+  file << data.bytes[3];
+  file << data.bytes[2];
+  file << data.bytes[1];
+  file << data.bytes[0];
+}
+
+
+static void writeVarLen(std::fstream &file, std::uint32_t value)
+{
+  std::uint32_t buffer;
+  buffer = value & 0x7F;
+
+  while ((value >>= 7) > 0)
+  {
+    buffer <<= 8;
+    buffer += ((value & 0x7F) | 0x80);
+  }
+
+  while (true)
+  {
+    file << (std::uint8_t)buffer;
+    if (!file.good())
+    {
+      std::cerr << "Error: " << strerror(errno) << '\n';
+    }
+    if (buffer & 0x80)
+    {
+      buffer >>= 8;
+    }
+    else
+    {
+      break;
+    }
+  }
+}
+
+
+static std::uint32_t readVarLen(std::fstream &file)
+{
+  std::uint32_t value;
+  std::uint8_t c;
+  file.read((char *)&c, 1);
   value = c;
   if (value & 0x80)
   {
     value &= 0x7F;
     do
     {
-      value = (value << 7);
-      file >> c;
+      value <<= 7;
+      file.read((char *)&c, 1);
       value += c & 0x7F;
     } while (c & 0x80);
   }
@@ -27,12 +90,12 @@ static unsigned int readVarLen(std::fstream &file)
 }
 
 
-static unsigned int bigEndianInt(std::fstream &file, int size)
+static std::uint32_t bigEndianInt(std::fstream &file, int size)
 {
-  char rawData[size];
+  std::uint8_t rawData[size];
   int shift;
-  unsigned int result = 0;
-  file.read(rawData, size);
+  std::uint32_t result = 0;
+  file.read((char *)rawData, size);
   for (int i = 0; i < size; ++i)
   {
     shift = (size - 1 - i) * 8;
@@ -51,7 +114,10 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 }
 
 
-File::File(const std::string &path) : file(path) {}
+File::File(const std::string &path)
+    : file(path, std::ios::in | std::ios::binary), _path{path}
+{
+}
 
 
 File::~File() { file.close(); }
@@ -74,30 +140,35 @@ Buffer File::read()
   {
     throw std::invalid_argument("Error reading event type!");
   }
-  switch (chunk->type)
+  if (chunk->type == Event::META)
   {
-    case Event::META:
-      readMetaEvent(file, chunk);
-      if (!file.good())
-      {
-        throw std::invalid_argument("Error reading meta event!");
-      }
-      break;
-    case Event::NOTE_ON:
-    case Event::NOTE_OFF:
-      file >> chunk->note >> chunk->velocity;
-      if (!file.good())
-      {
-        throw std::invalid_argument("Error reading note event!");
-      }
-      break;
-    case Event::CONTROLER_ON:
-      file >> chunk->controller >> chunk->value;
-      if (!file.good())
-      {
-        throw std::invalid_argument("Error reading controller event!");
-      }
-      break;
+    readMetaEvent(file, chunk);
+    if (!file.good())
+    {
+      throw std::invalid_argument("Error reading meta event!");
+    }
+  }
+  else
+  {
+    chunk->type &= Event::NOTE_MASK;
+    switch(chunk->type)
+    {
+      case Event::NOTE_ON:
+      case Event::NOTE_OFF:
+        file >> chunk->note >> chunk->velocity;
+        if (!file.good())
+        {
+          throw std::invalid_argument("Error reading note event!");
+        }
+        break;
+      case Event::CONTROLER_ON:
+        file >> chunk->controller >> chunk->value;
+        if (!file.good())
+        {
+          throw std::invalid_argument("Error reading controller event!");
+        }
+        break;
+    }
   }
   last = chunk;
   return chunk;
@@ -144,11 +215,73 @@ void File::readHeaders()
   {
     throw std::invalid_argument("Expected track marker!");
   }
-  length = bigEndianInt(file, 4);
+  std::uint32_t length = bigEndianInt(file, 4);
   if (!file.good())
   {
     throw std::invalid_argument("Error reading track length!");
   }
+}
+
+
+void File::save(Buffer buffer)
+{
+  if (buffer == nullptr || _path == "/tmp/clip.mid")
+  {
+    return;
+  }
+  Buffer lastSaved = std::make_shared<BufferData>();
+  lastSaved->time = 0;
+  std::fstream outfile;
+  outfile.open("/tmp/clip.mid",
+               std::ios::out | std::ios::trunc | std::ios::binary);
+  outfile << "MThd";
+  write(outfile, headerLength);
+  write(outfile, format);
+  write(outfile, (std::uint16_t)1);
+  write(outfile, Config::division);
+  outfile << "MTrk";
+
+  auto lengthPosition = outfile.tellg();
+  auto dataPosition = lengthPosition;
+  dataPosition += 4;
+  outfile.seekg(dataPosition);
+
+  std::uint32_t length = 0;
+  std::uint8_t typeChannel;
+  for (Buffer chunk = buffer; chunk != nullptr; chunk = chunk->next)
+  {
+    writeVarLen(outfile, chunk->time - lastSaved->time);
+    typeChannel = chunk->type;
+    write(outfile, typeChannel);
+    switch (chunk->type)
+    {
+      case Event::NOTE_ON:
+      case Event::NOTE_OFF:
+        write(outfile, chunk->note);
+        write(outfile, chunk->velocity);
+        break;
+      case Event::CONTROLER_ON:
+        write(outfile, chunk->controller);
+        write(outfile, chunk->value);
+        break;
+    }
+    lastSaved = chunk;
+    ++length;
+  }
+  std::uint8_t trackEnd;
+  trackEnd = 0;
+  write(outfile, trackEnd);
+  trackEnd = 0xFF;
+  write(outfile, trackEnd);
+  trackEnd = 0x2F;
+  write(outfile, trackEnd);
+  trackEnd = 0;
+  write(outfile, trackEnd);
+
+  outfile.seekg(lengthPosition);
+  write(outfile, length);
+  outfile.close();
+  // file.seekp(0);
 }
 
 

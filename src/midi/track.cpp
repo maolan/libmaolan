@@ -35,6 +35,8 @@ void Track::process()
   }
   if (armed)
   {
+    auto buffer = input.pull();
+    recording->write(buffer);
   }
   else if (!muted && _playHead >= _current->startSample())
   {
@@ -170,7 +172,6 @@ Buffer Track::pull()
 }
 
 
-void Track::mute() { muted = !muted; }
-void Track::arm() { armed = !armed; }
-void Track::solo() { soloed = !soloed; }
-
+void Track::mute(const bool &value) { muted = value; }
+void Track::arm(const bool &value) { armed = value; }
+void Track::solo(const bool &value) { soloed = value; }

@@ -27,7 +27,6 @@ void BufferData::print()
       std::cout << "note = " << (unsigned)note << '\n';
       std::cout << "channel = " << (unsigned)channel << '\n';
       std::cout << "velocity = " << (unsigned)velocity << '\n';
-      std::cout << "time = " << time << '\n';
       break;
     }
     case Event::CONTROLER_ON:
@@ -39,9 +38,14 @@ void BufferData::print()
     }
     case Event::META:
     {
-      std::cout << "meta: " << std::hex << meta << '\n';
+      std::cout << "meta: " << std::hex << (unsigned)meta << std::dec << '\n';
       break;
     }
+    default:
+    {
+      std::cout << "Unknown event of type " << (unsigned)type << '\n';
+    }
   }
+  std::cout << "time = " << time << '\n';
   std::cout << std::endl;
 }

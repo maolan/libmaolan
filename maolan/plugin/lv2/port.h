@@ -4,7 +4,7 @@
 #include <string>
 
 
-namespace maolan::audio
+namespace maolan::plugin::lv2
 {
 enum class PluginPortDirection
 {
@@ -32,9 +32,9 @@ public:
   PluginPortDirection direction() { return _direction; }
   PluginPortType type() { return _type; }
   void print() const;
-  void buffer(LilvInstance *instance, const Buffer buf);
+  void buffer(LilvInstance *instance, const audio::Buffer buf);
   void buffer(LilvInstance *instance, const float &control);
-  Buffer buffer(LilvInstance *instance);
+  audio::Buffer buffer(LilvInstance *instance);
 
 protected:
   static LilvNode *lv2_AtomPort;

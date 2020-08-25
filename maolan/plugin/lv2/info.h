@@ -2,7 +2,7 @@
 #include <cstddef>
 
 
-namespace maolan::audio
+namespace maolan::plugin::lv2
 {
 class PluginPortInfo
 {

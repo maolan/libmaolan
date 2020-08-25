@@ -1,5 +1,6 @@
 #include <maolan/engine.h>
 #include <maolan/io.h>
+#include <maolan/midi/clip.h>
 #include <thread>
 
 
@@ -27,6 +28,9 @@ void Engine::quit()
   IO::quit();
   _workers.clear();
 }
+
+
+void Engine::save() { midi::Clip::saveAll(); }
 
 
 void Engine::play() { IO::play(); }

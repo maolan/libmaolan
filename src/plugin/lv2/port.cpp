@@ -1,9 +1,9 @@
 #include <iostream>
-#include <maolan/audio/pluginport.h>
 #include <maolan/config.h>
+#include <maolan/plugin/lv2/port.h>
 
 
-using namespace maolan::audio;
+using namespace maolan::plugin::lv2;
 
 
 LilvNode *PluginPort::lv2_AtomPort = nullptr;
@@ -81,7 +81,7 @@ void PluginPort::print() const
 }
 
 
-void PluginPort::buffer(LilvInstance *instance, const Buffer buf)
+void PluginPort::buffer(LilvInstance *instance, const audio::Buffer buf)
 {
   lilv_instance_connect_port(instance, _index, buf->data());
 }
@@ -93,9 +93,9 @@ void PluginPort::buffer(LilvInstance *instance, const float &control)
 }
 
 
-Buffer PluginPort::buffer(LilvInstance *instance)
+maolan::audio::Buffer PluginPort::buffer(LilvInstance *instance)
 {
-  auto buf = std::make_shared<BufferData>(Config::audioBufferSize);
+  auto buf = std::make_shared<audio::BufferData>(Config::audioBufferSize);
   lilv_instance_connect_port(instance, _index, buf->data());
   return buf;
 }

@@ -16,6 +16,8 @@ public:
        const std::size_t &end, const std::size_t &offset, Track *parent);
   ~Clip();
 
+  static void saveAll();
+
   void load();
   virtual void fetch();
   virtual void process();
@@ -36,7 +38,12 @@ public:
   Clip *previous();
   void parent(maolan::IO *p);
 
+  void write(const Buffer buffer);
+  void save();
+
 protected:
+  static std::vector<Clip *> clips;
+
   std::size_t _offset = 0;
   std::size_t _start = 0;
   std::size_t _end = 0;

@@ -14,7 +14,7 @@ public:
   static unsigned samplerate;
   static std::size_t tempoIndex;
   static std::vector<Tempo> tempos;
-  static unsigned division;
+  static std::uint16_t division;
   std::size_t count;
   std::string name;
   std::string device;

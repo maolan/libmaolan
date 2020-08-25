@@ -1,7 +1,5 @@
-#include <iostream>
 #include <maolan/io.h>
 #include <maolan/utils.h>
-#include <thread>
 
 
 using namespace maolan;
