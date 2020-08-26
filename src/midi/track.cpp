@@ -6,12 +6,13 @@ using namespace maolan::midi;
 
 
 Track::Track(const std::string &name, const std::size_t &channel)
-    : IO(name, true, true), Connectable(), _current(nullptr), first(nullptr),
+    : IO(name, true, true), Connectable(1), _current(nullptr), first(nullptr),
       last(nullptr), armed(false), muted(false),
       soloed(false), _channel{channel}
 {
   _type = "MIDITrack";
   _name = name;
+  outputs.resize(1);
 }
 
 
@@ -30,19 +31,22 @@ void Track::process()
   Connectable::process();
   if (_current == nullptr)
   {
-    output = nullptr;
+    outputs[0] = nullptr;
     return;
   }
   if (armed)
   {
-    auto buffer = input.pull();
-    recording->write(buffer);
+    for (std::size_t i = 0; i < inputs.size() && i < outputs.size(); ++i)
+    {
+      outputs[i] = inputs[i].pull();
+    }
+    // recording->write(buffer);
   }
   else if (!muted && _playHead >= _current->startSample())
   {
     _current->process();
-    output = _current->pull();
-    for (auto buffer = output; buffer != nullptr; buffer = buffer->next)
+    outputs[0] = _current->pull(0);
+    for (auto buffer = outputs[0]; buffer != nullptr; buffer = buffer->next)
     {
       buffer->channel = _channel;
     }
@@ -54,7 +58,7 @@ void Track::setup()
 {
   if (armed && recording == nullptr)
   {
-    recording = new Clip("/tmp/clip.mid", this);
+    recording = new midi::Clip("/tmp/clip.mid", this);
     recording->startSample(_playHead);
     recording->endSample(_playHead + Config::audioBufferSize);
     _current = recording;
@@ -162,13 +166,13 @@ void Track::remove(Clip *clip)
 }
 
 
-Buffer Track::pull()
+Buffer Track::pull(const std::size_t &ch)
 {
   if (muted)
   {
     return nullptr;
   }
-  return output;
+  return outputs[ch];
 }
 
 

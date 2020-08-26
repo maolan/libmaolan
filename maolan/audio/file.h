@@ -8,7 +8,7 @@
 
 namespace maolan::audio
 {
-class File : public IO
+class File : public audio::IO
 {
 public:
   File(const std::size_t &channels);

@@ -23,7 +23,7 @@ public:
 protected:
   std::fstream file;
   std::string _path;
-  Buffer last;
+  midi::Buffer last;
   float rate;
   std::uint16_t chunks;
   std::uint16_t division;

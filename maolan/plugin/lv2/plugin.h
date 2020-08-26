@@ -2,6 +2,7 @@
 #include <lilv/lilv.h>
 #include <maolan/audio/buffer.h>
 #include <maolan/frame.h>
+#include <maolan/plugin/io.h>
 #include <maolan/plugin/lv2/info.h>
 #include <maolan/plugin/lv2/port.h>
 #include <string>
@@ -28,7 +29,7 @@ public:
 };
 
 
-class Plugin
+class Plugin : public plugin::IO
 {
 public:
   Plugin(const std::string &argUri);
@@ -39,13 +40,17 @@ public:
   static const void *portValue(const char *port_symbol, void *user_data,
                                uint32_t *size, uint32_t *type);
 
+  virtual void fetch();
+  virtual void process();
+  virtual std::size_t ports(const std::string &type = "audio",
+                            const std::string &direction = "out");
+
   void uri(const LilvNode *argUri);
   const LilvNode *uri() const;
   const std::string identifier() const;
   const std::string name() const;
   const Author author() const;
   void print() const;
-  const Frame *const process(const Frame *const inputs);
   const PluginInfo info() const;
   void saveSession() const;
 
@@ -64,4 +69,4 @@ protected:
   Ports output;
   LV2_URID_Map _lv2_urid_map;
 };
-} // namespace maolan::audio
+} // namespace maolan::plugin::lv2

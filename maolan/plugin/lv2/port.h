@@ -1,7 +1,9 @@
 #pragma once
 #include <lilv/lilv.h>
 #include <maolan/audio/buffer.h>
+#include <maolan/midi/buffer.h>
 #include <string>
+#include <lv2/atom/atom.h>
 
 
 namespace maolan::plugin::lv2
@@ -29,12 +31,12 @@ public:
              const float &defaultValue, const uint32_t &index);
   ~PluginPort();
 
-  PluginPortDirection direction() { return _direction; }
-  PluginPortType type() { return _type; }
+  PluginPortDirection direction();
+  PluginPortType type();
   void print() const;
   void buffer(LilvInstance *instance, const audio::Buffer buf);
+  void buffer(LilvInstance *instance, const midi::Buffer buf);
   void buffer(LilvInstance *instance, const float &control);
-  audio::Buffer buffer(LilvInstance *instance);
 
 protected:
   static LilvNode *lv2_AtomPort;
@@ -46,6 +48,7 @@ protected:
   static LilvNode *lv2_MidiEvent;
   static LilvNode *lv2_OutputPort;
   static LilvNode *lv2_ConnectionOptional;
+  static LV2_URID_Map map;
 
   float _minimum;
   float _maximum;
@@ -57,5 +60,6 @@ protected:
   std::string _name;
   LilvPort *rawPort;
   uint32_t _index;
+  LV2_Atom_Sequence *seq = nullptr;
 };
-} // namespace maolan::audio
+} // namespace maolan::plugin::lv2

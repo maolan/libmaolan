@@ -193,7 +193,6 @@ void IO::quit()
   cv.notify_one();
 }
 
-
 void IO::parent(IO *p) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }

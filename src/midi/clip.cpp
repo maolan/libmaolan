@@ -5,6 +5,7 @@
 #include <maolan/midi/event.h>
 #include <maolan/midi/file.h>
 #include <maolan/midi/track.h>
+#include <maolan/tempo.h>
 
 
 using namespace maolan::midi;
@@ -33,6 +34,7 @@ Clip::Clip(const std::string &name, Track *parent)
     parent->add(this);
   }
   clips.push_back(this);
+  outputs.resize(1);
 }
 
 
@@ -47,6 +49,7 @@ Clip::Clip(const std::string &name, const std::size_t &start,
   {
     parent->add(this);
   }
+  outputs.resize(1);
 }
 
 
@@ -70,7 +73,7 @@ void Clip::fetch() {}
 
 void Clip::process()
 {
-  output = nullptr;
+  outputs[0] = nullptr;
   if (data == nullptr || current == nullptr)
   {
     return;
@@ -89,10 +92,10 @@ void Clip::process()
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
     buffer->next = nullptr;
-    if (output == nullptr)
+    if (outputs[0] == nullptr)
     {
-      output = buffer;
-      last = output;
+      outputs[0] = buffer;
+      last = buffer;
     }
     else
     {
@@ -194,12 +197,45 @@ void Clip::write(const Buffer buffer)
 }
 
 
-void Clip::save()
+void Clip::startSample(const std::size_t &start)
 {
-  file.save(data);
+  if (Config::tempos.size() == 0)
+  {
+    return;
+  }
+  for (auto index = Config::tempos.size(); index > 0; --index)
+  {
+    auto tempo = Config::tempos[index - 1];
+    if (tempo.time < start)
+    {
+      _start = (start - tempo.time) / tempo.ratio + tempo.tick;
+      break;
+    }
+  }
 }
 
 
+void Clip::endSample(const std::size_t &end)
+{
+  if (Config::tempos.size() == 0)
+  {
+    return;
+  }
+  for (auto index = Config::tempos.size(); index > 0; --index)
+  {
+    auto tempo = Config::tempos[index - 1];
+    if (tempo.time < end)
+    {
+      _end = (end - tempo.time) / tempo.ratio + tempo.tick;
+      break;
+    }
+  }
+}
+
+
+void Clip::save() { file.save(data); }
+void Clip::start(const std::size_t &s) { _start = s; }
+void Clip::end(const std::size_t &e) { _end = e; }
 const std::size_t &Clip::start() const { return _start; }
 const std::size_t &Clip::end() const { return _end; }
 void Clip::next(Clip *n) { _next = n; }

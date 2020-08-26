@@ -5,6 +5,7 @@
 #include <maolan/engine.h>
 
 
+namespace lv2 = maolan::plugin::lv2;
 using namespace maolan::audio;
 
 
@@ -53,7 +54,5 @@ int main(int argc, char **argv)
     IO::playHead(playhead + Config::audioBufferSize);
   }
   */
-
-  maolan::plugin::lv2::Plugin::destroyWorld();
   return 0;
 }
