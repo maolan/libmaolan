@@ -19,4 +19,4 @@ public:
   PluginPortInfo input;
   PluginPortInfo output;
 };
-} // namespace maolan::audio
+} // namespace maolan::plugin::lv2

@@ -5,7 +5,7 @@
 
 namespace maolan::midi
 {
-class Track : public IO, public Connectable
+class Track : public midi::IO, public midi::Connectable
 {
 public:
   Track(const std::string &name, const std::size_t &channel);
@@ -13,21 +13,22 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
+  virtual Buffer pull(const std::size_t &channel);
+
   void mute(const bool &value = true);
   void arm(const bool &value = true);
   void solo(const bool &value = true);
-  void add(Clip *);
-  void remove(Clip *);
-  virtual Buffer pull();
+  void add(midi::Clip *);
+  void remove(midi::Clip *);
 
 protected:
   bool muted;
   bool armed;
   bool soloed;
   std::size_t _channel;
-  Clip *first;
-  Clip *_current;
-  Clip *last;
-  Clip *recording;
+  midi::Clip *first;
+  midi::Clip *_current;
+  midi::Clip *last;
+  midi::Clip *recording;
 };
 } // namespace maolan::midi

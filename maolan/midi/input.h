@@ -6,19 +6,18 @@
 
 namespace maolan::midi
 {
-class Input : public IO
+class Input : public midi::IO
 {
 public:
   Input();
 
   virtual void fetch();
   virtual void process();
-  void connect(IO *to);
-  std::size_t channels() const;
+  void connect(IO *to, const std::size_t &ch = 0);
   Buffer pull();
 
 protected:
-  std::vector<Connection> connections;
+  std::vector<midi::Connection> connections;
 };
 } // namespace maolan::midi
 

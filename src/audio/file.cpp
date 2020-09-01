@@ -76,7 +76,7 @@ void File::fetch()
 
 void File::write(const Frame &fr)
 {
-  const auto chs = fr.audioBuffer.size();
+  const auto chs = fr.audio.size();
   std::size_t i;
   std::size_t channel;
   float sample;
@@ -84,7 +84,7 @@ void File::write(const Frame &fr)
   {
     for (i = 0; i < Config::audioBufferSize; ++i)
     {
-      auto &buffer = fr.audioBuffer[channel];
+      auto &buffer = fr.audio[channel];
       if (buffer)
       {
         auto data = buffer->data();

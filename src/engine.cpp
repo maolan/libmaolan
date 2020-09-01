@@ -1,6 +1,7 @@
 #include <maolan/engine.h>
 #include <maolan/io.h>
 #include <maolan/midi/clip.h>
+#include <maolan/plugin/lv2/plugin.h>
 #include <thread>
 
 
@@ -20,6 +21,7 @@ void Engine::init(const int &threads)
   {
     _workers[i] = new Worker();
   }
+  plugin::lv2::Plugin::init();
 }
 
 
@@ -27,11 +29,10 @@ void Engine::quit()
 {
   IO::quit();
   _workers.clear();
+  plugin::lv2::Plugin::destroyWorld();
 }
 
 
 void Engine::save() { midi::Clip::saveAll(); }
-
-
 void Engine::play() { IO::play(); }
 void Engine::stop() { IO::stop(); }

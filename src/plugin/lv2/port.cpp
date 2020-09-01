@@ -1,9 +1,34 @@
 #include <iostream>
+#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
+#include <lv2/lv2plug.in/ns/ext/atom/forge.h>
+#include <lv2/midi/midi.h>
 #include <maolan/config.h>
+#include <maolan/io.h>
 #include <maolan/plugin/lv2/port.h>
 
 
 using namespace maolan::plugin::lv2;
+
+
+static std::uint32_t uid = 0;
+struct Message
+{
+  std::uint8_t *buf;
+  LV2_Atom atom;
+};
+
+struct MIDINoteEvent
+{
+  LV2_Atom_Event event;
+  uint8_t *msg;
+};
+
+
+static uint32_t _map(void *data, const char *uri)
+{
+  auto urid = (std::uint32_t *)data;
+  return ++(*urid);
+}
 
 
 LilvNode *PluginPort::lv2_AtomPort = nullptr;
@@ -15,6 +40,24 @@ LilvNode *PluginPort::lv2_InputPort = nullptr;
 LilvNode *PluginPort::lv2_MidiEvent = nullptr;
 LilvNode *PluginPort::lv2_OutputPort = nullptr;
 LilvNode *PluginPort::lv2_ConnectionOptional = nullptr;
+LV2_URID_Map PluginPort::map = {.handle = &uid, .map = _map};
+
+
+static inline LV2_Atom_Event *
+_lv2_atom_sequence_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
+                                const LV2_Atom_Event *event)
+{
+  const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
+  if (capacity - seq->atom.size < total_size)
+  {
+    return nullptr;
+  }
+
+  LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
+  memcpy(e, event, total_size);
+  seq->atom.size += lv2_atom_pad_size(total_size);
+  return e;
+}
 
 
 PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
@@ -22,7 +65,7 @@ PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
                        const float &argMaximum, const float &argDefault,
                        const uint32_t &argIndex)
     : _minimum{argMinimum}, _maximum{argMaximum}, _default{argDefault},
-      _index{argIndex}
+      _index{argIndex}, seq{nullptr}
 {
   if (lv2_AtomPort == nullptr)
   {
@@ -81,9 +124,31 @@ void PluginPort::print() const
 }
 
 
+PluginPortType PluginPort::type() { return _type; }
+
+
 void PluginPort::buffer(LilvInstance *instance, const audio::Buffer buf)
 {
   lilv_instance_connect_port(instance, _index, buf->data());
+}
+
+
+void PluginPort::buffer(LilvInstance *instance, const midi::Buffer buf)
+{
+  seq = new LV2_Atom_Sequence;
+  seq->atom.size = sizeof(LV2_Atom_Sequence_Body);
+  seq->atom.type = map.map(map.handle, LV2_ATOM__Sequence);
+  seq->body.unit = 0;
+  seq->body.pad = 0;
+
+  MIDINoteEvent ev;
+  ev.event.time.frames = IO::playHead(); // sample position
+  ev.event.body.type = map.map(map.handle, LV2_MIDI__MidiEvent);
+  ev.event.body.size = 3;
+  ev.msg = &(buf->type);
+  LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
+
+  lilv_instance_connect_port(instance, _index, seq);
 }
 
 
@@ -93,11 +158,5 @@ void PluginPort::buffer(LilvInstance *instance, const float &control)
 }
 
 
-maolan::audio::Buffer PluginPort::buffer(LilvInstance *instance)
-{
-  auto buf = std::make_shared<audio::BufferData>(Config::audioBufferSize);
-  lilv_instance_connect_port(instance, _index, buf->data());
-  return buf;
-}
-
+PluginPortDirection PluginPort::direction() { return _direction; }
 PluginPort::~PluginPort() {}

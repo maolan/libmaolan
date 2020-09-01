@@ -7,7 +7,7 @@
 namespace maolan::audio
 {
 class Track;
-class Clip : public IO
+class Clip : public audio::IO
 {
 public:
   Clip(Track *parent, const std::size_t &channels);

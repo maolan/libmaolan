@@ -20,7 +20,7 @@ OSSMIDIOut::OSSMIDIOut(const std::string &device) : OSSMIDI(device)
 void OSSMIDIOut::fetch()
 {
   Connectable::fetch();
-  data = input.pull();
+  data = inputs[0].pull();
 }
 
 

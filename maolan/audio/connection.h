@@ -8,14 +8,14 @@ class Connection
 {
 public:
   Connection();
-  Connection(IO *connectTo, const std::size_t &ch);
+  Connection(audio::IO *connectTo, const std::size_t &ch);
 
   IO *get();
-  void target(IO *connectTo, const std::size_t &ch);
+  void target(audio::IO *connectTo, const std::size_t &ch);
   Buffer pull();
 
 protected:
-  IO *to;
+  audio::IO *to;
   std::size_t channel;
 };
 } // namespace maolan::audio

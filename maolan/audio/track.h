@@ -6,7 +6,7 @@
 
 namespace maolan::audio
 {
-class Track : public IO, public Connectable
+class Track : public audio::IO, public audio::Connectable
 {
 public:
   Track(const std::string &name, const std::size_t &channel);
@@ -14,6 +14,9 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
+  virtual std::size_t channels() const;
+  virtual Buffer pull(const std::size_t &channel);
+
   void mute(const bool &value = true);
   void arm(const bool &value = true);
   void solo(const bool &value = true);
@@ -21,8 +24,6 @@ public:
   void remove(Clip *);
   void add(plugin::lv2::Plugin *);
   void remove(plugin::lv2::Plugin *);
-  virtual std::size_t channels() const;
-  virtual Buffer pull(const std::size_t &channel);
 
 protected:
   bool muted;

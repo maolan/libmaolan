@@ -35,17 +35,17 @@ void Track::process()
     _current->process();
   }
   auto const chs = channels();
-  auto frame = new Frame(chs, 0);
+  auto frame = new Frame(chs, 0, 0);
   if (armed)
   {
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
-      frame->audioBuffer[channel] = inputs[channel].pull();
+      frame->audio[channel] = inputs[channel].pull();
     }
     recording->write(frame);
     if (!muted)
     {
-      outputs = frame->audioBuffer;
+      outputs = frame->audio;
     }
     delete frame;
   }
@@ -53,30 +53,12 @@ void Track::process()
   {
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
-      frame->audioBuffer[channel] = _current->pull(channel);
+      frame->audio[channel] = _current->pull(channel);
     }
     auto &result = frame;
-    if (_plugins.size() > 0)
-    {
-      bool inInput = true;
-      auto frame2 = new Frame(chs, 0);
-      for (auto &plugin : _plugins)
-      {
-        if (inInput)
-        {
-          frame2 = (Frame *)plugin->process(result);
-          result = frame2;
-        }
-        else
-        {
-          frame = (Frame *)plugin->process(result);
-          result = frame;
-        }
-        inInput = !inInput;
-      }
-    }
+    // TODO: process plugins
 
-    outputs = result->audioBuffer;
+    outputs = result->audio;
     delete result;
   }
 }

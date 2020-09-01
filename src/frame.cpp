@@ -4,14 +4,19 @@
 using namespace maolan;
 
 
-Frame::Frame(std::size_t audioSize, std::size_t controlSize)
+Frame::Frame(const std::size_t &audioSize, const std::size_t &midiSize,
+             const std::size_t &controlSize)
 {
   if (audioSize > 0)
   {
-    audioBuffer.resize(audioSize);
+    audio.resize(audioSize);
+  }
+  if (midiSize > 0)
+  {
+    midi.resize(midiSize);
   }
   if (controlSize > 0)
   {
-    controls.resize(controlSize);
+    control.resize(controlSize);
   }
 }

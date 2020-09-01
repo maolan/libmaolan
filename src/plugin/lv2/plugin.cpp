@@ -7,64 +7,21 @@
 #include <maolan/plugin/lv2/port.h>
 
 
+namespace audio = maolan::audio;
+namespace midi = maolan::midi;
 using namespace maolan::plugin::lv2;
-
-
-static LV2_URID uri_to_id(LV2_URID_Map_Handle unused, const char *uri)
-{
-  return 4;
-}
-
-
-static const char *id_to_uri(LV2_URID_Unmap_Handle unused, LV2_URID urid)
-{
-  return "http://lv2plug.in/plugins/eg-amp";
-}
 
 
 LilvWorld *Plugin::world = nullptr;
 LilvPlugins *Plugin::plugins = nullptr;
-maolan::audio::Buffer Plugin::emptyBuffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
-
-
+audio::Buffer Plugin::emptyBuffer =
+    std::make_shared<audio::BufferData>(Config::audioBufferSize);
 float val = 0.0;
 
 
-const void *Plugin::portValue(const char *port_symbol, void *user_data,
-                              uint32_t *size, uint32_t *type)
-{
-  auto plugin = (Plugin *)user_data;
-  assert(plugin != nullptr);
-  std::cout << port_symbol << '\n';
-  // std::map<QString, size_t>::iterator it =
-  // state->controlsSymMap.find(QString::fromUtf8(port_symbol).toLower()); *size
-  // = *type = 0; if(it != state->controlsSymMap.end())
-  // {
-  // size_t ctrlNum = it->second;
-  // MusECore::Port *controls = NULL;
-
-  // if(state->plugInst != NULL)
-  // {
-  // controls = state->plugInst->controls;
-
-  // }
-  // else if(state->sif != NULL)
-  // {
-  // controls = state->sif->_controls;
-  // }
-
-  // if(controls != NULL)
-  // {
-  // *size = sizeof(float);
-  // *type = state->atomForge.Float;
-  // return &controls [ctrlNum].val;
-  // }
-  // }
-  return nullptr;
-}
-
-
-Plugin::Plugin(const std::string &argUri) : _identifier{argUri}
+Plugin::Plugin(const std::string &argUri)
+  : maolan::plugin::IO(argUri, true)
+  , _identifier{argUri}
 {
   if (world == nullptr)
   {
@@ -117,10 +74,12 @@ Plugin::Plugin(const std::string &argUri) : _identifier{argUri}
         if (port->type() == PluginPortType::midi)
         {
           input.midi.push_back(port);
+          midi::Connectable::inputs.emplace_back();
         }
         else if (port->type() == PluginPortType::audio)
         {
           input.audio.push_back(port);
+          audio::Connectable::inputs.emplace_back();
         }
         else if (port->type() == PluginPortType::control)
         {
@@ -132,10 +91,12 @@ Plugin::Plugin(const std::string &argUri) : _identifier{argUri}
         if (port->type() == PluginPortType::midi)
         {
           output.midi.push_back(port);
+          midi::IO::outputs.emplace_back();
         }
         else if (port->type() == PluginPortType::audio)
         {
           output.audio.push_back(port);
+          audio::IO::outputs.emplace_back();
         }
         else if (port->type() == PluginPortType::control)
         {
@@ -143,13 +104,27 @@ Plugin::Plugin(const std::string &argUri) : _identifier{argUri}
         }
       }
     }
+    instance = lilv_plugin_instantiate(rawPlugin, Config::samplerate, nullptr);
+    lilv_instance_activate(instance);
+
+    delete []mins;
+    delete []maxes;
+    delete []defaults;
   }
   else
   {
     std::cerr << "No such plugin " << _identifier << std::endl;
   }
-  instance = lilv_plugin_instantiate(rawPlugin, Config::samplerate, nullptr);
-  lilv_instance_activate(instance);
+}
+
+
+const void *Plugin::portValue(const char *port_symbol, void *user_data,
+                              uint32_t *size, uint32_t *type)
+{
+  auto plugin = (Plugin *)user_data;
+  assert(plugin != nullptr);
+  std::cout << port_symbol << '\n';
+  return nullptr;
 }
 
 
@@ -225,43 +200,6 @@ void Plugin::print() const
 }
 
 
-const maolan::Frame *const Plugin::process(const maolan::Frame *const inputs)
-{
-  auto size = input.control.size();
-  auto &controlResult = input.control;
-  auto &controlBuffer = inputs->controls;
-  for (uint32_t i = 0; i < size; ++i)
-  {
-    controlResult[i]->buffer(instance, controlBuffer[i]);
-  }
-  size = input.audio.size();
-  auto &inputResult = input.audio;
-  auto &inputBuffer = inputs->audioBuffer;
-  for (uint32_t i = 0; i < size; ++i)
-  {
-    auto &buffer = inputBuffer[i];
-    if (buffer == nullptr)
-    {
-      inputResult[i]->buffer(instance, emptyBuffer);
-    }
-    else
-    {
-      inputResult[i]->buffer(instance, inputBuffer[i]);
-    }
-  }
-  size = output.audio.size();
-  auto outputs = new maolan::Frame(size, 0);
-  auto &outputResult = output.audio;
-  auto &outputBuffer = outputs->audioBuffer;
-  for (uint32_t i = 0; i < size; ++i)
-  {
-    outputBuffer[i] = outputResult[i]->buffer(instance);
-  }
-  lilv_instance_run(instance, Config::audioBufferSize);
-  return outputs;
-}
-
-
 const PluginInfo Plugin::info() const
 {
   PluginInfo info;
@@ -313,6 +251,105 @@ void Plugin::init()
 {
   emptyBuffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
 }
+
+
+std::size_t Plugin::ports(const std::string &type, const std::string &direction)
+{
+  if (direction == "out")
+  {
+    if (type == "audio")
+    {
+      return output.audio.size();
+    }
+    if (type == "midi")
+    {
+      return output.midi.size();
+    }
+    if (type == "control")
+    {
+      return output.control.size();
+    }
+    std::cerr << "No such type: " << type << '\n';
+    return 0;
+  }
+  if (direction == "in")
+  {
+    if (type == "audio")
+    {
+      return input.audio.size();
+    }
+    if (type == "midi")
+    {
+      return input.midi.size();
+    }
+    if (type == "control")
+    {
+      return input.control.size();
+    }
+    std::cerr << "No such type: " << type << '\n';
+    return 0;
+  }
+  std::cerr << "No such direction!\n";
+  return 0;
+}
+
+
+void Plugin::fetch()
+{
+  plugin::IO::fetch();
+  auto portCount = ports("audio", "in");
+  auto &audioins = audio::Connectable::inputs;
+  auto &iaudio = input.audio;
+  for (std::size_t i = 0; i < portCount; ++i)
+  {
+    auto buffer = audioins[i].pull();
+    if (buffer == nullptr)
+    {
+      iaudio[i]->buffer(instance, emptyBuffer);
+    }
+    else
+    {
+      iaudio[i]->buffer(instance, buffer);
+    }
+  }
+
+  portCount = ports("midi", "in");
+  auto &midiins = midi::Connectable::inputs;
+  auto &imidi = input.midi;
+  for (std::size_t i = 0; i < portCount; ++i)
+  {
+    auto buffer = midiins[i].pull();
+    imidi[i]->buffer(instance, buffer);
+  }
+
+  portCount = ports("audio", "out");
+  auto &audioouts = audio::IO::outputs;
+  auto &oaudio = output.audio;
+  for (std::size_t i = 0; i < portCount; ++i)
+  {
+    auto buffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
+    oaudio[i]->buffer(instance, buffer);
+    audioouts[i] = buffer;
+  }
+
+  portCount = ports("midi", "out");
+  auto &midiouts = midi::IO::outputs;
+  auto &omidi = output.midi;
+  for (std::size_t i = 0; i < portCount; ++i)
+  {
+    auto buffer = std::make_shared<midi::BufferData>();
+    omidi[i]->buffer(instance, buffer);
+    midiouts[i] = buffer;
+  }
+}
+
+
+void Plugin::process()
+{
+  lilv_instance_run(instance, Config::audioBufferSize);
+}
+
+
 void Plugin::destroyWorld() { lilv_world_free(world); }
 void Plugin::uri(const LilvNode *argUri) { _uri = argUri; }
 const LilvNode *Plugin::uri() const { return _uri; }

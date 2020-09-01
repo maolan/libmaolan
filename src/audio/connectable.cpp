@@ -1,4 +1,3 @@
-#include <iostream>
 #include <maolan/audio/connectable.h>
 
 

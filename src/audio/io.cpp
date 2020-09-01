@@ -31,3 +31,9 @@ Buffer IO::pull(const std::size_t &channel)
   std::cerr << " channels and channel " << channel + 1 << " requested!\n";
   return nullptr;
 }
+
+
+std::size_t IO::channels() const
+{
+  return outputs.size();
+}

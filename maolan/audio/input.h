@@ -6,7 +6,7 @@
 
 namespace maolan::audio
 {
-class Input : public IO
+class Input : public audio::IO
 {
 public:
   Input();
@@ -18,6 +18,6 @@ public:
   Buffer pull();
 
 protected:
-  std::vector<Connection> connections;
+  std::vector<audio::Connection> connections;
 };
 } // namespace maolan::audio
