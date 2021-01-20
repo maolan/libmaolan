@@ -1,12 +1,12 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/audio/oss/base.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
 #include <sstream>
 #include <sys/soundcard.h>
 #include <unistd.h>
+#include "maolan/audio/oss/base.hpp"
+#include "maolan/config.hpp"
+#include "maolan/constants.hpp"
 
 
 using namespace maolan::audio;

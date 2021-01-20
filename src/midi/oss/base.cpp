@@ -1,9 +1,9 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/midi/event.h>
-#include <maolan/midi/oss/base.h>
 #include <unistd.h>
+#include "maolan/midi/event.hpp"
+#include "maolan/midi/oss/base.hpp"
 
 
 using namespace maolan::midi;

@@ -1,11 +1,11 @@
 #include <exception>
 #include <iostream>
-#include <maolan/midi/buffer.h>
-#include <maolan/midi/clip.h>
-#include <maolan/midi/event.h>
-#include <maolan/midi/file.h>
-#include <maolan/midi/track.h>
-#include <maolan/tempo.h>
+#include "maolan/midi/buffer.hpp"
+#include "maolan/midi/clip.hpp"
+#include "maolan/midi/event.hpp"
+#include "maolan/midi/file.hpp"
+#include "maolan/midi/track.hpp"
+#include "maolan/tempo.hpp"
 
 
 using namespace maolan::midi;

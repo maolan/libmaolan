@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <iostream>
-#include <maolan/audio/file.h>
-#include <maolan/config.h>
+#include "maolan/audio/file.hpp"
+#include "maolan/config.hpp"
 
 
 using namespace maolan::audio;

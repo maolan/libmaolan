@@ -1,13 +1,13 @@
 #include <iostream>
 #include <pugixml.hpp>
 
-#include <maolan/audio/clip.h>
-#include <maolan/audio/connection.h>
-#include <maolan/audio/oss/in.h>
-#include <maolan/audio/oss/out.h>
-#include <maolan/audio/track.h>
-#include <maolan/io.h>
-#include <maolan/utils.h>
+#include "maolan/audio/clip.hpp"
+#include "maolan/audio/connection.hpp"
+#include "maolan/audio/oss/in.hpp"
+#include "maolan/audio/oss/out.hpp"
+#include "maolan/audio/track.hpp"
+#include "maolan/io.hpp"
+#include "maolan/utils.hpp"
 
 namespace maolan
 {

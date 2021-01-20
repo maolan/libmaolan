@@ -1,7 +1,7 @@
 #include <iostream>
-#include <maolan/midi/event.h>
-#include <maolan/midi/oss/out.h>
 #include <unistd.h>
+#include "maolan/midi/event.hpp"
+#include "maolan/midi/oss/out.hpp"
 
 
 using namespace maolan::midi;

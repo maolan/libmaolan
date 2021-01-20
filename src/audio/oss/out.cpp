@@ -1,10 +1,10 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/audio/oss/out.h>
-#include <maolan/constants.h>
 #include <sys/soundcard.h>
 #include <unistd.h>
+#include "maolan/audio/oss/out.hpp"
+#include "maolan/constants.hpp"
 
 using namespace maolan::audio;
 
@@ -53,7 +53,7 @@ void OSSOut::convertToRaw()
         {
           sample = 1.0;
         }
-        frame[i * chs + channel] = sample * maxInt;
+        frame[i * chs + channel] = sample * floatMaxInt;
       }
     }
   }

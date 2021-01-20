@@ -1,5 +1,5 @@
-#include <maolan/midi/oss/config.h>
 #include <sys/soundcard.h>
+#include "maolan/midi/oss/config.hpp"
 
 
 using namespace maolan::midi;

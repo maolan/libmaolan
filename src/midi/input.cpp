@@ -1,5 +1,5 @@
-#include <maolan/config.h>
-#include <maolan/midi/input.h>
+#include "maolan/config.hpp"
+#include "maolan/midi/input.hpp"
 
 
 using namespace maolan::midi;

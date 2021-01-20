@@ -1,8 +1,8 @@
 #include <iostream>
-#include <maolan/audio/alsa/base.h>
-#include <maolan/audio/alsa/config.h>
-#include <maolan/config.h>
-#include <maolan/constants.h>
+#include "maolan/audio/alsa/base.hpp"
+#include "maolan/audio/alsa/config.hpp"
+#include "maolan/config.hpp"
+#include "maolan/constants.hpp"
 
 
 static void checkError(int &value, const std::string &message)

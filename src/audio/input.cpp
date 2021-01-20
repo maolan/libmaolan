@@ -1,5 +1,5 @@
-#include <maolan/audio/input.h>
-#include <maolan/config.h>
+#include "maolan/audio/input.hpp"
+#include "maolan/config.hpp"
 
 
 using namespace maolan::audio;

@@ -2,9 +2,9 @@
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/atom/forge.h>
 #include <lv2/midi/midi.h>
-#include <maolan/config.h>
-#include <maolan/io.h>
-#include <maolan/plugin/lv2/port.h>
+#include "maolan/config.hpp"
+#include "maolan/io.hpp"
+#include "maolan/plugin/lv2/port.hpp"
 
 
 using namespace maolan::plugin::lv2;
