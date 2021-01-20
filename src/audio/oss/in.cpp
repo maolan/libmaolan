@@ -1,8 +1,10 @@
-#include <maolan/audio/oss/in.h>
-#include <maolan/constants.h>
 #include <unistd.h>
+#include "maolan/audio/oss/in.hpp"
+#include "maolan/constants.hpp"
+
 
 using namespace maolan::audio;
+
 
 OSSIn::OSSIn(const std::string &device, const int &chs, const int &frag)
     : OSS(device, frag, chs)

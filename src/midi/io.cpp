@@ -1,5 +1,5 @@
-#include <maolan/config.h>
-#include <maolan/midi/io.h>
+#include "maolan/config.hpp"
+#include "maolan/midi/io.hpp"
 #include <vector>
 
 

@@ -1,4 +1,4 @@
-#include <maolan/midi/connectable.h>
+#include "maolan/midi/connectable.hpp"
 
 
 using namespace maolan::midi;

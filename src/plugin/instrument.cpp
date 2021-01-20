@@ -1,6 +1,6 @@
-#include <maolan/plugin/instrument.h>
 #include <iostream>
 #include <sstream>
+#include "maolan/plugin/instrument.hpp"
 
 
 using namespace maolan::plugin;

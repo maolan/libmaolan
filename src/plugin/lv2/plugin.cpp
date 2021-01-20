@@ -2,9 +2,9 @@
 #include <cassert>
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/state/state.h>
-#include <maolan/config.h>
-#include <maolan/plugin/lv2/plugin.h>
-#include <maolan/plugin/lv2/port.h>
+#include "maolan/config.hpp"
+#include "maolan/plugin/lv2/plugin.hpp"
+#include "maolan/plugin/lv2/port.hpp"
 
 
 namespace audio = maolan::audio;

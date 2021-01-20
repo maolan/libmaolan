@@ -1,5 +1,5 @@
-#include <maolan/config.h>
-#include <maolan/tempo.h>
+#include "maolan/config.hpp"
+#include "maolan/tempo.hpp"
 
 
 using namespace maolan;

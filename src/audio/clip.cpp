@@ -1,7 +1,7 @@
 #include <iostream>
-#include <maolan/audio/clip.h>
-#include <maolan/audio/track.h>
-#include <maolan/config.h>
+#include "maolan/audio/clip.hpp"
+#include "maolan/audio/track.hpp"
+#include "maolan/config.hpp"
 
 
 using namespace maolan::audio;

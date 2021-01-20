@@ -1,8 +1,8 @@
-#include <maolan/engine.h>
-#include <maolan/io.h>
-#include <maolan/midi/clip.h>
-#include <maolan/plugin/lv2/plugin.h>
 #include <thread>
+#include "maolan/engine.hpp"
+#include "maolan/io.hpp"
+#include "maolan/midi/clip.hpp"
+#include "maolan/plugin/lv2/plugin.hpp"
 
 
 using namespace maolan;

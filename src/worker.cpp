@@ -1,6 +1,6 @@
 #include <iostream>
-#include <maolan/io.h>
-#include <maolan/worker.h>
+#include "maolan/io.hpp"
+#include "maolan/worker.hpp"
 
 
 using namespace maolan;

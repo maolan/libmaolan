@@ -1,10 +1,13 @@
-#include <maolan/audio/clip.h>
-#include <maolan/audio/track.h>
-#include <maolan/config.h>
-#include <maolan/utils.h>
+#include "maolan/audio/clip.hpp"
+#include "maolan/audio/track.hpp"
+#include "maolan/config.hpp"
+#include "maolan/utils.hpp"
 
 
 using namespace maolan::audio;
+
+
+std::vector<Track *> Track::all;
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
@@ -14,6 +17,13 @@ Track::Track(const std::string &name, const std::size_t &ch)
   _type = "Track";
   _name = name;
   outputs.resize(ch);
+  all.push_back(this);
+}
+
+
+Track::~Track()
+{
+  std::remove(all.begin(), all.end(), this);
 }
 
 

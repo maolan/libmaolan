@@ -1,12 +1,14 @@
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
-#include <maolan/audio/alsa/out.h>
-#include <maolan/constants.h>
 #include <sys/soundcard.h>
 #include <unistd.h>
+#include "maolan/audio/alsa/out.hpp"
+#include "maolan/constants.hpp"
+
 
 using namespace maolan::audio;
+
 
 ALSAOut::ALSAOut(const std::string &device, const int &chs,
                  const snd_pcm_uframes_t &frames)

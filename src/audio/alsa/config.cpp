@@ -1,5 +1,5 @@
 #include <alsa/asoundlib.h>
-#include <maolan/audio/alsa/config.h>
+#include "maolan/audio/alsa/config.hpp"
 
 
 using namespace maolan::audio;

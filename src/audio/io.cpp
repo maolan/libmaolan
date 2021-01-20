@@ -1,7 +1,7 @@
 #include <iostream>
-#include <maolan/audio/io.h>
-#include <maolan/config.h>
 #include <vector>
+#include "maolan/audio/io.hpp"
+#include "maolan/config.hpp"
 
 
 using namespace maolan::audio;

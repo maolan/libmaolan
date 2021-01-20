@@ -1,8 +1,8 @@
 #include <fstream>
 #include <iostream>
-#include <maolan/midi/buffer.h>
-#include <maolan/midi/event.h>
-#include <maolan/midi/file.h>
+#include "maolan/midi/buffer.hpp"
+#include "maolan/midi/event.hpp"
+#include "maolan/midi/file.hpp"
 
 
 using namespace maolan::midi;

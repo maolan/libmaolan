@@ -1,5 +1,5 @@
-#include <maolan/midi/clip.h>
-#include <maolan/midi/track.h>
+#include "maolan/midi/clip.hpp"
+#include "maolan/midi/track.hpp"
 
 
 using namespace maolan::midi;
