@@ -1,0 +1,11 @@
+prefix=/usr/local
+exec_prefix=${prefix}
+libdir=${exec_prefix}/lib
+includedir=${prefix}/include
+
+Name: libmaolan
+Version: 0.0.1
+Description: Multithreaded DSP C++ library supporting multiple drivers
+Requires: lilv-0 sndfile
+Libs: -L${libdir} -lmaolan
+Cflags: -I${includedir}
