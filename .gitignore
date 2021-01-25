@@ -4,7 +4,6 @@
 *.po
 *.pico
 build/
-libmaolan*
 maolan-cli
 makeinclude
 autom4te.cache
