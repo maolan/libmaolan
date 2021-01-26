@@ -20,9 +20,13 @@ public:
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel);
 
-  void mute(const bool &value = true);
-  void arm(const bool &value = true);
-  void solo(const bool &value = true);
+  bool mute();
+  bool arm();
+  bool solo();
+  void mute(const bool &value);
+  void arm(const bool &value);
+  void solo(const bool &value);
+
   void add(Clip *);
   void remove(Clip *);
   void add(plugin::lv2::Plugin *);

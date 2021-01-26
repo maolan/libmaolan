@@ -28,7 +28,9 @@ enum Stage
 
 
 IO::IO(const std::string &argName, const bool &front, const bool &reg)
-    : _next{nullptr}, _previous{nullptr}, _name{argName}
+  : _next{nullptr}
+  , _previous{nullptr}
+  , _name{argName}
 {
   if (reg)
   {
