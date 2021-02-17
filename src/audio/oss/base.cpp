@@ -40,7 +40,6 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
 
   if (!found)
   {
-    oss_audioinfo ai;
     int error = 0;
     int tmp;
     int devcaps;
@@ -53,8 +52,8 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
       checkError(error, "open");
       device->fd = error;
 
-      ai.dev = -1;
-      ioctl(device->fd, SNDCTL_ENGINEINFO, &ai);
+      device->audioInfo.dev = -1;
+      ioctl(device->fd, SNDCTL_ENGINEINFO, &(device->audioInfo));
 
       error = ioctl(device->fd, SNDCTL_DSP_GETCAPS, &devcaps);
       checkError(error, "SNDCTL_DSP_GETCAPS");
@@ -90,11 +89,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
     catch (const std::invalid_argument &ex)
     {
       std::cerr << _type << " error: " << ex.what();
-      if (error == -1)
-      {
-        std::cerr << ' ' << strerror(errno);
-      }
-      std::cerr << '\n';
+      std::cerr << ' ' << strerror(errno) << '\n';
       exit(1);
     }
 

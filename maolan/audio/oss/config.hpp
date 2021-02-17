@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <sys/soundcard.h>
 #include "maolan/config.hpp"
 
 
@@ -16,5 +17,7 @@ public:
   int fragSize;
   int channels;
   std::size_t audioChannels;
+  oss_audioinfo audioInfo;
+  audio_buf_info bufferInfo;
 };
 } // namespace maolan::audio
