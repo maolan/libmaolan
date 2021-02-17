@@ -52,9 +52,10 @@ The main components are:
   - maolan::worker
   - maolan::engine
 
-While maolan::IO is abstract class, maolan::midi::IO and maolan::audio::IO is
-what every class should extend actually. In the remaining text its is just
-called IO. That class has most important methods (some of them abstract):
+The `maolan::IO is` abstract class which is base for `maolan::midi::IO` and 
+`maolan::audio::IO`. One of those classes is what every other class should extend. In 
+the remaining text its is just called IO. That class has most important methods 
+(some of them abstract):
   - setup
   - fetch
   - process
@@ -91,4 +92,3 @@ to be put into the list. The list I'm talking about `is IO::ios`. For example,
 track needs to be registered in order for engine to call it's setup/fetch/process
 methods, but Clip does not, because its methods are going to be called by a
 parent Track (same for the file in a clip).
-
