@@ -12,7 +12,7 @@ namespace audio = maolan::audio;
 
 int main(int argc, char **argv)
 {
-  audio::OSSOut out("/dev/dsp", 2, 4);
+  audio::OSSOut out("/dev/dsp");
   midi::OSSMIDIIn midiIn("/dev/umidi0.0");
   auto drumgizmo =
       new maolan::plugin::Instrument("http://drumgizmo.org/lv2", "lv2");

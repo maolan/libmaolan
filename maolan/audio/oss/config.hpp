@@ -14,8 +14,7 @@ public:
   int fd;
   int format;
   int frag;
-  int fragSize;
-  int channels;
+  int sampleCount;
   std::size_t audioChannels;
   oss_audioinfo audioInfo;
   audio_buf_info bufferInfo;

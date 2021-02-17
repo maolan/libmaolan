@@ -5,7 +5,10 @@
 using namespace maolan::audio;
 
 
-OSSConfig::OSSConfig() : format{AFMT_S32_NE}, frag{16}, fragSize{0}
+OSSConfig::OSSConfig()
+  : format{AFMT_S32_NE}
+  , frag{16}
 {
   name = "OSS";
+  sampleSize = 4;
 }

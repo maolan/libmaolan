@@ -10,8 +10,7 @@ namespace maolan::audio
 class OSS : public IO
 {
 public:
-  OSS(const std::string &device, const int &fragSize = defaultFrag,
-      const int &channels = 2);
+  OSS(const std::string &device, const int &fragSize = defaultFrag);
   ~OSS();
 
   virtual std::size_t channels() const;

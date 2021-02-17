@@ -8,11 +8,11 @@
 
 using namespace maolan::audio;
 
-OSSOut::OSSOut(const std::string &device, const int &chs, const int &frag)
-    : OSS(device, frag, chs), Connectable(chs)
+OSSOut::OSSOut(const std::string &device, const int &frag)
+    : OSS(device, frag)
+    , Connectable(channels())
 {
   _type = "OSSOut";
-  outputs.resize(chs);
 }
 
 
@@ -64,7 +64,7 @@ void OSSOut::process()
 {
   Connectable::process();
   convertToRaw();
-  play(frame, device->fragSize);
+  play(frame, device->bufferInfo.bytes);
 }
 
 

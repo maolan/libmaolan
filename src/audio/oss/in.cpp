@@ -6,15 +6,15 @@
 using namespace maolan::audio;
 
 
-OSSIn::OSSIn(const std::string &device, const int &chs, const int &frag)
-    : OSS(device, frag, chs)
+OSSIn::OSSIn(const std::string &device, const int &frag)
+    : OSS(device, frag)
 {
   _type = "OSSIn";
   _name = "OSS In";
 }
 
 
-void OSSIn::fetch() { read(device->fd, frame, device->fragSize); }
+void OSSIn::fetch() { read(device->fd, frame, device->bufferInfo.bytes); }
 
 
 void OSSIn::process()
@@ -26,7 +26,7 @@ void OSSIn::process()
   {
     outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
-  auto sizeLimit = device->fragSize / sizeof(*frame);
+  auto sizeLimit = device->bufferInfo.bytes / device->sampleSize;
   for (int i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;

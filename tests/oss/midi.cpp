@@ -20,7 +20,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  audio::OSSOut out("/dev/dsp", 2, 4);
+  audio::OSSOut out("/dev/dsp");
   // midi::Track track("Something", 2);
   // midi::Clip clip(argv[1], nullptr);
   // midi::OSSMIDIOut midiOut("/dev/umidi0.0");

@@ -16,7 +16,7 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
     return 1;
   }
-  OSSOut out("/dev/dsp", 2);
+  OSSOut out("/dev/dsp");
   Track trackp("play", 2);
   Clip clip("../data/stereo.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);

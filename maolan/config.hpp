@@ -18,5 +18,6 @@ public:
   std::size_t count;
   std::string name;
   std::string device;
+  std::size_t sampleSize;
 };
 } // namespace maolan

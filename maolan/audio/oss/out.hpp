@@ -10,8 +10,7 @@ namespace maolan::audio
 class OSSOut : public OSS, public Connectable
 {
 public:
-  OSSOut(const std::string &device, const int &channels,
-         const int &frag = defaultFrag);
+  OSSOut(const std::string &device, const int &frag = defaultFrag);
 
   virtual void fetch();
   virtual void process();
