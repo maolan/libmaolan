@@ -1,5 +1,7 @@
+#include <algorithm>
 #include <exception>
 #include <iostream>
+
 #include "maolan/midi/buffer.hpp"
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/event.hpp"
@@ -63,12 +65,6 @@ Clip::~Clip()
                                [this](const Clip *c) { return c == this; });
   clips.erase(newend, clips.end());
 }
-
-
-void Clip::setup() {}
-
-
-void Clip::fetch() {}
 
 
 void Clip::process()
@@ -242,3 +238,5 @@ void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
 void Clip::previous(Clip *p) { _previous = p; }
 Clip *Clip::previous() { return _previous; }
+void Clip::setup() {}
+void Clip::fetch() {}
