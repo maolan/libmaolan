@@ -86,9 +86,9 @@ playhead and tempo marker are updated.
 
 Every IO subclass' constructor calls `IO(name, front = true, register = false)`.
 That means that by default, new object pointer is put to the front of the list
-unless it's HW IO, which calls for IO(name, false, true). That way HW is
+unless it's HW IO, which calls for `IO(name, false, true)`. That way HW is
 grouped on one end of the list. If register = false, that object is not going
-to be put into the list. The list I'm talking about `is IO::ios`. For example,
-track needs to be registered in order for engine to call it's setup/fetch/process
-methods, but Clip does not, because its methods are going to be called by a
-parent Track (same for the file in a clip).
+to be put into the lis: `IO::ios`. For example, `Track` needs to be registered 
+in order for engine to call it's `setup`/`fetch`/`process` methods, but `Clip`
+does not, because its methods are going to be called by a parent `Track`
+(same for the file in a clip).
