@@ -1,11 +1,11 @@
 #include <chrono>
 #include <iostream>
-#include <maolan/audio/oss/out.h>
-#include <maolan/engine.h>
-#include <maolan/midi/clip.h>
-#include <maolan/midi/oss/in.h>
-#include <maolan/midi/oss/out.h>
-#include <maolan/midi/track.h>
+#include <maolan/audio/oss/out.hpp>
+#include <maolan/engine.hpp>
+#include <maolan/midi/clip.hpp>
+#include <maolan/midi/oss/in.hpp>
+#include <maolan/midi/oss/out.hpp>
+#include <maolan/midi/track.hpp>
 #include <thread>
 
 namespace audio = maolan::audio;

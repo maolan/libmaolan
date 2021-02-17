@@ -1,8 +1,8 @@
 #include <iostream>
-#include <maolan/audio/clip.h>
-#include <maolan/audio/oss/out.h>
-#include <maolan/audio/track.h>
-#include <maolan/engine.h>
+#include <maolan/audio/clip.hpp>
+#include <maolan/audio/oss/out.hpp>
+#include <maolan/audio/track.hpp>
+#include <maolan/engine.hpp>
 
 
 namespace lv2 = maolan::plugin::lv2;

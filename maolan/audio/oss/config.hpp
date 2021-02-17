@@ -12,9 +12,9 @@ public:
 
   int fd;
   int format;
-  std::size_t audioChannels;
   int frag;
   int fragSize;
   int channels;
+  std::size_t audioChannels;
 };
 } // namespace maolan::audio

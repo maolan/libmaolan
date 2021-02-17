@@ -12,7 +12,7 @@
 using namespace maolan::audio;
 
 
-static void checkError(int &value, const std::string &message)
+static void checkError(const int &value, const std::string &message)
 {
   if (value == -1)
   {
@@ -74,14 +74,13 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &chs)
       tmp = device->format;
       error = ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp);
       checkError(error, "SNDCTL_DSP_SETFMT");
-      if (tmp != AFMT_S32_NE && tmp != AFMT_S32_OE)
+      if (tmp != device->format)
       {
         std::stringstream s;
         s << device << " doesn't support chosen sample format (";
         s << tmp << ")";
         error = 0;
-        int tempError = 1;
-        checkError(tempError, s.str());
+        checkError(1, s.str());
       }
 
       tmp = device->samplerate;
