@@ -22,7 +22,7 @@ make -j4 build-tests
 make test
 ```
 
-All drivers are enabled by default, so you might want to disable some of them. The syntax is:
+All drivers are disabled by default, so you might want to enable some of them. The syntax is:
 ```
 cmake .. -D<driver>=Off
 ```
