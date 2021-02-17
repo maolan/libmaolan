@@ -66,10 +66,10 @@ and exposes controls: play, stop, quit.
 
 Worker is a class that implements thread pool. One worker is one thread. As IO
 has list of all it's objects, what thread pool does is takes one IO pointer at
-a time and execute it's work() method. There are also 2 stages for every
+a time and execute it's `work()` method. There are also 2 stages for every
 `IO::work()`: fetch and process. Fetch stage calls `setup()` and `fetch()` from IO.
 Setup is meant to deal with any setup track or any other IO object needs to do
-before doing actual work, like muting, soloing, ... Fetch will pull() samples
+before doing actual work, like muting, soloing, ... Fetch will `pull()` samples
 (which are actually `shared_ptr` to `BufferData` and it's called `Buffer` - for MIDI
 and audio) from all its connections, mix them and put them into inputs. The
 process() is meant to do any processing (like LV2 or mixing of inputs, if needed)
