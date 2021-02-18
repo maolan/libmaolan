@@ -30,7 +30,7 @@ static int size2frag(int x)
 }
 
 
-OSS::OSS(const std::string &deviceName, const int &argFrag)
+OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSize)
     : IO(0, true, true, deviceName)
     , device{nullptr}
 {
@@ -54,6 +54,15 @@ OSS::OSS(const std::string &deviceName, const int &argFrag)
     device = new OSSConfig;
     device->frag = argFrag;
     device->device = deviceName;
+    device->sampleSize = sampleSize;
+    if (sampleSize == 4) { device->format = AFMT_S32_NE; }
+    else if (sampleSize == 2) { device->format = AFMT_S16_NE; }
+    else if (sampleSize == 1) { device->format = AFMT_S8; }
+    else
+    {
+      std::cerr << "Unsupported sample size: " << sampleSize << '\n';
+      exit(1);
+    }
     try
     {
       error = open(deviceName.data(), O_RDWR, 0);

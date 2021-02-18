@@ -15,7 +15,6 @@ public:
   int format;
   int frag;
   int sampleCount;
-  std::size_t audioChannels;
   oss_audioinfo audioInfo;
   audio_buf_info bufferInfo;
 };

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdint>
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/audio/track.hpp>
@@ -16,7 +17,7 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
     return 1;
   }
-  OSSOut out("/dev/dsp");
+  OSSOut<int32_t> out("/dev/dsp");
   Track trackp("play", 2);
   Clip clip("../data/stereo.wav", 0, 10000000, 0, &trackp);
   out.connect(&trackp);

@@ -7,6 +7,7 @@
 
 namespace maolan::audio
 {
+template <class T>
 class OSSOut : public OSS, public Connectable
 {
 public:

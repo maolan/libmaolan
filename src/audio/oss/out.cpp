@@ -6,17 +6,21 @@
 #include "maolan/audio/oss/out.hpp"
 #include "maolan/constants.hpp"
 
+
 using namespace maolan::audio;
 
-OSSOut::OSSOut(const std::string &device, const int &frag)
-    : OSS(device, frag)
+
+template <class T>
+OSSOut<T>::OSSOut(const std::string &device, const int &frag)
+    : OSS(device, frag, sizeof(T))
     , Connectable(channels())
 {
   _type = "OSSOut";
 }
 
 
-void OSSOut::fetch()
+template <class T>
+void OSSOut<T>::fetch()
 {
   Connectable::fetch();
   for (size_t i = 0; i < channels(); ++i)
@@ -26,9 +30,10 @@ void OSSOut::fetch()
 }
 
 
-void OSSOut::convertToRaw()
+template <class T>
+void OSSOut<T>::convertToRaw()
 {
-  int32_t *samples = (int32_t *)bytes;
+  T *samples = (T *)bytes;
   auto chs = channels();
   for (auto channel = 0; channel < chs; ++channel)
   {
@@ -54,9 +59,18 @@ void OSSOut::convertToRaw()
 }
 
 
-void OSSOut::process()
+template <class T>
+void OSSOut<T>::process()
 {
   Connectable::process();
   convertToRaw();
   write(device->fd, bytes, device->bufferInfo.bytes);
+}
+
+
+namespace maolan::audio
+{
+template class OSSOut<int32_t>;
+template class OSSOut<int16_t>;
+template class OSSOut<int8_t>;
 }

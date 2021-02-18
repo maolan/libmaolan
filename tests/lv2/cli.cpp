@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdint>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/engine.hpp>
 #include <maolan/midi/oss/in.hpp>
@@ -12,10 +13,9 @@ namespace audio = maolan::audio;
 
 int main(int argc, char **argv)
 {
-  audio::OSSOut out("/dev/dsp");
+  audio::OSSOut<int32_t> out("/dev/dsp");
   midi::OSSMIDIIn midiIn("/dev/umidi0.0");
-  auto drumgizmo =
-      new maolan::plugin::Instrument("http://drumgizmo.org/lv2", "lv2");
+  auto drumgizmo = new maolan::plugin::Instrument("http://drumgizmo.org/lv2", "lv2");
   drumgizmo->connect(&midiIn);
   out.connect(drumgizmo->audio());
 

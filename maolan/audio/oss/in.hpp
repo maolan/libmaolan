@@ -5,6 +5,7 @@
 
 namespace maolan::audio
 {
+template <class T>
 class OSSIn : public OSS
 {
 public:

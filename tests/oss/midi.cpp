@@ -1,5 +1,6 @@
 #include <chrono>
 #include <iostream>
+#include <cstdint>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/engine.hpp>
 #include <maolan/midi/clip.hpp>
@@ -20,7 +21,7 @@ int main(int argc, char **argv)
     return 1;
   }
 
-  audio::OSSOut out("/dev/dsp");
+  audio::OSSOut<int32_t> out("/dev/dsp");
   // midi::Track track("Something", 2);
   // midi::Clip clip(argv[1], nullptr);
   // midi::OSSMIDIOut midiOut("/dev/umidi0.0");
