@@ -14,7 +14,7 @@ OSSIn::OSSIn(const std::string &device, const int &frag)
 }
 
 
-void OSSIn::fetch() { read(device->fd, frame, device->bufferInfo.bytes); }
+void OSSIn::fetch() { read(device->fd, bytes, device->bufferInfo.bytes); }
 
 
 void OSSIn::process()
@@ -22,15 +22,15 @@ void OSSIn::process()
   auto chs = channels();
   int channel;
   int index;
+  int32_t *samples = (int32_t *)bytes;
   for (int i = 0; i < chs; ++i)
   {
     outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
-  auto sizeLimit = device->bufferInfo.bytes / device->sampleSize;
-  for (int i = 0; i < sizeLimit; ++i)
+  for (int i = 0; i < Config::audioBufferSize; ++i)
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data()[index] = frame[i] / floatMaxInt;
+    outputs[channel]->data()[index] = samples[i] / floatMaxInt;
   }
 }

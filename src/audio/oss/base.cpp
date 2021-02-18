@@ -110,7 +110,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag)
 
     device->sampleCount = device->bufferInfo.bytes / device->sampleSize;
     Config::audioBufferSize =  device->sampleCount / channels();
-    frame = new int[device->sampleCount];
+    bytes = new int8_t[device->bufferInfo.bytes];
     devices.emplace(devices.begin(), device);
   }
 }

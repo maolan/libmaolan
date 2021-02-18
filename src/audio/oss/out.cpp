@@ -28,6 +28,7 @@ void OSSOut::fetch()
 
 void OSSOut::convertToRaw()
 {
+  int32_t *samples = (int32_t *)bytes;
   auto chs = channels();
   for (auto channel = 0; channel < chs; ++channel)
   {
@@ -36,24 +37,17 @@ void OSSOut::convertToRaw()
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        frame[i * chs + channel] = 0;
+        samples[i * chs + channel] = 0;
       }
     }
     else
     {
       for (auto i = 0; i < device->audioBufferSize; ++i)
       {
-        float sample = buffer->data()[i];
-
-        if (sample <= -1.0)
-        {
-          sample = -1.0;
-        }
-        else if (sample >= 1.0)
-        {
-          sample = 1.0;
-        }
-        frame[i * chs + channel] = sample * floatMaxInt;
+        auto &sample = buffer->data()[i];
+        if (sample <= -1.0) { sample = -1.0; }
+        else if (sample >= 1.0) { sample = 1.0; }
+        samples[i * chs + channel] = sample * floatMaxInt;
       }
     }
   }
@@ -64,11 +58,5 @@ void OSSOut::process()
 {
   Connectable::process();
   convertToRaw();
-  play(frame, device->bufferInfo.bytes);
-}
-
-
-void OSSOut::play(int *frame, size_t dataSize)
-{
-  write(device->fd, frame, dataSize);
+  write(device->fd, bytes, device->bufferInfo.bytes);
 }

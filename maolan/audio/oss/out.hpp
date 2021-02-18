@@ -15,6 +15,5 @@ public:
   virtual void fetch();
   virtual void process();
   void convertToRaw();
-  void play(int *frame, std::size_t dataSize);
 };
 } // namespace maolan::audio
