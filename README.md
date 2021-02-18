@@ -47,6 +47,7 @@ cmake .. -DBUILD_STATIC=On -DBUILD_SHARED=On
 ```
 
 ## Implementation idea
+
 The main components are:
   - maolan::IO
   - maolan::worker
@@ -87,8 +88,14 @@ playhead and tempo marker are updated.
 Every IO subclass' constructor calls `IO(name, front = true, register = false)`.
 That means that by default, new object pointer is put to the front of the list
 unless it's HW IO, which calls for `IO(name, false, true)`. That way HW is
-grouped on one end of the list. If register = false, that object is not going
+grouped on one end of the list. If `register = false`, that object is not going
 to be put into the lis: `IO::ios`. For example, `Track` needs to be registered 
 in order for engine to call it's `setup`/`fetch`/`process` methods, but `Clip`
 does not, because its methods are going to be called by a parent `Track`
 (same for the file in a clip).
+
+### Connections
+
+Every class that can connect it's inputs to other class, subclasses `Connectable`.
+That way code for connecting and fetching samples from connected object is grouped
+in `Connectable`.
