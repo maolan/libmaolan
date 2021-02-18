@@ -24,7 +24,7 @@ make test
 
 All drivers are disabled by default, so you might want to enable some of them. The syntax is:
 ```
-cmake .. -D<driver>=Off
+cmake .. -D<driver>=On
 ```
 
 ### List of drivers
