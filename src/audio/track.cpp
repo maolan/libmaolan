@@ -32,20 +32,14 @@ Track::~Track()
 void Track::fetch()
 {
   Connectable::fetch();
-  if (_current != nullptr)
-  {
-    _current->fetch();
-  }
+  if (_current != nullptr) { _current->fetch(); }
 }
 
 
 void Track::process()
 {
   Connectable::process();
-  if (_current != nullptr)
-  {
-    _current->process();
-  }
+  if (_current != nullptr) { _current->process(); }
   auto const chs = channels();
   auto frame = new Frame(chs, 0, 0);
   if (armed)
@@ -55,10 +49,7 @@ void Track::process()
       frame->audio[channel] = inputs[channel].pull();
     }
     recording->write(frame);
-    if (!muted)
-    {
-      outputs = frame->audio;
-    }
+    if (!muted) { outputs = frame->audio; }
     delete frame;
   }
   else if (!muted && _current != nullptr && _playHead >= _current->start())
@@ -88,18 +79,9 @@ void Track::setup()
     last = _current;
     _current->setup();
   }
-  else if (first == nullptr)
-  {
-    _current = nullptr;
-  }
-  else if (_playHead < first->start())
-  {
-    _current = nullptr;
-  }
-  else if (!armed && _playHead > last->end())
-  {
-    _current = nullptr;
-  }
+  else if (first == nullptr) { _current = nullptr; }
+  else if (_playHead < first->start()) { _current = nullptr; }
+  else if (!armed && _playHead > last->end()) { _current = nullptr; }
   else
   {
     for (auto clip = last; clip != nullptr; clip = clip->previous())
@@ -132,16 +114,9 @@ void Track::add(Clip *clip)
         clip->previous(cl->previous());
         cl->previous()->next(clip);
         cl->previous(clip);
-        if (clip->previous() == nullptr)
-        {
-          first = clip;
-        }
-
-        // This will never happen, so it's a bug
-        if (clip->next() == nullptr)
-        {
-          last->next(clip);
-        }
+        if (clip->previous() == nullptr) { first = clip; }
+        // This should never happen, so it's a bug
+        if (clip->next() == nullptr) { last->next(clip); }
         break;
       }
     }
@@ -159,30 +134,12 @@ void Track::remove(Clip *clip)
   {
     if (cl == clip)
     {
-      if (cl->next() != nullptr)
-      {
-        cl->next()->previous(cl->previous());
-      }
-      if (cl->previous() != nullptr)
-      {
-        cl->previous()->next(cl->next());
-      }
-      if (cl == _current)
-      {
-        _current = nullptr;
-      }
-      if (cl == recording)
-      {
-        recording = nullptr;
-      }
-      if (cl == first)
-      {
-        first = cl->next();
-      }
-      if (cl == last)
-      {
-        last = cl->previous();
-      }
+      if (cl->next() != nullptr) { cl->next()->previous(cl->previous()); }
+      if (cl->previous() != nullptr) { cl->previous()->next(cl->next()); }
+      if (cl == _current) { _current = nullptr; }
+      if (cl == recording) { recording = nullptr; }
+      if (cl == first) { first = cl->next(); }
+      if (cl == last) { last = cl->previous(); }
       cl->parent(nullptr);
       return;
     }
@@ -205,10 +162,7 @@ void Track::remove(plugin::lv2::Plugin *plugin)
 
 Buffer Track::pull(const std::size_t &channel)
 {
-  if (muted)
-  {
-    return nullptr;
-  }
+  if (muted) { return nullptr; }
   return IO::pull(channel);
 }
 
@@ -221,3 +175,4 @@ bool Track::solo() { return soloed; }
 void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }
+Clip * Track::clips() { return first; }

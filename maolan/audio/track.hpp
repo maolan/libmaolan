@@ -31,6 +31,7 @@ public:
   void remove(Clip *);
   void add(plugin::lv2::Plugin *);
   void remove(plugin::lv2::Plugin *);
+  Clip * clips();
 
 protected:
   bool muted;
