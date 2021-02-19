@@ -23,12 +23,6 @@ Track::Track(const std::string &name, const std::size_t &ch)
 }
 
 
-Track::~Track()
-{
-  std::remove(all.begin(), all.end(), this);
-}
-
-
 void Track::fetch()
 {
   Connectable::fetch();
@@ -176,3 +170,4 @@ void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }
 Clip * Track::clips() { return first; }
+Track::~Track() { std::remove(all.begin(), all.end(), this); }
