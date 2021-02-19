@@ -93,14 +93,28 @@ void Track::setup()
 
 void Track::add(Clip *clip)
 {
+  clip->next(nullptr);
+  clip->previous(nullptr);
   if (first == nullptr)
   {
     first = clip;
     last = clip;
   }
+  else if (first->start() > clip->start())
+  {
+    first->previous(clip);
+    clip->next(first);
+    first = clip;
+  }
+  else if (last->start() < clip->start())
+  {
+    last->next(clip);
+    clip->previous(last);
+    last = clip;
+  }
   else
   {
-    for (auto cl = first; cl != nullptr; cl = cl->next())
+    for (auto cl = last; cl != nullptr; cl = cl->previous())
     {
       if (clip->start() < cl->start())
       {
@@ -109,7 +123,6 @@ void Track::add(Clip *clip)
         cl->previous()->next(clip);
         cl->previous(clip);
         if (clip->previous() == nullptr) { first = clip; }
-        // This should never happen, so it's a bug
         if (clip->next() == nullptr) { last->next(clip); }
         break;
       }
