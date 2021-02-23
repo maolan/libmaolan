@@ -31,6 +31,7 @@ IO::IO(const std::string &argName, const bool &front, const bool &reg)
   : _next{nullptr}
   , _previous{nullptr}
   , _name{argName}
+  , _data{nullptr}
 {
   if (reg)
   {
@@ -212,3 +213,5 @@ void IO::next(IO *n) { _next = n; }
 IO *IO::next() { return _next; }
 void IO::previous(IO *p) { _previous = p; }
 IO *IO::previous() { return _previous; }
+void * IO::data() { return _data; }
+void IO::data(void *d) { _data = d; }

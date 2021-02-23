@@ -45,6 +45,9 @@ public:
   void name(const std::string &);
   std::string name();
 
+  void data(void *d);
+  void * data();
+
 protected:
   static bool check();
 
@@ -65,5 +68,6 @@ protected:
   IO *_previous;
   std::string _type;
   std::string _name;
+  void *_data;
 };
 } // namespace maolan
