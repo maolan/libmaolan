@@ -76,14 +76,14 @@ void Clip::process()
   }
   auto tempo = Config::tempos[Config::tempoIndex];
   auto playhead = _playHead - tempo.time;
-  if (playhead < (current->time - tempo.tick) * tempo.ratio)
+  if (playhead < (current->time - tempo.tick) * tempo.a2m)
   {
     return;
   }
   Buffer last;
   auto nextTime = playhead + Config::audioBufferSize;
   while (current != nullptr &&
-         (current->time - tempo.tick) * tempo.ratio < nextTime)
+         (current->time - tempo.tick) * tempo.a2m < nextTime)
   {
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
@@ -162,14 +162,14 @@ void Clip::parent(maolan::IO *p)
 const std::size_t Clip::startSample() const
 {
   auto tempo = Config::tempos[Config::tempoIndex];
-  return (_start - tempo.tick) * tempo.ratio + tempo.time;
+  return (_start - tempo.tick) * tempo.a2m + tempo.time;
 }
 
 
 const std::size_t Clip::endSample() const
 {
   auto tempo = Config::tempos[Config::tempoIndex];
-  return (_end - tempo.tick) * tempo.ratio + tempo.time;
+  return (_end - tempo.tick) * tempo.a2m + tempo.time;
 }
 
 
@@ -204,7 +204,7 @@ void Clip::startSample(const std::size_t &start)
     auto tempo = Config::tempos[index - 1];
     if (tempo.time < start)
     {
-      _start = (start - tempo.time) / tempo.ratio + tempo.tick;
+      _start = (start - tempo.time) / tempo.a2m + tempo.tick;
       break;
     }
   }
@@ -222,7 +222,7 @@ void Clip::endSample(const std::size_t &end)
     auto tempo = Config::tempos[index - 1];
     if (tempo.time < end)
     {
-      _end = (end - tempo.time) / tempo.ratio + tempo.tick;
+      _end = (end - tempo.time) / tempo.a2m + tempo.tick;
       break;
     }
   }

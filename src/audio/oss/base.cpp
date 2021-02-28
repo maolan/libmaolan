@@ -97,7 +97,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
         checkError(1, s.str());
       }
 
-      tmp = device->samplerate;
+      tmp = Config::samplerate;
       error = ioctl(device->fd, SNDCTL_DSP_SPEED, &tmp);
       checkError(error, "SNDCTL_DSP_SPEED");
 
