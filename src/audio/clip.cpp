@@ -18,17 +18,17 @@ Clip::Clip(Track *parent, const std::size_t &ch)
 
 Clip::Clip(const std::string &path, const std::size_t &start,
            const std::size_t &end, const std::size_t &offset, Track *parent)
-    : IO(0, true, false, path), _offset(offset), _start(start), _end(end),
-      _previous(nullptr), _next(nullptr), file(path, offset), _parent(parent)
+    : IO{0, true, false, path}, _offset{offset}, _start{start}, _end{end},
+      _previous{nullptr}, _next{nullptr}, file{path, offset}, _parent{parent}
 {
   _type = "Clip";
-  if (parent != nullptr) { parent->add(this); }
+  if (parent) { parent->add(this); }
 }
 
 
 Clip::~Clip()
 {
-  if (_parent != nullptr) { _parent->remove(this); }
+  if (_parent) { _parent->remove(this); }
 }
 
 
@@ -41,9 +41,9 @@ Buffer Clip::pull(const unsigned &channel)
 
 void Clip::parent(maolan::IO *p)
 {
-  if (_parent != nullptr) { _parent->remove(this); }
+  if (_parent) { _parent->remove(this); }
   _parent = (Track *)p;
-  if (_parent != nullptr) { _parent->add(this); }
+  if (_parent) { _parent->add(this); }
 }
 
 
@@ -54,7 +54,6 @@ void Clip::write(const Frame &fr)
 }
 
 
-void Clip::setup() { if (_current != nullptr) { _current->setup(); } }
 void Clip::write(const Frame *const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
