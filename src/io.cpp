@@ -19,6 +19,9 @@ std::condition_variable IO::cv;
 std::vector<maolan::Config *> IO::_devices;
 
 
+static bool firstRun = false;
+
+
 enum Stage
 {
   FETCH = 0,
@@ -38,51 +41,27 @@ IO::IO(const std::string &argName, const bool &front, const bool &reg)
     if (front)
     {
       this->_next = ios;
-      if (ios != nullptr)
-      {
-        ios->_previous = this;
-      }
+      if (ios != nullptr) { ios->_previous = this; }
       ios = this;
-      if (last == nullptr)
-      {
-        last = this;
-      }
+      if (last == nullptr) { last = this; }
     }
     else
     {
       this->_previous = last;
       last = this;
-      if (ios == nullptr)
-      {
-        ios = this;
-      }
+      if (ios == nullptr) { ios = this; }
     }
   }
-  if (_current == nullptr)
-  {
-    _current = ios;
-  }
+  if (_current == nullptr) { _current = ios; }
 }
 
 
 IO::~IO()
 {
-  if (this->_previous != nullptr)
-  {
-    this->_previous->next(this->_next);
-  }
-  else
-  {
-    ios = this->_next;
-  }
-  if (this->_next != nullptr)
-  {
-    this->_next->previous(this->_previous);
-  }
-  else
-  {
-    last = this->_previous;
-  }
+  if (this->_previous != nullptr) { this->_previous->next(this->_next); }
+  else { ios = this->_next; }
+  if (this->_next != nullptr) { this->_next->previous(this->_previous); }
+  else { last = this->_previous; }
 }
 
 
@@ -93,10 +72,7 @@ void IO::work()
     setup();
     fetch();
   }
-  else if (_stage == PROCESS)
-  {
-    process();
-  }
+  else if (_stage == PROCESS) { process(); }
   --_count;
 }
 
@@ -117,16 +93,10 @@ IO *IO::task()
 {
   std::unique_lock<std::mutex> lk(m);
   cv.wait(lk, [] { return IO::check(); });
-  if (_quit)
-  {
-    return nullptr;
-  }
+  if (_quit) { return nullptr; }
   ++_count;
   auto result = _current;
-  if (_current != nullptr)
-  {
-    _current = _current->next();
-  }
+  if (_current != nullptr) { _current = _current->next(); }
   lk.unlock();
   cv.notify_one();
   return result;
@@ -135,18 +105,9 @@ IO *IO::task()
 
 bool IO::check()
 {
-  if (_quit)
-  {
-    return true;
-  }
-  if (ios == nullptr)
-  {
-    return false;
-  }
-  if (!_playing)
-  {
-    return false;
-  }
+  if (_quit) { return true; }
+  if (ios == nullptr) { return false; }
+  if (!_playing) { return false; }
   if (_current == nullptr)
   {
     if (_count == 0)
@@ -155,15 +116,16 @@ bool IO::check()
       _stage = ++_stage % TOTAL;
       if (_stage == FETCH)
       {
-        _playHead += Config::audioBufferSize;
+        if (firstRun) { firstRun = false; }
+        else { _playHead += Config::audioBufferSize; }
         if (Config::tempoIndex + 1 < Config::tempos.size())
         {
-          // TODO: move to next tempo
           auto tempo = Config::tempos[Config::tempoIndex];
           while (Config::tempoIndex < Config::tempos.size() &&
                  _playHead <= tempo.time)
           {
             ++Config::tempoIndex;
+            tempo=Config::tempos[Config::tempoIndex];
           }
         }
       }
@@ -178,22 +140,22 @@ bool IO::check()
 void IO::play()
 {
   _playing = true;
-  _playHead = -Config::audioBufferSize;
-  cv.notify_one();
+  firstRun = true;
+  cv.notify_all();
 }
 
 
 void IO::stop()
 {
   _playing = false;
-  cv.notify_one();
+  cv.notify_all();
 }
 
 
 void IO::quit()
 {
   _quit = true;
-  cv.notify_one();
+  cv.notify_all();
 }
 
 void IO::parent(IO *p) {}
