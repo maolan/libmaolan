@@ -1,7 +1,7 @@
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/atom/forge.h>
-#include <lv2/midi/midi.h>
+#include <lv2/lv2plug.in/ns/ext/midi/midi.h>
 #include "maolan/config.hpp"
 #include "maolan/io.hpp"
 #include "maolan/plugin/lv2/port.hpp"

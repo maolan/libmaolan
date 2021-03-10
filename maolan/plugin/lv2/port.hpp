@@ -1,7 +1,7 @@
 #pragma once
 #include <lilv/lilv.h>
 #include <string>
-#include <lv2/atom/atom.h>
+#include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include "maolan/audio/buffer.hpp"
 #include "maolan/midi/buffer.hpp"
 

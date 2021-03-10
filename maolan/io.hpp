@@ -2,7 +2,6 @@
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
-#include <pugixml.hpp>
 #include <string>
 #include <vector>
 #include "maolan/config.hpp"
@@ -24,7 +23,6 @@ public:
   static void quit();
   static void playHead(const std::size_t &argPlayHead);
   static std::size_t playHead();
-  static IO *loadFromXml(pugi::xml_node *n);
   static IO *task();
   static IO *begin();
   static Config *devices();

@@ -1,5 +1,4 @@
 #include "maolan/io.hpp"
-#include "maolan/utils.hpp"
 
 
 using namespace maolan;
@@ -74,18 +73,6 @@ void IO::work()
   }
   else if (_stage == PROCESS) { process(); }
   --_count;
-}
-
-
-IO *IO::loadFromXml(pugi::xml_node *n)
-{
-  auto io = xmlElement2IO(n);
-  for (auto node = n->first_child(); node != nullptr;
-       node = node.next_sibling())
-  {
-    io->loadFromXml(&node);
-  }
-  return io;
 }
 
 
