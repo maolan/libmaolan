@@ -4,6 +4,8 @@
 #include <mutex>
 #include <string>
 #include <vector>
+#include <nlohmann/json.hpp>
+#include <pugixml.hpp>
 #include "maolan/config.hpp"
 
 
@@ -31,6 +33,7 @@ public:
   virtual void fetch() = 0;
   virtual void process() = 0;
   virtual void parent(IO *p);
+  virtual nlohmann::json json();
   void work();
   void next(IO *);
   IO *next();

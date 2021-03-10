@@ -112,7 +112,7 @@ bool IO::check()
                  _playHead <= tempo.time)
           {
             ++Config::tempoIndex;
-            tempo=Config::tempos[Config::tempoIndex];
+            tempo = Config::tempos[Config::tempoIndex];
           }
         }
       }
@@ -144,6 +144,16 @@ void IO::quit()
   _quit = true;
   cv.notify_all();
 }
+
+
+nlohmann::json IO::json()
+{
+  nlohmann::json data;
+  data["name"] = _name;
+  data["type"] = _type;
+  return data;
+}
+
 
 void IO::parent(IO *p) {}
 void IO::rec(bool record) { _rec = record; }

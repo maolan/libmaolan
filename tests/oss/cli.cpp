@@ -25,6 +25,11 @@ int main(int argc, char **argv)
   /* Background threads + main thread
    */
   maolan::Engine::init();
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    std::cout << io->json().dump(2) << '\n';
+  }
+  return 0;
   std::cerr << "Playing ...";
   maolan::Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(14));
