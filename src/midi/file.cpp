@@ -118,6 +118,7 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 File::File(const std::string &path)
     : file(path, std::ios::in | std::ios::binary), _path{path}
 {
+  _type = "MIDIFile";
   file >> std::noskipws;
 }
 

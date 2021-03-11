@@ -11,8 +11,8 @@ template <class T>
 OSSIn<T>::OSSIn(const std::string &device, const int &frag)
     : OSS(device, frag, sizeof(T))
 {
-  _type = "OSSIn";
-  _name = "OSS In";
+  _type = "AudioOSSIn";
+  _name = "OSS Audio In";
 }
 
 

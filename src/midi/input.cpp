@@ -7,7 +7,7 @@ using namespace maolan::midi;
 
 Input::Input() : IO("MIDIInput")
 {
-  _type = "Input";
+  _type = "MIDIInput";
   connections.clear();
   outputs.resize(1);
 }

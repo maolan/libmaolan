@@ -9,6 +9,7 @@ using namespace maolan::audio;
 
 File::File(const std::size_t &ch) : IO(0, true, false), recording(true)
 {
+  _type = "AudioFile";
   std::string path = "recording.wav";
   _audioFile = SndfileHandle(path, SFM_RDWR, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
                              ch, Config::samplerate);

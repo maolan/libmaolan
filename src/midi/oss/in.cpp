@@ -13,7 +13,7 @@ static Buffer lastBuffer = nullptr;
 
 OSSMIDIIn::OSSMIDIIn(const std::string &device) : OSSMIDI(device)
 {
-  _type = "OSSMIDIIn";
+  _type = "MIDIOSSIn";
   _name = "OSS MIDI In";
 }
 

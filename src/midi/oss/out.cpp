@@ -12,7 +12,7 @@ static unsigned char buf[4];
 
 OSSMIDIOut::OSSMIDIOut(const std::string &device) : OSSMIDI(device)
 {
-  _type = "OSSMIDIOut";
+  _type = "MIDIOSSOut";
   _name = "OSS MIDI Out";
 }
 

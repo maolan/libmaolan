@@ -14,17 +14,15 @@ ALSAOut::ALSAOut(const std::string &device, const int &chs,
                  const snd_pcm_uframes_t &frames)
     : ALSA(device, chs), Connectable(chs)
 {
-  _type = "ALSAOut";
+  _type = "AudioALSAOut";
+  _name = "ALSA Audio Out";
   outputs.resize(chs);
 }
 
 
 void ALSAOut::fetch()
 {
-  for (size_t i = 0; i < channels(); ++i)
-  {
-    outputs[i] = inputs[i].pull();
-  }
+  for (size_t i = 0; i < channels(); ++i) { outputs[i] = inputs[i].pull(); }
 }
 
 
@@ -47,14 +45,8 @@ void ALSAOut::convertToRaw()
       {
         float sample = buffer->data()[i];
 
-        if (sample <= -1.0)
-        {
-          sample = -1.0;
-        }
-        else if (sample >= 1.0)
-        {
-          sample = 1.0;
-        }
+        if (sample <= -1.0) { sample = -1.0; }
+        else if (sample >= 1.0) { sample = 1.0; }
         frame[i * chs + channel] = sample * maxInt;
       }
     }

@@ -11,7 +11,7 @@ Clip::Clip(Track *parent, const std::size_t &ch)
   : IO(0, true, false)
   , file(ch)
 {
-  _type = "Clip";
+  _type = "AudioClip";
   if (parent != nullptr) { parent->add(this); }
 }
 
@@ -21,7 +21,7 @@ Clip::Clip(const std::string &path, const std::size_t &start,
     : IO{0, true, false, path}, _offset{offset}, _start{start}, _end{end},
       _previous{nullptr}, _next{nullptr}, file{path, offset}, _parent{parent}
 {
-  _type = "Clip";
+  _type = "AudioClip";
   if (parent) { parent->add(this); }
 }
 

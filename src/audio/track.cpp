@@ -15,7 +15,7 @@ Track::Track(const std::string &name, const std::size_t &ch)
     : IO(0, true, true), Connectable(ch), _current(nullptr), first(nullptr),
       last(nullptr), armed(false), muted(false), soloed(false)
 {
-  _type = "Track";
+  _type = "AudioTrack";
   _name = name;
   outputs.resize(ch);
   all.push_back(this);
