@@ -21,7 +21,6 @@ ALSA::ALSA(const std::string &deviceName, const int &chs,
            const snd_pcm_uframes_t &frames)
     : IO(0, true, true, deviceName), device{nullptr}
 {
-
   bool found = false;
   for (const auto iter : IO::devices)
   {

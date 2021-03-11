@@ -15,7 +15,7 @@ ALSAOut::ALSAOut(const std::string &device, const int &chs,
     : ALSA(device, chs), Connectable(chs)
 {
   _type = "AudioALSAOut";
-  _name = "ALSA Audio Out";
+  _name = device;
   outputs.resize(chs);
 }
 

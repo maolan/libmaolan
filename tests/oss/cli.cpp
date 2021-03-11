@@ -3,6 +3,7 @@
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/audio/track.hpp>
+#include <maolan/midi/track.hpp>
 #include <maolan/engine.hpp>
 
 
@@ -20,15 +21,13 @@ int main(int argc, char **argv)
   OSSOut<int32_t> out("/dev/dsp");
   Track trackp("play", 2);
   Clip clip("../data/stereo.wav", 0, 10000000, 0, &trackp);
+  maolan::midi::Track midiTrack("Midi Track", 1);
   out.connect(&trackp);
 
   /* Background threads + main thread
    */
   maolan::Engine::init();
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
-  {
-    std::cout << io->json().dump(2) << '\n';
-  }
+  maolan::Engine::save();
   return 0;
   std::cerr << "Playing ...";
   maolan::Engine::play();

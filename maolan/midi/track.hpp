@@ -1,4 +1,6 @@
 #pragma once
+#include <nlohmann/json.hpp>
+
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/connectable.hpp"
 
@@ -13,6 +15,7 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
+  virtual nlohmann::json json();
   virtual Buffer pull(const std::size_t &channel);
 
   void mute(const bool &value = true);
@@ -20,6 +23,7 @@ public:
   void solo(const bool &value = true);
   void add(midi::Clip *);
   void remove(midi::Clip *);
+  Clip * clips();
 
 protected:
   bool muted;

@@ -12,7 +12,7 @@ OSSIn<T>::OSSIn(const std::string &device, const int &frag)
     : OSS(device, frag, sizeof(T))
 {
   _type = "AudioOSSIn";
-  _name = "OSS Audio In";
+  _name = device;
 }
 
 

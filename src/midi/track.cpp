@@ -176,6 +176,19 @@ Buffer Track::pull(const std::size_t &ch)
 }
 
 
+nlohmann::json Track::json()
+{
+  auto data = IO::json();
+  data["clips"] = nlohmann::json::array();
+  for (auto clip = clips(); clip != nullptr; clip = clip->next())
+  {
+    data["clips"].push_back(clip->json());
+  }
+  return data;
+}
+
+
+Clip * Track::clips() { return first; }
 void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }

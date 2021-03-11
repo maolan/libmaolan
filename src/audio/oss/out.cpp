@@ -16,7 +16,7 @@ OSSOut<T>::OSSOut(const std::string &device, const int &frag)
     , Connectable(channels())
 {
   _type = "AudioOSSOut";
-  _name = "OSS Audio Out";
+  _name = device;
 }
 
 

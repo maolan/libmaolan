@@ -116,9 +116,10 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 
 
 File::File(const std::string &path)
-    : file(path, std::ios::in | std::ios::binary), _path{path}
+    : file(path, std::ios::in | std::ios::binary)
 {
   _type = "MIDIFile";
+  _name = path;
   file >> std::noskipws;
 }
 
@@ -228,7 +229,7 @@ void File::readHeaders()
 
 void File::save(Buffer buffer)
 {
-  if (buffer == nullptr || _path == "/tmp/clip.mid")
+  if (buffer == nullptr || _name == "/tmp/clip.mid")
   {
     return;
   }
@@ -284,10 +285,11 @@ void File::save(Buffer buffer)
   outfile.seekg(lengthPosition);
   write(outfile, length);
   outfile.close();
-  // file.seekp(0);
 }
 
 
 bool File::eof() { return file.eof(); }
 bool File::good() { return file.good(); }
 std::streampos File::tellg() { return file.tellg(); }
+void File::fetch() {}
+void File::process() {}

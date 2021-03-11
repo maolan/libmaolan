@@ -9,7 +9,7 @@ ALSAIn::ALSAIn(const std::string &device, const int &chs,
     : ALSA(device, chs)
 {
   _type = "AudioALSAIn";
-  _name = "ALSA Audio In";
+  _name = device;
 }
 
 

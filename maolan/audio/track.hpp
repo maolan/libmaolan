@@ -1,4 +1,6 @@
 #pragma once
+#include <nlohmann/json.hpp>
+
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/connectable.hpp"
 #include "maolan/plugin/lv2/plugin.hpp"
@@ -17,6 +19,7 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
+  virtual nlohmann::json json();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel);
 

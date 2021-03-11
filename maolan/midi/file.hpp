@@ -7,12 +7,14 @@
 
 namespace maolan::midi
 {
-class File
+class File : public IO
 {
 public:
   File(const std::string &path);
   ~File();
 
+  virtual void fetch();
+  virtual void process();
   Buffer read();
   void save(const Buffer buffer);
   void readHeaders();
@@ -22,7 +24,6 @@ public:
 
 protected:
   std::fstream file;
-  std::string _path;
   midi::Buffer last;
   float rate;
   std::uint16_t chunks;

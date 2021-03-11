@@ -173,6 +173,19 @@ Buffer Track::pull(const std::size_t &channel)
 }
 
 
+
+nlohmann::json Track::json()
+{
+  auto data = IO::json();
+  data["clips"] = nlohmann::json::array();
+  for (auto clip = first; clip != nullptr; clip = clip->next())
+  {
+    data["clips"].push_back(clip->json());
+  }
+  return data;
+}
+
+
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return inputs.size(); }
 bool Track::mute() { return muted; }

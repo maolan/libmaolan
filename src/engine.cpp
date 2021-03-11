@@ -1,3 +1,4 @@
+#include <iostream>
 #include <thread>
 #include "maolan/engine.hpp"
 #include "maolan/io.hpp"
@@ -33,6 +34,25 @@ void Engine::quit()
 }
 
 
-void Engine::save() { midi::Clip::saveAll(); }
+nlohmann::json Engine::json()
+{
+  nlohmann::json data;
+  data["io"] = nlohmann::json::array();
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    data["io"].push_back(io->json());
+  }
+  return data;
+}
+
+
+void Engine::save()
+{
+  midi::Clip::saveAll();
+  auto data = json();
+  std::cout << data.dump(2) << '\n';
+}
+
+
 void Engine::play() { IO::play(); }
 void Engine::stop() { IO::stop(); }
