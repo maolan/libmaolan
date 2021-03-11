@@ -3,7 +3,7 @@ DAW written in C++17
 
 Dependencies:
 * libsndfile
-* pugixml
+* nlohmann-json
 * lilv
 
 Build
