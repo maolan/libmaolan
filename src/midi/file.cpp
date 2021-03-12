@@ -1,6 +1,8 @@
 #include <cstring>
 #include <fstream>
 #include <iostream>
+
+#include "maolan/config.hpp"
 #include "maolan/midi/buffer.hpp"
 #include "maolan/midi/event.hpp"
 #include "maolan/midi/file.hpp"
@@ -116,10 +118,10 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 
 
 File::File(const std::string &path)
-    : file(path, std::ios::in | std::ios::binary)
+  : file{path, std::ios::in | std::ios::binary}
 {
-  _type = "MIDIFile";
   _name = path;
+  _type = "MIDIFile";
   file >> std::noskipws;
 }
 

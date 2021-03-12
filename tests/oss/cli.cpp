@@ -3,6 +3,7 @@
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/audio/track.hpp>
+#include <maolan/midi/clip.hpp>
 #include <maolan/midi/track.hpp>
 #include <maolan/engine.hpp>
 
@@ -22,6 +23,7 @@ int main(int argc, char **argv)
   Track trackp("play", 2);
   Clip clip("../data/stereo.wav", 0, 10000000, 0, &trackp);
   maolan::midi::Track midiTrack("Midi Track", 1);
+  maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
   out.connect(&trackp);
 
   /* Background threads + main thread

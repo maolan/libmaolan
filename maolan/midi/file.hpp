@@ -1,13 +1,12 @@
 #pragma once
 #include <fstream>
 #include <string>
-#include "maolan/io.hpp"
 #include "maolan/midi/buffer.hpp"
 
 
 namespace maolan::midi
 {
-class File : public IO
+class File
 {
 public:
   File(const std::string &path);
@@ -31,5 +30,7 @@ protected:
   std::uint16_t format;
   std::uint32_t headerLength;
   std::uint32_t length;
+  std::string _name;
+  std::string _type;
 };
 } // namespace maolan::midi
