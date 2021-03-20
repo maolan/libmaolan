@@ -63,6 +63,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
       std::cerr << "Unsupported sample size: " << sampleSize << '\n';
       exit(1);
     }
+    this->sampleSize = sampleSize;
     try
     {
       error = open(deviceName.data(), O_RDWR, 0);
@@ -122,6 +123,14 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
     bytes = new int8_t[device->bufferInfo.bytes];
     devices.emplace(devices.begin(), device);
   }
+}
+
+
+nlohmann::json OSS::json()
+{
+  auto data = IO::json();
+  data["bits"] = sampleSize * 8;
+  return data;
 }
 
 

@@ -77,6 +77,16 @@ if (ALSA)
     add_test(NAME alsa COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
 endif()
 
+pkg_check_modules(NLOHMANN REQUIRED nlohmann_json)
+set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${NLOHMANN_INCLUDE_DIRS})
+set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${NLOHMANN_LIBRARY_DIRS})
+set(MY_LIBRARIES ${MY_LIBRARIES} ${NLOHMANN_LIBRARIES})
+
+pkg_check_modules(SNDFILE REQUIRED sndfile)
+set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${SNDFILE_INCLUDE_DIRS})
+set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${SNDFILE_LIBRARY_DIRS})
+set(MY_LIBRARIES ${MY_LIBRARIES} ${SNDFILE_LIBRARIES})
+
 option(LV2 "LADSPA version 2 plugins" ON)
 if (LV2)
     pkg_check_modules(LILV REQUIRED lilv-0)

@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <nlohmann/json.hpp>
+
 #include "maolan/audio/io.hpp"
 #include "maolan/audio/oss/config.hpp"
 #include "maolan/constants.hpp"
@@ -14,8 +16,10 @@ public:
   ~OSS();
 
   virtual std::size_t channels() const;
+  virtual nlohmann::json json();
 
 protected:
+  int sampleSize;
   int8_t *bytes;
   OSSConfig *device;
 };
