@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+
 #include "maolan/audio/io.hpp"
 #include "maolan/config.hpp"
 
@@ -14,10 +15,7 @@ IO::IO(const size_t &chs, const bool &front, const bool &reg,
        const std::string &name)
     : maolan::IO(name, front, reg)
 {
-  if (chs > 0)
-  {
-    outputs.resize(chs);
-  }
+  if (chs > 0) { outputs.resize(chs); }
 }
 
 
@@ -36,4 +34,12 @@ Buffer IO::pull(const std::size_t &channel)
 std::size_t IO::channels() const
 {
   return outputs.size();
+}
+
+
+nlohmann::json IO::json()
+{
+  auto result = maolan::IO::json();
+  result["channels"] = channels();
+  return result;
 }

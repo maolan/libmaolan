@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <nlohmann/json.hpp>
+
 #include "maolan/audio/buffer.hpp"
 #include "maolan/config.hpp"
 #include "maolan/io.hpp"
@@ -17,6 +19,7 @@ public:
 
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel);
+  virtual nlohmann::json json();
 
 protected:
   std::vector<audio::Buffer> outputs;

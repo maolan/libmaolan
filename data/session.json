@@ -1,0 +1,32 @@
+{
+  "io": [
+    {
+      "clips": [
+        {
+          "name": "Midi Clip",
+          "type": "MIDIClip"
+        }
+      ],
+      "name": "Midi Track",
+      "type": "MIDITrack"
+    },
+    {
+      "channels": 2,
+      "clips": [
+        {
+          "channels": 2,
+          "name": "audio/stereo.wav",
+          "type": "AudioClip"
+        }
+      ],
+      "name": "play",
+      "type": "AudioTrack"
+    },
+    {
+      "bits": 32,
+      "channels": 2,
+      "name": "/dev/dsp",
+      "type": "AudioOSSOut"
+    }
+  ]
+}
