@@ -84,6 +84,11 @@ endif()
 
 option(LV2 "LADSPA version 2 plugins" ON)
 if (LV2)
+    pkg_check_modules(LV2 REQUIRED lv2)
+    set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${LV2_INCLUDE_DIRS})
+    set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${LV2_LIBRARY_DIRS})
+    set(MY_LIBRARIES ${MY_LIBRARIES} ${LV2_LIBRARIES})
+
     pkg_check_modules(LILV REQUIRED lilv-0)
     set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${LILV_INCLUDE_DIRS})
     set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${LILV_LIBRARY_DIRS})
