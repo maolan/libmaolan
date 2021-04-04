@@ -11,13 +11,15 @@ File::File(const std::size_t &ch) : IO(0, true, false), recording(true)
 {
   _type = "AudioFile";
   std::string path = "recording.wav";
-  _audioFile = SndfileHandle(path, SFM_RDWR, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
-                             ch, Config::samplerate);
+  _audioFile = SndfileHandle(
+    path, 
+    SFM_RDWR, 
+    SF_FORMAT_WAV | SF_FORMAT_FLOAT,
+    ch, 
+    Config::samplerate
+  );
   _type = "File";
   _name = path;
-  const auto chs = _audioFile.channels();
-  outputs.resize(chs, nullptr);
-  frame = new float[Config::audioBufferSize * chs];
 }
 
 
@@ -27,22 +29,16 @@ File::File(const std::string &path, const uint64_t &offset)
   _audioFile = SndfileHandle(path);
   if (_audioFile.error())
   {
-    std::cerr << "_audiofile error " << _audioFile.strError() << std::endl;
+    std::cerr << "Audio file (" << path << ") error ";
+    std::cerr << _audioFile.strError() << '\n';
     exit(1);
   }
   if (offset)
   {
     _audioFile.seek(offset, SEEK_SET);
   }
-  if (Config::audioBufferSize == 0)
-  {
-    std::cerr << "Loading order error. Load some hardware IO first!\n";
-    exit(1);
-  }
   _type = "File";
-  const auto chs = _audioFile.channels();
-  outputs.resize(chs, nullptr);
-  frame = new float[Config::audioBufferSize * chs];
+  _name = path;
 }
 
 
@@ -99,6 +95,15 @@ void File::write(const Frame &fr)
     }
   }
   int bytesWritten = _audioFile.writef(frame, Config::audioBufferSize);
+}
+
+
+void File::init()
+{
+  const auto chs = _audioFile.channels();
+  outputs.resize(chs, nullptr);
+  if (frame) { delete []frame; }
+  frame = new float[Config::audioBufferSize * chs];
 }
 
 

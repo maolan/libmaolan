@@ -36,9 +36,9 @@ void Track::process()
   }
   if (armed)
   {
-    for (std::size_t i = 0; i < inputs.size() && i < outputs.size(); ++i)
+    for (std::size_t i = 0; i < _inputs.size() && i < outputs.size(); ++i)
     {
-      outputs[i] = inputs[i].pull();
+      outputs[i] = _inputs[i].pull();
     }
     // recording->write(buffer);
   }

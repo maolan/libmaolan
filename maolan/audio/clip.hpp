@@ -10,10 +10,9 @@ class Track;
 class Clip : public audio::IO
 {
 public:
-  Clip(Track *parent, const std::size_t &channels);
-  Clip(const std::string &path, const std::size_t &start,
-       const std::size_t &end, const std::size_t &offset = 0,
-       Track *parent = nullptr);
+  Clip(const std::string &path, Track *parent = nullptr,
+       const std::size_t &start = 0, const std::size_t &end = 0,
+       const std::size_t &offset = 0);
   ~Clip();
 
   virtual void fetch();

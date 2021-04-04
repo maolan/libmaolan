@@ -74,12 +74,12 @@ Plugin::Plugin(const std::string &argUri)
         if (port->type() == PluginPortType::midi)
         {
           input.midi.push_back(port);
-          midi::Connectable::inputs.emplace_back();
+          midi::Connectable::_inputs.emplace_back();
         }
         else if (port->type() == PluginPortType::audio)
         {
           input.audio.push_back(port);
-          audio::Connectable::inputs.emplace_back();
+          audio::Connectable::_inputs.emplace_back();
         }
         else if (port->type() == PluginPortType::control)
         {
@@ -247,7 +247,7 @@ Plugin::~Plugin()
 }
 
 
-void Plugin::init()
+void Plugin::allocate()
 {
   emptyBuffer = std::make_shared<audio::BufferData>(Config::audioBufferSize);
 }
@@ -298,7 +298,7 @@ void Plugin::fetch()
 {
   plugin::IO::fetch();
   auto portCount = ports("audio", "in");
-  auto &audioins = audio::Connectable::inputs;
+  auto &audioins = audio::Connectable::_inputs;
   auto &iaudio = input.audio;
   for (std::size_t i = 0; i < portCount; ++i)
   {
@@ -314,7 +314,7 @@ void Plugin::fetch()
   }
 
   portCount = ports("midi", "in");
-  auto &midiins = midi::Connectable::inputs;
+  auto &midiins = midi::Connectable::_inputs;
   auto &imidi = input.midi;
   for (std::size_t i = 0; i < portCount; ++i)
   {

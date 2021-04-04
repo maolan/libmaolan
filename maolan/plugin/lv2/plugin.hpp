@@ -2,6 +2,7 @@
 #include <lilv/lilv.h>
 #include <string>
 #include <vector>
+
 #include "maolan/audio/buffer.hpp"
 #include "maolan/frame.hpp"
 #include "maolan/plugin/io.hpp"
@@ -35,7 +36,7 @@ public:
   Plugin(const std::string &argUri);
   ~Plugin();
 
-  static void init();
+  static void allocate();
   static void destroyWorld();
   static const void *portValue(const char *port_symbol, void *user_data,
                                uint32_t *size, uint32_t *type);

@@ -1,12 +1,12 @@
 #include <iostream>
 #include <thread>
 
-#include "maolan/engine.hpp"
-#include "maolan/io.hpp"
 #include "maolan/audio/clip.hpp"
-#include "maolan/audio/track.hpp"
 #include "maolan/audio/oss/in.hpp"
 #include "maolan/audio/oss/out.hpp"
+#include "maolan/audio/track.hpp"
+#include "maolan/engine.hpp"
+#include "maolan/io.hpp"
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
 #include "maolan/plugin/lv2/plugin.hpp"
@@ -22,13 +22,17 @@ void Engine::init(const int &threads)
 {
   auto maxWorkers = std::thread::hardware_concurrency();
   auto realWorkerNumber =
-      threads == -1 || threads > maxWorkers ? maxWorkers : threads;
+    threads == -1 || threads > maxWorkers ? maxWorkers : threads;
   _workers.resize(realWorkerNumber);
   for (std::size_t i = 0; i < _workers.size(); ++i)
   {
     _workers[i] = new Worker();
   }
-  plugin::lv2::Plugin::init();
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    io->init();
+  }
+  plugin::lv2::Plugin::allocate();
 }
 
 
@@ -48,6 +52,7 @@ nlohmann::json Engine::json()
   {
     data["io"].push_back(io->json());
   }
+  data["connections"] = nlohmann::json::array();
   return data;
 }
 
@@ -71,7 +76,8 @@ nlohmann::json Engine::load(const std::string &path)
       auto track = new maolan::audio::Track(io["name"], io["channels"]);
       for (const auto &clipio : io["clips"])
       {
-        auto clip = new maolan::audio::Clip(track, clipio["channels"]);
+        const std::string name = clipio["name"];
+        auto clip = new maolan::audio::Clip(path + "/" + name, track);
       }
     }
     else if (io["type"] == "MIDITrack")

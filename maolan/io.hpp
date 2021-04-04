@@ -14,7 +14,7 @@ namespace maolan
 class IO
 {
 public:
-  IO(const std::string &argName = "", const bool &front = true,
+  IO(const std::string &argName = "", const bool &front = false,
      const bool &reg = true);
   ~IO();
 
@@ -30,10 +30,12 @@ public:
   static Config *devices();
 
   virtual void setup();
+  virtual void init();
   virtual void fetch() = 0;
   virtual void process() = 0;
   virtual void parent(IO *p);
   virtual nlohmann::json json();
+  virtual nlohmann::json connections();
   void work();
   void next(IO *);
   IO *next();

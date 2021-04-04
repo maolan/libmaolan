@@ -8,7 +8,7 @@ namespace maolan::midi
 class IO : public maolan::IO
 {
 public:
-  IO(const std::string &name = "", const bool &front = true,
+  IO(const std::string &name = "", const bool &front = false,
      const bool &reg = false);
 
   static std::vector<maolan::Config *> devices;

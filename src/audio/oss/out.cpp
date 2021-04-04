@@ -24,10 +24,7 @@ template <class T>
 void OSSOut<T>::fetch()
 {
   Connectable::fetch();
-  for (size_t i = 0; i < channels(); ++i)
-  {
-    outputs[i] = inputs[i].pull();
-  }
+  for (size_t i = 0; i < channels(); ++i) { outputs[i] = _inputs[i].pull(); }
 }
 
 

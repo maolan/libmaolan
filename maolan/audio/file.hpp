@@ -16,6 +16,7 @@ public:
   ~File();
 
   virtual void fetch();
+  virtual void init();
   virtual void split();
   virtual void process();
   void write(const Frame &frame);

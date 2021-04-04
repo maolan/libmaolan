@@ -20,6 +20,7 @@ public:
   virtual void process();
   virtual void setup();
   virtual nlohmann::json json();
+  virtual nlohmann::json connections();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel);
 

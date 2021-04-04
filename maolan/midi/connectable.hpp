@@ -16,7 +16,7 @@ public:
   void connect(midi::IO *to, std::size_t inCh, std::size_t outCh);
 
 protected:
-  std::vector<midi::Input> inputs;
+  std::vector<midi::Input> _inputs;
 };
 } // namespace maolan::midi
 

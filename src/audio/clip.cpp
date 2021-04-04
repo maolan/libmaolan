@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/config.hpp"
@@ -7,17 +8,8 @@
 using namespace maolan::audio;
 
 
-Clip::Clip(Track *parent, const std::size_t &ch)
-  : IO(0, true, false)
-  , file(ch)
-{
-  _type = "AudioClip";
-  if (parent != nullptr) { parent->add(this); }
-}
-
-
-Clip::Clip(const std::string &path, const std::size_t &start,
-           const std::size_t &end, const std::size_t &offset, Track *parent)
+Clip::Clip(const std::string &path, Track *parent, const std::size_t &start,
+           const std::size_t &end, const std::size_t &offset)
     : IO{0, true, false, path}, _offset{offset}, _start{start}, _end{end},
       _previous{nullptr}, _next{nullptr}, file{path, offset}, _parent{parent}
 {

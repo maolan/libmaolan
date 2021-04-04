@@ -155,6 +155,7 @@ nlohmann::json IO::json()
 }
 
 
+nlohmann::json IO::connections() { return nullptr; }
 void IO::parent(IO *p) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
@@ -174,3 +175,4 @@ void IO::previous(IO *p) { _previous = p; }
 IO *IO::previous() { return _previous; }
 void * IO::data() { return _data; }
 void IO::data(void *d) { _data = d; }
+void IO::init() {}

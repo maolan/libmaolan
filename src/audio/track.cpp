@@ -1,4 +1,6 @@
 #include <algorithm>
+#include <random>
+#include <string>
 
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
@@ -9,6 +11,16 @@ using namespace maolan::audio;
 
 
 std::vector<Track *> Track::all;
+
+
+std::string random_string(const std::size_t &size)
+{
+  std::string str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
+  std::random_device rd;
+  std::mt19937 generator(rd());
+  std::shuffle(str.begin(), str.end(), generator);
+  return str.substr(0, size);
+}
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
@@ -39,7 +51,7 @@ void Track::process()
   {
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
-      frame->audio[channel] = inputs[channel].pull();
+      frame->audio[channel] = _inputs[channel].pull();
     }
     recording->write(frame);
     if (!muted) { outputs = frame->audio; }
@@ -64,7 +76,7 @@ void Track::setup()
 {
   if (armed && recording == nullptr)
   {
-    recording = new Clip(this, channels());
+    recording = new Clip(random_string(8), this);
     recording->start(_playHead);
     recording->end(_playHead + Config::audioBufferSize);
     _current = recording;
@@ -186,8 +198,22 @@ nlohmann::json Track::json()
 }
 
 
+nlohmann::json Track::connections()
+{
+  if (_inputs.size() == 0) { return nullptr; }
+  auto result = nlohmann::json::array();
+  for (std::size_t i = 0; i < _inputs.size(); ++i)
+  {
+    const auto &input = _inputs[i];
+    if (input.channels() == 0) { continue; }
+  }
+  if (result.size() == 0) { return nullptr; }
+  return result;
+}
+
+
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
-std::size_t Track::channels() const { return inputs.size(); }
+std::size_t Track::channels() const { return _inputs.size(); }
 bool Track::mute() { return muted; }
 bool Track::arm() { return armed; }
 bool Track::solo() { return soloed; }
