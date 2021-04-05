@@ -1,3 +1,4 @@
+#include <iostream>
 #include <algorithm>
 #include <random>
 #include <string>
@@ -24,8 +25,8 @@ std::string random_string(const std::size_t &size)
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
-    : IO(0, true, true), Connectable(ch), _current(nullptr), first(nullptr),
-      last(nullptr), armed(false), muted(false), soloed(false)
+    : IO(0, true, true), Connectable(ch), muted(false), armed(false),
+      soloed(false), first(nullptr), _current(nullptr), last(nullptr)
 {
   _type = "AudioTrack";
   _name = name;
@@ -37,14 +38,20 @@ Track::Track(const std::string &name, const std::size_t &ch)
 void Track::fetch()
 {
   Connectable::fetch();
-  if (_current != nullptr) { _current->fetch(); }
+  if (_current != nullptr)
+  {
+    _current->fetch();
+  }
 }
 
 
 void Track::process()
 {
   Connectable::process();
-  if (_current != nullptr) { _current->process(); }
+  if (_current != nullptr)
+  {
+    _current->process();
+  }
   auto const chs = channels();
   auto frame = new Frame(chs, 0, 0);
   if (armed)
@@ -54,7 +61,10 @@ void Track::process()
       frame->audio[channel] = _inputs[channel].pull();
     }
     recording->write(frame);
-    if (!muted) { outputs = frame->audio; }
+    if (!muted)
+    {
+      outputs = frame->audio;
+    }
     delete frame;
   }
   else if (!muted && _current != nullptr && _playHead >= _current->start())
@@ -84,9 +94,18 @@ void Track::setup()
     last = _current;
     _current->setup();
   }
-  else if (first == nullptr) { _current = nullptr; }
-  else if (_playHead < first->start()) { _current = nullptr; }
-  else if (!armed && _playHead > last->end()) { _current = nullptr; }
+  else if (first == nullptr)
+  {
+    _current = nullptr;
+  }
+  else if (_playHead < first->start())
+  {
+    _current = nullptr;
+  }
+  else if (!armed && _playHead > last->end())
+  {
+    _current = nullptr;
+  }
   else
   {
     for (auto clip = last; clip != nullptr; clip = clip->previous())
@@ -133,8 +152,14 @@ void Track::add(Clip *clip)
         clip->previous(cl->previous());
         cl->previous()->next(clip);
         cl->previous(clip);
-        if (clip->previous() == nullptr) { first = clip; }
-        if (clip->next() == nullptr) { last->next(clip); }
+        if (clip->previous() == nullptr)
+        {
+          first = clip;
+        }
+        if (clip->next() == nullptr)
+        {
+          last->next(clip);
+        }
         break;
       }
     }
@@ -152,12 +177,30 @@ void Track::remove(Clip *clip)
   {
     if (cl == clip)
     {
-      if (cl->next() != nullptr) { cl->next()->previous(cl->previous()); }
-      if (cl->previous() != nullptr) { cl->previous()->next(cl->next()); }
-      if (cl == _current) { _current = nullptr; }
-      if (cl == recording) { recording = nullptr; }
-      if (cl == first) { first = cl->next(); }
-      if (cl == last) { last = cl->previous(); }
+      if (cl->next() != nullptr)
+      {
+        cl->next()->previous(cl->previous());
+      }
+      if (cl->previous() != nullptr)
+      {
+        cl->previous()->next(cl->next());
+      }
+      if (cl == _current)
+      {
+        _current = nullptr;
+      }
+      if (cl == recording)
+      {
+        recording = nullptr;
+      }
+      if (cl == first)
+      {
+        first = cl->next();
+      }
+      if (cl == last)
+      {
+        last = cl->previous();
+      }
       cl->parent(nullptr);
       return;
     }
@@ -167,7 +210,7 @@ void Track::remove(Clip *clip)
 
 void Track::remove(plugin::lv2::Plugin *plugin)
 {
-  for (int i = 0; i < _plugins.size(); ++i)
+  for (std::size_t i = 0; i < _plugins.size(); ++i)
   {
     if (_plugins[i] == plugin)
     {
@@ -180,10 +223,12 @@ void Track::remove(plugin::lv2::Plugin *plugin)
 
 Buffer Track::pull(const std::size_t &channel)
 {
-  if (muted) { return nullptr; }
+  if (muted)
+  {
+    return nullptr;
+  }
   return IO::pull(channel);
 }
-
 
 
 nlohmann::json Track::json()
@@ -204,8 +249,13 @@ nlohmann::json Track::connections()
   auto result = nlohmann::json::array();
   for (std::size_t i = 0; i < _inputs.size(); ++i)
   {
+    std::cout << "Track::connections()\n";
     const auto &input = _inputs[i];
     if (input.channels() == 0) { continue; }
+    nlohmann::json data;
+    data["from"] = 0;
+    data["to"] = 0;
+    result.push_back(data);
   }
   if (result.size() == 0) { return nullptr; }
   return result;
@@ -220,5 +270,5 @@ bool Track::solo() { return soloed; }
 void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }
-Clip * Track::clips() { return first; }
+Clip *Track::clips() { return first; }
 Track::~Track() { std::remove(all.begin(), all.end(), this); }

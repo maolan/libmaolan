@@ -73,9 +73,9 @@ void Input::fetch()
 }
 
 
-Buffer Input::pull()
+Buffer Input::pull(const std::size_t &channel)
 {
-  return outputs[0];
+  return outputs[channel];
 }
 
 

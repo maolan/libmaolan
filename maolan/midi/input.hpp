@@ -14,7 +14,7 @@ public:
   virtual void fetch();
   virtual void process();
   void connect(IO *to, const std::size_t &ch = 0);
-  Buffer pull();
+  Buffer pull(const std::size_t &channel = 0);
 
 protected:
   std::vector<midi::Connection> connections;

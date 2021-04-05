@@ -10,8 +10,14 @@ using namespace maolan::audio;
 
 Clip::Clip(const std::string &path, Track *parent, const std::size_t &start,
            const std::size_t &end, const std::size_t &offset)
-    : IO{0, true, false, path}, _offset{offset}, _start{start}, _end{end},
-      _previous{nullptr}, _next{nullptr}, file{path, offset}, _parent{parent}
+    : IO{0, true, false, path}
+    , _offset{offset}
+    , _start{start}
+    , _end{end}
+    , file{path, offset}
+    , _parent{parent}
+    , _next{nullptr}
+    , _previous{nullptr}
 {
   _type = "AudioClip";
   if (parent) { parent->add(this); }
@@ -24,7 +30,7 @@ Clip::~Clip()
 }
 
 
-Buffer Clip::pull(const unsigned &channel)
+Buffer Clip::pull(const std::size_t &channel)
 {
   if (_playHead >= _start) { return file.pull(channel); }
   return nullptr;

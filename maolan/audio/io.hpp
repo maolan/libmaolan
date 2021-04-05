@@ -18,7 +18,7 @@ public:
   static std::vector<maolan::Config *> devices;
 
   virtual std::size_t channels() const;
-  virtual Buffer pull(const std::size_t &channel);
+  virtual Buffer pull(const std::size_t &channel = 0);
   virtual nlohmann::json json();
 
 protected:

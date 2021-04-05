@@ -25,8 +25,8 @@ public:
 
   const std::size_t &start() const;
   const std::size_t &end() const;
-  const std::size_t startSample() const;
-  const std::size_t endSample() const;
+  std::size_t startSample() const;
+  std::size_t endSample() const;
   void start(const std::size_t &);
   void end(const std::size_t &);
   void startSample(const std::size_t &);

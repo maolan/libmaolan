@@ -26,8 +26,15 @@ void Clip::saveAll()
 
 
 Clip::Clip(const std::string &name, Track *parent)
-    : IO(name), file(name), _previous{nullptr}, _next{nullptr}, _parent{parent},
-      _start{0}, _end{100000000}, _offset{0}
+  : IO(name)
+  , _offset{0}
+  , _start{0}
+  , _end{100000000}
+  , _name{name}
+  , file(name)
+  , _parent{parent}
+  , _next{nullptr}
+  , _previous{nullptr}
 {
   _type = "MIDIClip";
   load();
@@ -42,8 +49,15 @@ Clip::Clip(const std::string &name, Track *parent)
 
 Clip::Clip(const std::string &name, const std::size_t &start,
            const std::size_t &end, const std::size_t &offset, Track *parent)
-    : IO(name), _name{name}, file{name}, _previous{nullptr}, _next{nullptr},
-      _parent{parent}, _start{start}, _end{end}, _offset{offset}
+  : IO(name)
+  , _offset{offset}
+  , _start{start}
+  , _end{end}
+  , _name{name}
+  , file{name}
+  , _parent{parent}
+  , _next{nullptr}
+  , _previous{nullptr}
 {
   _type = "MIDIClip";
   load();
@@ -107,7 +121,6 @@ void Clip::load()
 {
   data = nullptr;
   last = nullptr;
-  float divisionRate;
   try
   {
     file.readHeaders();
@@ -159,14 +172,14 @@ void Clip::parent(maolan::IO *p)
 }
 
 
-const std::size_t Clip::startSample() const
+std::size_t Clip::startSample() const
 {
   auto tempo = Config::tempos[Config::tempoIndex];
   return (_start - tempo.tick) * tempo.a2m + tempo.time;
 }
 
 
-const std::size_t Clip::endSample() const
+std::size_t Clip::endSample() const
 {
   auto tempo = Config::tempos[Config::tempoIndex];
   return (_end - tempo.tick) * tempo.a2m + tempo.time;

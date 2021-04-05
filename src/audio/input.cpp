@@ -64,14 +64,15 @@ void Input::fetch()
 size_t Input::channels() const { return outputs.size(); }
 
 
-Buffer Input::pull()
+Buffer Input::pull(const std::size_t &channel)
 {
   if (outputs.size() == 0)
   {
     return nullptr;
   }
-  return outputs[0];
+  return outputs[channel];
 }
 
 
+Input::~Input() {}
 void Input::process() {}

@@ -22,7 +22,7 @@ public:
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
   virtual std::size_t channels() const;
-  virtual Buffer pull(const std::size_t &channel);
+  virtual Buffer pull(const std::size_t &channel = 0);
 
   bool mute();
   bool arm();

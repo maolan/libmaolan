@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+
 #include "maolan/audio/buffer.hpp"
 #include "maolan/audio/connection.hpp"
 
@@ -10,12 +11,13 @@ class Input : public audio::IO
 {
 public:
   Input();
+  virtual ~Input();
 
   virtual void fetch();
   virtual void process();
   void connect(IO *to, const std::size_t &ch = 0);
   std::size_t channels() const;
-  Buffer pull();
+  Buffer pull(const std::size_t &channel = 0);
 
 protected:
   std::vector<audio::Connection> connections;

@@ -1,13 +1,11 @@
-#include "maolan/config.hpp"
 #include "maolan/tempo.hpp"
+#include "maolan/config.hpp"
 
 
 using namespace maolan;
 
 
-Tempo::Tempo(const unsigned &b, const std::size_t &t)
-  : bpm{b}
-  , time{t}
+Tempo::Tempo(const unsigned &b, const std::size_t &t) : time{t}, bpm{b}
 {
   if (Config::samplerate != 0 && bpm != 0 && Config::division != 0)
   {
