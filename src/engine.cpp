@@ -63,13 +63,19 @@ nlohmann::json Engine::json()
 {
   nlohmann::json data;
   data["io"] = nlohmann::json::array();
+  data["connections"] = nlohmann::json::array();
   for (auto io = IO::begin(); io != nullptr; io = io->next())
   {
     data["io"].push_back(io->json());
   }
-  auto c = maolan::audio::Connectable::json();
-  if (c != nullptr) { data["connections"] = c; }
-  else { data["connections"] = nlohmann::json::array(); }
+  auto ioconns = maolan::audio::Connectable::json();
+  if (ioconns != nullptr) 
+  { 
+    for (auto &c : ioconns) 
+    { 
+      data["connections"].push_back(c); 
+    }
+  }
   return data;
 }
 
@@ -151,17 +157,16 @@ nlohmann::json Engine::load(const std::string &path)
   }
   for (const auto &c : result["connections"])
   {
-    auto fromjson = c["from"];
-    auto fromio = ios[fromjson["name"]];
+    auto &fromio = ios[c["name"]];
     if (std::find(audioNames.begin(), audioNames.end(), fromio->type()) != audioNames.end())
     {
-      auto &fromch = fromjson["channel"];
-      auto tojson = c["to"];
+      auto &fromch = c["channel"];
+      auto &tojson = c["to"];
       for (auto &iojson : tojson)
       {
         auto toio = (audio::IO *)ios[iojson["name"]];
         auto &toch = iojson["channel"];
-        ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
+        // ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
       }
     }
   }

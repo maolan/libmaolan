@@ -13,7 +13,10 @@ nlohmann::json Connectable::json()
   for (auto &c : _all)
   {
     auto result = c->connections();
-    if (result != nullptr) { data.push_back(result); }
+    if (result != nullptr) 
+    { 
+      for (auto &r : result) { data.push_back(r); }
+    }
   }
   if (data.size() == 0) { return nullptr; }
   return data;
@@ -62,11 +65,9 @@ void Connectable::process()
 
 nlohmann::json Connectable::conns(const std::string_view name)
 {
-  if (_inputs.size() == 0)
-  {
-    return nullptr;
-  }
-  auto result = nlohmann::json::array();
+  if (_inputs.size() == 0) { return nullptr; }
+  bool empty = true;
+  auto result = R"([])"_json;
   for (std::size_t i = 0; i < _inputs.size(); ++i)
   {
     auto &input = _inputs[i];
@@ -80,17 +81,13 @@ nlohmann::json Connectable::conns(const std::string_view name)
       continue;
     }
 
+    empty = false;
     nlohmann::json data;
-    auto from = R"({})"_json;
-    from["name"] = name;
-    from["channel"] = i;
-    data["from"] = from;
+    data["channel"] = i;
     data["to"] = to;
+    data["name"] = name.data();
     result.push_back(data);
   }
-  if (result.size() == 0)
-  {
-    return nullptr;
-  }
+  if (empty) { return nullptr; }
   return result;
 }

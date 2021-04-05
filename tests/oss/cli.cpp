@@ -21,19 +21,19 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
     return 1;
   }
-  // OSSOut<int32_t> out("/dev/dsp");
-  // Track trackp("play", 2);
-  // Clip clip("../data/audio/stereo.wav", &trackp, 0, 10000000, 0);
-  // maolan::midi::Track midiTrack("Midi Track", 1);
-  // maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
-  // out.connect(&trackp);
+  OSSOut<int32_t> out("/dev/dsp");
+  Track trackp("play", 2);
+  Clip clip("../data/audio/stereo.wav", &trackp, 0, 10000000, 0);
+  maolan::midi::Track midiTrack("Midi Track", 1);
+  maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
+  out.connect(&trackp);
 
   /* Background threads + main thread
    */
   std::string mydir = dirname(argv[0]);
   std::string session = mydir + "/../data";
   maolan::Engine::init();
-  auto result = maolan::Engine::load(session);
+  // auto result = maolan::Engine::load(session);
   maolan::Engine::save();
   return 0;
   std::cerr << "Playing ...";

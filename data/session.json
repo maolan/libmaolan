@@ -1,10 +1,8 @@
 {
   "connections": [
     {
-      "from": {
-        "channel": 0,
-        "name": "/dev/dsp"
-      },
+      "channel": 0,
+      "name": "/dev/dsp",
       "to": [
         {
           "channel": 0,
@@ -13,10 +11,8 @@
       ]
     },
     {
-      "from": {
-        "channel": 1,
-        "name": "/dev/dsp"
-      },
+      "channel": 1,
+      "name": "/dev/dsp",
       "to": [
         {
           "channel": 1,
