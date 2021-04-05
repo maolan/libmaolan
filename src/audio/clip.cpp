@@ -52,6 +52,16 @@ void Clip::write(const Frame &fr)
 }
 
 
+nlohmann::json Clip::json()
+{
+  auto data = IO::json();
+  data["offset"] = _offset;
+  data["start"] = _start;
+  data["end"] = _end;
+  return data;
+}
+
+
 void Clip::init() { file.init(); }
 void Clip::write(const Frame *const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }

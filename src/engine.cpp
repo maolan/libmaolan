@@ -90,7 +90,8 @@ void Engine::save()
 
 nlohmann::json Engine::load(const std::string &path)
 {
-  std::ifstream session{path + "/session.json"};
+  Config::root = path;
+  std::ifstream session{_root + "/session.json"};
   auto result = nlohmann::json::parse(session);
   std::map<std::string, IO *> ios;
   for (const auto &io : result["io"])

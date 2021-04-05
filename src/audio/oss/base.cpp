@@ -4,6 +4,7 @@
 #include <sstream>
 #include <sys/soundcard.h>
 #include <unistd.h>
+
 #include "maolan/audio/oss/base.hpp"
 #include "maolan/config.hpp"
 #include "maolan/constants.hpp"
@@ -130,6 +131,7 @@ nlohmann::json OSS::json()
 {
   auto data = IO::json();
   data["bits"] = sampleSize * 8;
+  data["samplerate"] = device->samplerate;
   return data;
 }
 

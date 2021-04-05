@@ -15,6 +15,8 @@ public:
   static std::size_t tempoIndex;
   static std::vector<Tempo> tempos;
   static std::uint16_t division;
+  static std::string _root;
+
   std::size_t count;
   std::string name;
   std::string device;
