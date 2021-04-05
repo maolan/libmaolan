@@ -35,6 +35,7 @@ public:
   virtual void process() = 0;
   virtual void parent(IO *p);
   virtual nlohmann::json json();
+
   void work();
   void next(IO *);
   IO *next();
@@ -46,6 +47,7 @@ public:
   std::string type();
   void name(const std::string &);
   std::string name();
+  bool exists(const std::string_view);
 
   void data(void *d);
   void * data();

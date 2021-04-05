@@ -1,4 +1,30 @@
 {
+  "connections": [
+    {
+      "from": {
+        "channel": 0,
+        "name": "/dev/dsp"
+      },
+      "to": [
+        {
+          "channel": 0,
+          "name": "play"
+        }
+      ]
+    },
+    {
+      "from": {
+        "channel": 1,
+        "name": "/dev/dsp"
+      },
+      "to": [
+        {
+          "channel": 1,
+          "name": "play"
+        }
+      ]
+    }
+  ],
   "io": [
     {
       "clips": [

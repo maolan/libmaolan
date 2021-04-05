@@ -155,6 +155,16 @@ nlohmann::json IO::json()
 }
 
 
+bool IO::exists(std::string_view n)
+{
+  for (auto io = begin(); io != nullptr; io = io->next())
+  {
+    if (io->name() == n) { return true; }
+  }
+  return false;
+}
+
+
 void IO::parent(IO *) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
