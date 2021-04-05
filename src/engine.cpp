@@ -2,6 +2,7 @@
 #include <thread>
 
 #include "maolan/audio/clip.hpp"
+#include "maolan/audio/connectable.hpp"
 #include "maolan/audio/oss/in.hpp"
 #include "maolan/audio/oss/out.hpp"
 #include "maolan/audio/track.hpp"
@@ -20,9 +21,9 @@ std::vector<Worker *> Engine::_workers;
 
 void Engine::init(const int &threads)
 {
-  auto maxWorkers = std::thread::hardware_concurrency();
+  int maxWorkers = std::thread::hardware_concurrency();
   auto realWorkerNumber =
-    threads == -1 || threads > maxWorkers ? maxWorkers : threads;
+      threads == -1 || threads > maxWorkers ? maxWorkers : threads;
   _workers.resize(realWorkerNumber);
   for (std::size_t i = 0; i < _workers.size(); ++i)
   {
@@ -52,7 +53,9 @@ nlohmann::json Engine::json()
   {
     data["io"].push_back(io->json());
   }
-  data["connections"] = nlohmann::json::array();
+  auto c = maolan::audio::Connectable::json();
+  if (c != nullptr) { data["connections"] = c; }
+  else { data["connections"] = nlohmann::json::array(); }
   return data;
 }
 

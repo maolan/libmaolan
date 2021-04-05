@@ -10,6 +10,7 @@ class Input : public midi::IO
 {
 public:
   Input();
+  virtual ~Input();
 
   virtual void fetch();
   virtual void process();

@@ -33,19 +33,19 @@ void OSSOut<T>::convertToRaw()
 {
   T *samples = (T *)bytes;
   auto chs = channels();
-  for (auto channel = 0; channel < chs; ++channel)
+  for (std::size_t channel = 0; channel < chs; ++channel)
   {
     auto buffer = outputs[channel];
     if (buffer == nullptr)
     {
-      for (auto i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
       {
         samples[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (auto i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
         if (sample <= -1.0) { sample = -1.0; }
@@ -64,6 +64,10 @@ void OSSOut<T>::process()
   convertToRaw();
   write(device->fd, bytes, device->bufferInfo.bytes);
 }
+
+
+template <class T>
+nlohmann::json OSSOut<T>::connections() { return conns(_name); }
 
 
 namespace maolan::audio

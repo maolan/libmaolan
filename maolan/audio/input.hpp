@@ -18,8 +18,9 @@ public:
   void connect(IO *to, const std::size_t &ch = 0);
   std::size_t channels() const;
   Buffer pull(const std::size_t &channel = 0);
+  virtual nlohmann::json connections();
 
 protected:
-  std::vector<audio::Connection> connections;
+  std::vector<audio::Connection> _connections;
 };
 } // namespace maolan::audio

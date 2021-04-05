@@ -155,8 +155,7 @@ nlohmann::json IO::json()
 }
 
 
-nlohmann::json IO::connections() { return nullptr; }
-void IO::parent(IO *p) {}
+void IO::parent(IO *) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
 void IO::stage(const bool &s) { _stage = s; }

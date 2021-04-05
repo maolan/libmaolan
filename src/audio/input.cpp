@@ -8,24 +8,23 @@ using namespace maolan::audio;
 Input::Input() : IO(1, true)
 {
   _type = "AudioInput";
-  connections.clear();
 }
 
 
 void Input::connect(IO *to, const std::size_t &ch)
 {
-  auto it = connections.emplace(connections.end());
+  auto it = _connections.emplace(_connections.end());
   it->target(to, ch);
 }
 
 
 void Input::fetch()
 {
-  std::vector<Buffer> channels(connections.size());
+  std::vector<Buffer> channels(_connections.size());
   bool empty = true;
-  for (std::size_t i = 0; i < connections.size(); ++i)
+  for (std::size_t i = 0; i < _connections.size(); ++i)
   {
-    const auto element = connections[i].pull();
+    const auto element = _connections[i].pull();
     channels[i] = element;
     if (element != nullptr)
     {
@@ -71,6 +70,21 @@ Buffer Input::pull(const std::size_t &channel)
     return nullptr;
   }
   return outputs[channel];
+}
+
+
+nlohmann::json Input::connections()
+{
+  if (_connections.size() == 0) { return nullptr; }
+  auto data = R"([])"_json;
+  for (auto &con: _connections)
+  {
+    auto to = R"({})"_json;
+    to["name"] = con.get()->name();
+    to["channel"] = con.channel();
+    data.push_back(to);
+  }
+  return data;
 }
 
 

@@ -66,3 +66,6 @@ void IO::connect(audio::IO *to, std::size_t inCh, std::size_t outCh)
 {
   audio::Connectable::connect(to, inCh, outCh);
 }
+
+
+nlohmann::json IO::connections() { return conns(audio::IO::_name); }

@@ -1,4 +1,6 @@
 #pragma once
+#include <nlohmann/json.hpp>
+
 #include "maolan/audio/buffer.hpp"
 #include "maolan/audio/connectable.hpp"
 #include "maolan/audio/input.hpp"
@@ -29,5 +31,6 @@ public:
 
   virtual audio::Buffer audio(const std::size_t &channel);
   virtual midi::Buffer midi(const std::size_t &channel);
+  virtual nlohmann::json connections();
 };
 } // namespace maolan::plugin

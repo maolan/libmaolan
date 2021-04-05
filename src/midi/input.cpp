@@ -80,3 +80,4 @@ Buffer Input::pull(const std::size_t &channel)
 
 
 void Input::process() {}
+Input::~Input() {}

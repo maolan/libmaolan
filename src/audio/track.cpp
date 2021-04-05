@@ -1,5 +1,5 @@
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 #include <random>
 #include <string>
 
@@ -243,25 +243,7 @@ nlohmann::json Track::json()
 }
 
 
-nlohmann::json Track::connections()
-{
-  if (_inputs.size() == 0) { return nullptr; }
-  auto result = nlohmann::json::array();
-  for (std::size_t i = 0; i < _inputs.size(); ++i)
-  {
-    std::cout << "Track::connections()\n";
-    const auto &input = _inputs[i];
-    if (input.channels() == 0) { continue; }
-    nlohmann::json data;
-    data["from"] = 0;
-    data["to"] = 0;
-    result.push_back(data);
-  }
-  if (result.size() == 0) { return nullptr; }
-  return result;
-}
-
-
+nlohmann::json Track::connections() { return conns(_name); }
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return _inputs.size(); }
 bool Track::mute() { return muted; }

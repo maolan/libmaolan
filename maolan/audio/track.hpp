@@ -1,6 +1,4 @@
 #pragma once
-#include <nlohmann/json.hpp>
-
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/connectable.hpp"
 #include "maolan/plugin/lv2/plugin.hpp"

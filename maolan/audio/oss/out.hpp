@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <nlohmann/json.hpp>
 
 #include "maolan/audio/connectable.hpp"
 #include "maolan/audio/input.hpp"
@@ -16,6 +17,7 @@ public:
 
   virtual void fetch();
   virtual void process();
+  virtual nlohmann::json connections();
   void convertToRaw();
 };
 } // namespace maolan::audio
