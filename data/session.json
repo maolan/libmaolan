@@ -37,7 +37,10 @@
       "clips": [
         {
           "channels": 2,
+          "end": 10000000,
           "name": "audio/stereo.wav",
+          "offset": 0,
+          "start": 0,
           "type": "AudioClip"
         }
       ],
@@ -48,6 +51,7 @@
       "bits": 32,
       "channels": 2,
       "name": "/dev/dsp",
+      "samplerate": 48000,
       "type": "AudioOSSOut"
     }
   ]

@@ -1,12 +1,14 @@
 #include <iostream>
 #include <cstdint>
 #include <libgen.h>
+#include <unistd.h>
 
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/audio/track.hpp>
 #include <maolan/midi/clip.hpp>
 #include <maolan/midi/track.hpp>
+#include <maolan/config.hpp>
 #include <maolan/engine.hpp>
 
 
@@ -18,22 +20,22 @@ int main(int argc, char **argv)
 {
   if (argc < 2)
   {
-    std::cerr << "Usage: " << argv[0] << " <plugin uri>" << std::endl;
+    std::cerr << "Usage: " << argv[0] << " <session dir>" << std::endl;
     return 1;
   }
-  OSSOut<int32_t> out("/dev/dsp");
-  Track trackp("play", 2);
-  Clip clip("../data/audio/stereo.wav", &trackp, 0, 10000000, 0);
-  maolan::midi::Track midiTrack("Midi Track", 1);
-  maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
-  out.connect(&trackp);
+  maolan::Config::root = argv[1];
+  chdir(maolan::Config::root.data());
+  // OSSOut<int32_t> out("/dev/dsp");
+  // Track trackp("play", 2);
+  // Clip clip("audio/stereo.wav", &trackp, 0, 10000000, 0);
+  // maolan::midi::Track midiTrack("Midi Track", 1);
+  // maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
+  // out.connect(&trackp);
 
   /* Background threads + main thread
    */
-  std::string mydir = dirname(argv[0]);
-  std::string session = mydir + "/../data";
   maolan::Engine::init();
-  // auto result = maolan::Engine::load(session);
+  auto result = maolan::Engine::load();
   maolan::Engine::save();
   return 0;
   std::cerr << "Playing ...";

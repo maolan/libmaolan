@@ -17,7 +17,7 @@ public:
   static void quit();
   static void save();
   static nlohmann::json json();
-  static nlohmann::json load(const std::string &path);
+  static nlohmann::json load();
 
 protected:
   static std::vector<Worker *> _workers;

@@ -1,6 +1,7 @@
 #include <algorithm>
 #include <iostream>
 #include <thread>
+#include <unistd.h>
 
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/connectable.hpp"
@@ -82,16 +83,18 @@ nlohmann::json Engine::json()
 
 void Engine::save()
 {
+  chdir(Config::root.data());
   midi::Clip::saveAll();
   auto data = json();
-  std::cout << data.dump(2) << '\n';
+  std::ofstream session{"session.json"};
+  session << data.dump(2);
 }
 
 
-nlohmann::json Engine::load(const std::string &path)
+nlohmann::json Engine::load()
 {
-  Config::root = path;
-  std::ifstream session{_root + "/session.json"};
+  chdir(Config::root.data());
+  std::ifstream session{"session.json"};
   auto result = nlohmann::json::parse(session);
   std::map<std::string, IO *> ios;
   for (const auto &io : result["io"])
@@ -103,7 +106,7 @@ nlohmann::json Engine::load(const std::string &path)
       for (const auto &clipio : io["clips"])
       {
         const std::string &name = clipio["name"];
-        auto clip = new maolan::audio::Clip(path + "/" + name, track);
+        auto clip = new maolan::audio::Clip(name, track);
         ios[name] = clip;
       }
     }
@@ -167,7 +170,7 @@ nlohmann::json Engine::load(const std::string &path)
       {
         auto toio = (audio::IO *)ios[iojson["name"]];
         auto &toch = iojson["channel"];
-        // ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
+        ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
       }
     }
   }
