@@ -17,6 +17,7 @@ public:
 
   virtual void fetch();
   virtual void process();
+  virtual void init();
   virtual Buffer pull(const std::size_t &channel = 0);
 
   std::size_t channels() const;

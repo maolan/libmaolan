@@ -17,6 +17,7 @@ public:
   virtual void fetch();
   virtual void process();
   virtual void setup();
+  virtual void init();
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
   virtual std::size_t channels() const;

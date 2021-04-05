@@ -1,25 +1,21 @@
-#include <cstdint>
-#include <iostream>
 #include "maolan/audio/file.hpp"
 #include "maolan/config.hpp"
+#include <cstdint>
+#include <iostream>
 
 
 using namespace maolan::audio;
 
 
-File::File(const std::size_t &ch) : IO(0, true, false), recording(true)
+File::File(const std::size_t &ch) : IO(0, true, false), recording(true), frame{}
 {
   _type = "AudioFile";
   std::string path = "recording.wav";
-  _audioFile = SndfileHandle(
-    path, 
-    SFM_RDWR, 
-    SF_FORMAT_WAV | SF_FORMAT_FLOAT,
-    ch, 
-    Config::samplerate
-  );
+  _audioFile = SndfileHandle(path, SFM_RDWR, SF_FORMAT_WAV | SF_FORMAT_FLOAT,
+                             ch, Config::samplerate);
   _type = "File";
   _name = path;
+  if (Config::audioBufferSize > 0) { init(); }
 }
 
 
@@ -39,6 +35,7 @@ File::File(const std::string &path, const uint64_t &offset)
   }
   _type = "File";
   _name = path;
+  if (Config::audioBufferSize > 0) { init(); }
 }
 
 
@@ -65,7 +62,7 @@ void File::fetch()
   if (!recording)
   {
     auto size = channels() * Config::audioBufferSize;
-    int bytesRead = _audioFile.read(frame, size);
+    _audioFile.read(frame, size);
     split();
   }
 }
@@ -94,7 +91,7 @@ void File::write(const Frame &fr)
       frame[i * chs + channel] = sample;
     }
   }
-  int bytesWritten = _audioFile.writef(frame, Config::audioBufferSize);
+  _audioFile.writef(frame, Config::audioBufferSize);
 }
 
 
@@ -102,7 +99,10 @@ void File::init()
 {
   const auto chs = _audioFile.channels();
   outputs.resize(chs, nullptr);
-  if (frame) { delete []frame; }
+  if (frame)
+  {
+    delete[] frame;
+  }
   frame = new float[Config::audioBufferSize * chs];
 }
 

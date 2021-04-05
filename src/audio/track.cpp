@@ -243,6 +243,15 @@ nlohmann::json Track::json()
 }
 
 
+void Track::init()
+{
+  for (auto clip = first; clip != nullptr; clip = clip->next())
+  {
+    clip->init();
+  }
+}
+
+
 nlohmann::json Track::connections() { return conns(_name); }
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return _inputs.size(); }

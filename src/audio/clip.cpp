@@ -52,6 +52,7 @@ void Clip::write(const Frame &fr)
 }
 
 
+void Clip::init() { file.init(); }
 void Clip::write(const Frame *const fr) { write(*fr); }
 void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
