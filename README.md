@@ -22,9 +22,9 @@ make -j4 build-tests
 make test
 ```
 
-All drivers are disabled by default, so you might want to enable some of them. The syntax is:
+All options are disabled by default, so you might want to enable some of them. The syntax is:
 ```
-cmake .. -D<driver>=On
+cmake .. -D<option>=On
 ```
 
 ### List of drivers
@@ -32,6 +32,7 @@ cmake .. -D<driver>=On
 |------|:---------------------------------:|--------------:|
 | OSS  | Open Sound System                 | -DOSS         |
 | ALSA | Advanced Linux Sound Architecture | -DALSA        |
+| LV2  | Support for LV2 plugins           | -DLV2         |
 
 
 You can point cmake where to search for `pkg-config` .pc files and where to
