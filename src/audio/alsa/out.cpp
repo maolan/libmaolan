@@ -22,26 +22,26 @@ ALSAOut::ALSAOut(const std::string &device, const int &chs,
 
 void ALSAOut::fetch()
 {
-  for (size_t i = 0; i < channels(); ++i) { outputs[i] = inputs[i].pull(); }
+  for (size_t i = 0; i < channels(); ++i) { outputs[i] = _inputs[i].pull(); }
 }
 
 
 void ALSAOut::convertToRaw()
 {
   auto chs = channels();
-  for (auto channel = 0; channel < chs; ++channel)
+  for (std::size_t channel = 0; channel < chs; ++channel)
   {
     auto buffer = outputs[channel];
     if (buffer == nullptr)
     {
-      for (auto i = 0; i < device->audioBufferSize; ++i)
+      for (int i = 0; i < device->audioBufferSize; ++i)
       {
         frame[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (auto i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
       {
         float sample = buffer->data()[i];
 
