@@ -11,14 +11,15 @@
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
 
-#if OSS == ON
+#ifdef OSS_ENABLED
 #include "maolan/audio/oss/in.hpp"
 #include "maolan/audio/oss/out.hpp"
 #endif
 
-#if LV2 == ON
+#ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
 #endif
+
 
 using namespace maolan;
 
@@ -26,14 +27,14 @@ using namespace maolan;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames =
 {
-#if OSS == ON
+#ifdef OSS_ENABLED
   "AudioOSSOut",
 #endif
   "AudioTrack"
 };
 static std::vector<std::string> midiNames =
 {
-#if OSS == ON
+#ifdef OSS_ENABLED
   "MidiOSSOut",
 #endif
   "MidiTrack"
@@ -57,7 +58,7 @@ void Engine::init(const int &threads)
   {
     io->init();
   }
-#if LV2 == ON
+#ifdef LV2_ENABLED
   plugin::lv2::Plugin::allocate();
 #endif
 }
@@ -67,7 +68,7 @@ void Engine::quit()
 {
   IO::quit();
   _workers.clear();
-#if LV2 == ON
+#ifdef LV2_ENABLED
   plugin::lv2::Plugin::destroyWorld();
 #endif
 }
@@ -133,7 +134,7 @@ nlohmann::json Engine::load()
         ios[clipio["name"]] = clip;
       }
     }
-#if OSS == ON
+#ifdef OSS_ENABLED
     else if (io["type"] == "AudioOSSOut")
     {
       auto bits = io["bits"];
