@@ -32,7 +32,7 @@ static int size2frag(int x)
 
 
 OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSize)
-    : IO(0, true, true, deviceName)
+    : IO(0, true, deviceName)
     , device{nullptr}
 {
 

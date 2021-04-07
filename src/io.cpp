@@ -29,7 +29,7 @@ enum Stage
 };
 
 
-IO::IO(const std::string &argName, const bool &front, const bool &reg)
+IO::IO(const std::string &argName, const bool &reg)
   : _next{nullptr}
   , _previous{nullptr}
   , _name{argName}
@@ -37,19 +37,9 @@ IO::IO(const std::string &argName, const bool &front, const bool &reg)
 {
   if (reg)
   {
-    if (front)
-    {
-      this->_next = ios;
-      if (ios != nullptr) { ios->_previous = this; }
-      ios = this;
-      if (last == nullptr) { last = this; }
-    }
-    else
-    {
-      this->_previous = last;
-      last = this;
-      if (ios == nullptr) { ios = this; }
-    }
+    this->_previous = last;
+    last = this;
+    if (ios == nullptr) { ios = this; }
   }
   if (_current == nullptr) { _current = ios; }
 }

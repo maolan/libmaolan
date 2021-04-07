@@ -21,6 +21,6 @@ public:
   virtual nlohmann::json connections();
 
 protected:
-  std::vector<audio::Connection> _connections;
+  std::vector<audio::Connection *> _connections;
 };
 } // namespace maolan::audio

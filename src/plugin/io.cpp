@@ -7,8 +7,8 @@ using namespace maolan::plugin;
 
 
 IO::IO(const std::string &name, const bool &reg)
-    : midi::IO(name, true, reg)
-    , audio::IO(0, true, false)
+    : midi::IO(name, reg)
+    , audio::IO(0, false)
     , midi::Connectable(0)
     , audio::Connectable(0)
 {

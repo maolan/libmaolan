@@ -11,11 +11,13 @@ using namespace maolan::audio;
 std::vector<maolan::Config *> IO::devices;
 
 
-IO::IO(const size_t &chs, const bool &front, const bool &reg,
-       const std::string &name)
-    : maolan::IO(name, front, reg)
+IO::IO(const size_t &chs, const bool &reg, const std::string &name)
+  : maolan::IO(name, reg)
 {
-  if (chs > 0) { _outputs.resize(chs); }
+  if (chs > 0)
+  {
+    _outputs.resize(chs);
+  }
 }
 
 

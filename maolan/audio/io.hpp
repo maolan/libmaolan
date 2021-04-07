@@ -1,6 +1,6 @@
 #pragma once
-#include <vector>
 #include <nlohmann/json.hpp>
+#include <vector>
 
 #include "maolan/audio/buffer.hpp"
 #include "maolan/config.hpp"
@@ -12,7 +12,7 @@ namespace maolan::audio
 class IO : public maolan::IO
 {
 public:
-  IO(const size_t &outs = 0, const bool &front = false, const bool &reg = false,
+  IO(const size_t &outs = 0, const bool &reg = false,
      const std::string &name = "");
 
   static std::vector<maolan::Config *> devices;

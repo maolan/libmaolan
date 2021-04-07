@@ -9,8 +9,8 @@ using namespace maolan::midi;
 std::vector<maolan::Config *> IO::devices;
 
 
-IO::IO(const std::string &name, const bool &front, const bool &reg)
-    : maolan::IO(name, front, reg)
+IO::IO(const std::string &name, const bool &reg)
+    : maolan::IO(name, reg)
 {}
 
 

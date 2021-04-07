@@ -25,11 +25,10 @@ std::string random_string(const std::size_t &size)
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
-    : IO(0, true, true), Connectable(ch), muted(false), armed(false),
+    : IO(0, true, name), Connectable(ch), muted(false), armed(false),
       soloed(false), first(nullptr), _current(nullptr), last(nullptr)
 {
   _type = "AudioTrack";
-  _name = name;
   _outputs.resize(ch);
   all.push_back(this);
 }

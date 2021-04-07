@@ -1,16 +1,16 @@
+#include "maolan/midi/oss/base.hpp"
+#include "maolan/midi/event.hpp"
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <unistd.h>
-#include "maolan/midi/event.hpp"
-#include "maolan/midi/oss/base.hpp"
 
 
 using namespace maolan::midi;
 
 
 OSSMIDI::OSSMIDI(const std::string &deviceName)
-    : IO(deviceName, true, true), device{nullptr}
+    : IO(deviceName, true), device{nullptr}
 {
 
   data = std::make_shared<BufferData>();

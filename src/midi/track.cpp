@@ -1,17 +1,15 @@
-#include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
+#include "maolan/midi/clip.hpp"
 
 
 using namespace maolan::midi;
 
 
 Track::Track(const std::string &name, const std::size_t &channel)
-    : IO(name, true, true), Connectable(1), _current(nullptr), first(nullptr),
-      last(nullptr), armed(false), muted(false),
-      soloed(false), _channel{channel}
+    : IO(name, true), Connectable(1), muted{false}, armed{false}, soloed{false},
+      _channel{channel}, first{nullptr}, _current{nullptr}, last{nullptr}
 {
   _type = "MIDITrack";
-  _name = name;
   _outputs.resize(1);
 }
 
@@ -188,7 +186,7 @@ nlohmann::json Track::json()
 }
 
 
-Clip * Track::clips() { return first; }
+Clip *Track::clips() { return first; }
 void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }
