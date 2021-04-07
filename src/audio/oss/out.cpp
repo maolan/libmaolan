@@ -24,7 +24,7 @@ template <class T>
 void OSSOut<T>::fetch()
 {
   Connectable::fetch();
-  for (size_t i = 0; i < channels(); ++i) { outputs[i] = _inputs[i].pull(); }
+  for (size_t i = 0; i < channels(); ++i) { _outputs[i] = _inputs[i].pull(); }
 }
 
 
@@ -35,7 +35,7 @@ void OSSOut<T>::convertToRaw()
   auto chs = channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
-    auto buffer = outputs[channel];
+    auto buffer = _outputs[channel];
     if (buffer == nullptr)
     {
       for (std::size_t i = 0; i < device->audioBufferSize; ++i)

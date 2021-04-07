@@ -30,7 +30,7 @@ Track::Track(const std::string &name, const std::size_t &ch)
 {
   _type = "AudioTrack";
   _name = name;
-  outputs.resize(ch);
+  _outputs.resize(ch);
   all.push_back(this);
 }
 
@@ -63,7 +63,7 @@ void Track::process()
     recording->write(frame);
     if (!muted)
     {
-      outputs = frame->audio;
+      _outputs = frame->audio;
     }
     delete frame;
   }
@@ -76,7 +76,7 @@ void Track::process()
     auto &result = frame;
     // TODO: process plugins
 
-    outputs = result->audio;
+    _outputs = result->audio;
     delete result;
   }
 }
@@ -233,7 +233,7 @@ Buffer Track::pull(const std::size_t &channel)
 
 nlohmann::json Track::json()
 {
-  auto data = IO::json();
+  auto data = audio::IO::json();
   data["clips"] = nlohmann::json::array();
   for (auto clip = first; clip != nullptr; clip = clip->next())
   {
@@ -254,7 +254,7 @@ void Track::init()
 
 nlohmann::json Track::connections() { return conns(_name); }
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
-std::size_t Track::channels() const { return _inputs.size(); }
+std::size_t Track::channels() const { return IO::channels(); }
 bool Track::mute() { return muted; }
 bool Track::arm() { return armed; }
 bool Track::solo() { return soloed; }

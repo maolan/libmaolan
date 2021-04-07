@@ -17,6 +17,6 @@ public:
   virtual midi::Buffer pull(const std::size_t &channel);
 
 protected:
-  std::vector<midi::Buffer> outputs;
+  std::vector<midi::Buffer> _outputs;
 };
 } // namespace maolan::midi

@@ -29,13 +29,13 @@ void OSSIn<T>::process()
   T *samples = (T *)bytes;
   for (int i = 0; i < chs; ++i)
   {
-    outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
+    _outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
   for (int i = 0; i < Config::audioBufferSize; ++i)
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data()[index] = samples[i] / floatMaxInt;
+    _outputs[channel]->data()[index] = samples[i] / floatMaxInt;
   }
 }
 

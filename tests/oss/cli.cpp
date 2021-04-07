@@ -24,7 +24,6 @@ int main(int argc, char **argv)
     return 1;
   }
   maolan::Config::root = argv[1];
-  chdir(maolan::Config::root.data());
   // OSSOut<int32_t> out("/dev/dsp");
   // Track trackp("play", 2);
   // Clip clip("audio/stereo.wav", &trackp, 0, 10000000, 0);

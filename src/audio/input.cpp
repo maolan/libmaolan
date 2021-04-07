@@ -33,11 +33,11 @@ void Input::fetch()
   }
   if (empty)
   {
-    outputs[0] = nullptr;
+    _outputs[0] = nullptr;
   }
   else if (channels.size() == 1)
   {
-    outputs[0] = channels[0];
+    _outputs[0] = channels[0];
   }
   else
   {
@@ -55,21 +55,21 @@ void Input::fetch()
       }
       result->data()[i] = sum;
     }
-    outputs[0] = result;
+    _outputs[0] = result;
   }
 }
 
 
-size_t Input::channels() const { return outputs.size(); }
+size_t Input::channels() const { return _outputs.size(); }
 
 
 Buffer Input::pull(const std::size_t &channel)
 {
-  if (outputs.size() == 0)
+  if (_outputs.size() == 0)
   {
     return nullptr;
   }
-  return outputs[channel];
+  return _outputs[channel];
 }
 
 

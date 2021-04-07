@@ -16,9 +16,9 @@ IO::IO(const std::string &name, const bool &front, const bool &reg)
 
 Buffer IO::pull(const std::size_t &ch)
 {
-  if (ch < outputs.size())
+  if (ch < _outputs.size())
   {
-    return outputs[ch];
+    return _outputs[ch];
   }
   return nullptr;
 }
@@ -26,5 +26,5 @@ Buffer IO::pull(const std::size_t &ch)
 
 std::size_t IO::channels() const
 {
-  return outputs.size();
+  return _outputs.size();
 }

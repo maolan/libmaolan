@@ -22,6 +22,6 @@ public:
   virtual nlohmann::json json();
 
 protected:
-  std::vector<audio::Buffer> outputs;
+  std::vector<audio::Buffer> _outputs;
 };
 } // namespace maolan::audio

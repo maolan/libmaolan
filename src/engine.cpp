@@ -97,11 +97,9 @@ nlohmann::json Engine::json()
 
 void Engine::save()
 {
-  chdir(Config::root.data());
   midi::Clip::saveAll();
-  auto data = json();
   std::ofstream session{"session.json"};
-  session << data.dump(2);
+  session << json().dump(2) << '\n';
 }
 
 
@@ -178,16 +176,12 @@ nlohmann::json Engine::load()
   for (const auto &c : result["connections"])
   {
     auto &fromio = ios[c["name"]];
-    if (std::find(audioNames.begin(), audioNames.end(), fromio->type()) != audioNames.end())
+    auto &fromch = c["channel"];
+    for (auto &tojson : c["to"])
     {
-      auto &fromch = c["channel"];
-      auto &tojson = c["to"];
-      for (auto &iojson : tojson)
-      {
-        auto toio = (audio::IO *)ios[iojson["name"]];
-        auto &toch = iojson["channel"];
-        ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
-      }
+      auto toio = (audio::IO *)ios[tojson["name"]];
+      auto &toch = tojson["channel"];
+      ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
     }
   }
   return result;

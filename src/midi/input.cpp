@@ -9,7 +9,7 @@ Input::Input() : IO("MIDIInput")
 {
   _type = "MIDIInput";
   connections.clear();
-  outputs.resize(1);
+  _outputs.resize(1);
 }
 
 
@@ -35,15 +35,15 @@ void Input::fetch()
   }
   if (empty)
   {
-    outputs[0] = nullptr;
+    _outputs[0] = nullptr;
   }
   else if (channels.size() == 1)
   {
-    outputs[0] = channels[0];
+    _outputs[0] = channels[0];
   }
   else
   {
-    outputs[0] = nullptr;
+    _outputs[0] = nullptr;
     Buffer lastBuffer;
     Buffer chunk;
     for (auto channel : channels)
@@ -52,10 +52,10 @@ void Input::fetch()
       {
         continue;
       }
-      if (outputs[0] == nullptr)
+      if (_outputs[0] == nullptr)
       {
         chunk = std::make_shared<BufferData>();
-        outputs[0] = chunk;
+        _outputs[0] = chunk;
       }
       else
       {
@@ -75,7 +75,7 @@ void Input::fetch()
 
 Buffer Input::pull(const std::size_t &channel)
 {
-  return outputs[channel];
+  return _outputs[channel];
 }
 
 

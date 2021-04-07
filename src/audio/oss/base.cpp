@@ -73,7 +73,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
 
       device->audioInfo.dev = -1;
       ioctl(device->fd, SNDCTL_ENGINEINFO, &(device->audioInfo));
-      outputs.resize(device->audioInfo.max_channels);
+      _outputs.resize(device->audioInfo.max_channels);
 
       error = ioctl(device->fd, SNDCTL_DSP_GETCAPS, &(device->audioInfo.caps));
       checkError(error, "SNDCTL_DSP_GETCAPS");
@@ -147,4 +147,4 @@ OSS::~OSS()
 }
 
 
-size_t OSS::channels() const { return outputs.size(); }
+size_t OSS::channels() const { return _outputs.size(); }

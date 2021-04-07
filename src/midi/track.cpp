@@ -12,7 +12,7 @@ Track::Track(const std::string &name, const std::size_t &channel)
 {
   _type = "MIDITrack";
   _name = name;
-  outputs.resize(1);
+  _outputs.resize(1);
 }
 
 
@@ -31,22 +31,22 @@ void Track::process()
   Connectable::process();
   if (_current == nullptr)
   {
-    outputs[0] = nullptr;
+    _outputs[0] = nullptr;
     return;
   }
   if (armed)
   {
-    for (std::size_t i = 0; i < _inputs.size() && i < outputs.size(); ++i)
+    for (std::size_t i = 0; i < _inputs.size() && i < _outputs.size(); ++i)
     {
-      outputs[i] = _inputs[i].pull();
+      _outputs[i] = _inputs[i].pull();
     }
     // recording->write(buffer);
   }
   else if (!muted && _playHead >= _current->startSample())
   {
     _current->process();
-    outputs[0] = _current->pull(0);
-    for (auto buffer = outputs[0]; buffer != nullptr; buffer = buffer->next)
+    _outputs[0] = _current->pull(0);
+    for (auto buffer = _outputs[0]; buffer != nullptr; buffer = buffer->next)
     {
       buffer->channel = _channel;
     }
@@ -172,7 +172,7 @@ Buffer Track::pull(const std::size_t &ch)
   {
     return nullptr;
   }
-  return outputs[ch];
+  return _outputs[ch];
 }
 
 

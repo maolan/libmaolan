@@ -43,7 +43,7 @@ Clip::Clip(const std::string &name, Track *parent)
     parent->add(this);
   }
   clips.push_back(this);
-  outputs.resize(1);
+  _outputs.resize(1);
 }
 
 
@@ -65,7 +65,7 @@ Clip::Clip(const std::string &name, const std::size_t &start,
   {
     parent->add(this);
   }
-  outputs.resize(1);
+  _outputs.resize(1);
 }
 
 
@@ -83,7 +83,7 @@ Clip::~Clip()
 
 void Clip::process()
 {
-  outputs[0] = nullptr;
+  _outputs[0] = nullptr;
   if (data == nullptr || current == nullptr)
   {
     return;
@@ -102,9 +102,9 @@ void Clip::process()
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
     buffer->next = nullptr;
-    if (outputs[0] == nullptr)
+    if (_outputs[0] == nullptr)
     {
-      outputs[0] = buffer;
+      _outputs[0] = buffer;
       last = buffer;
     }
     else

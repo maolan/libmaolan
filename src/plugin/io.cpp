@@ -12,16 +12,16 @@ IO::IO(const std::string &name, const bool &reg)
     , midi::Connectable(0)
     , audio::Connectable(0)
 {
-  midi::IO::outputs.clear();
-  audio::IO::outputs.clear();
+  midi::IO::_outputs.clear();
+  audio::IO::_outputs.clear();
 }
 
 
 maolan::audio::Buffer IO::audio(const std::size_t &channel)
 {
-  if (channel < audio::IO::outputs.size())
+  if (channel < audio::IO::_outputs.size())
   {
-    return audio::IO::outputs[channel];
+    return audio::IO::_outputs[channel];
   }
   return nullptr;
 }
@@ -29,9 +29,9 @@ maolan::audio::Buffer IO::audio(const std::size_t &channel)
 
 maolan::midi::Buffer IO::midi(const std::size_t &channel)
 {
-  if (channel < midi::IO::outputs.size())
+  if (channel < midi::IO::_outputs.size())
   {
-    return midi::IO::outputs[channel];
+    return midi::IO::_outputs[channel];
   }
   return nullptr;
 }
