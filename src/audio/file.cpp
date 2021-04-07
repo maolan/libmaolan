@@ -20,7 +20,7 @@ File::File(const std::size_t &ch) : IO(0, false), recording(true), frame{}
 
 
 File::File(const std::string &path, const uint64_t &offset)
-    : IO(0, false, path), recording{false}
+    : IO(path, false, 0), recording{false}
 {
   _audioFile = SndfileHandle(path);
   if (_audioFile.error())

@@ -12,8 +12,7 @@ namespace maolan::audio
 class IO : public maolan::IO
 {
 public:
-  IO(const size_t &outs = 0, const bool &reg = false,
-     const std::string &name = "");
+  IO(const std::string &name, const bool &reg = false, const size_t &outs = 0);
 
   static std::vector<maolan::Config *> devices;
 

@@ -11,8 +11,8 @@ using namespace maolan::audio;
 std::vector<maolan::Config *> IO::devices;
 
 
-IO::IO(const size_t &chs, const bool &reg, const std::string &name)
-  : maolan::IO(name, reg)
+IO::IO(const std::string &name, const bool &reg, const size_t &chs)
+    : maolan::IO(name, reg)
 {
   if (chs > 0)
   {

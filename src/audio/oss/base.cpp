@@ -26,14 +26,17 @@ static void checkError(const int &value, const std::string &message)
 static int size2frag(int x)
 {
   int frag = 0;
-  while ((1 << frag) < x) { ++frag; }
+  while ((1 << frag) < x)
+  {
+    ++frag;
+  }
   return frag;
 }
 
 
-OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSize)
-    : IO(0, true, deviceName)
-    , device{nullptr}
+OSS::OSS(const std::string &deviceName, const int &argFrag,
+         const int &sampleSize)
+    : IO(deviceName, 0, true), device{nullptr}
 {
 
   bool found = false;
@@ -56,9 +59,18 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
     device->frag = argFrag;
     device->device = deviceName;
     device->sampleSize = sampleSize;
-    if (sampleSize == 4) { device->format = AFMT_S32_NE; }
-    else if (sampleSize == 2) { device->format = AFMT_S16_NE; }
-    else if (sampleSize == 1) { device->format = AFMT_S8; }
+    if (sampleSize == 4)
+    {
+      device->format = AFMT_S32_NE;
+    }
+    else if (sampleSize == 2)
+    {
+      device->format = AFMT_S16_NE;
+    }
+    else if (sampleSize == 1)
+    {
+      device->format = AFMT_S8;
+    }
     else
     {
       std::cerr << "Unsupported sample size: " << sampleSize << '\n';
@@ -104,7 +116,10 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
       checkError(error, "SNDCTL_DSP_SPEED");
 
       int minFrag = size2frag(device->sampleSize * channels());
-      if (device->frag < minFrag) { device->frag = minFrag; }
+      if (device->frag < minFrag)
+      {
+        device->frag = minFrag;
+      }
       tmp = device->frag;
       error = ioctl(device->fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
       checkError(error, "SNDCTL_DSP_SETFRAGMENT");
@@ -120,7 +135,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag, const int &sampleSiz
     }
 
     device->sampleCount = device->bufferInfo.bytes / device->sampleSize;
-    Config::audioBufferSize =  device->sampleCount / channels();
+    Config::audioBufferSize = device->sampleCount / channels();
     bytes = new int8_t[device->bufferInfo.bytes];
     devices.emplace(devices.begin(), device);
   }

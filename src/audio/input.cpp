@@ -81,6 +81,6 @@ nlohmann::json Input::connections()
 }
 
 
-Input::Input() : IO(1, true) { _type = "AudioInput"; }
+Input::Input() : IO("Input", true, 1) { _type = "AudioInput"; }
 Input::~Input() {}
 void Input::process() {}

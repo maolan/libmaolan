@@ -10,7 +10,7 @@ using namespace maolan::audio;
 
 Clip::Clip(const std::string &path, Track *parent, const std::size_t &start,
            const std::size_t &end, const std::size_t &offset)
-    : IO{0, false, path}
+    : IO{path, false, 0}
     , _offset{offset}
     , _start{start}
     , _end{end}
