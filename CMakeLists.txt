@@ -122,6 +122,7 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX}/include ${MY_INCLUDE_DIRS})
 link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
+add_compile_options(-Wall)
 
 
 option(BUILD_SHARED "Build shared library (libmaolan.so)" ON)

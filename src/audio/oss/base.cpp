@@ -36,7 +36,7 @@ static int size2frag(int x)
 
 OSS::OSS(const std::string &deviceName, const int &argFrag,
          const int &sampleSize)
-    : IO(deviceName, 0, true), device{nullptr}
+    : IO(deviceName, true, 0), device{nullptr}
 {
 
   bool found = false;

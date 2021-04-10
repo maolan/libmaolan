@@ -14,7 +14,7 @@ namespace maolan
 class IO
 {
 public:
-  IO(const std::string &argName = "", const bool &reg = true);
+  IO(const std::string &argName = "", const bool &reg = false);
   ~IO();
 
   static void rec(bool record);

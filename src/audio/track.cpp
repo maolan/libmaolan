@@ -4,6 +4,8 @@
 #include <string>
 
 #include "maolan/audio/clip.hpp"
+#include "maolan/audio/connectable.hpp"
+#include "maolan/audio/io.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/config.hpp"
 

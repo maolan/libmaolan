@@ -1,15 +1,4 @@
-*.o
-*.so
-*.core
-*.po
-*.pico
+.cache
 build/
-maolan-cli
-makeinclude
-autom4te.cache
-config.log
-config.status
-configure
-makedepend
-makeinclude.configured
 maolancli
+compile_commands.json
