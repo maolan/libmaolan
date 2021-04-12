@@ -25,20 +25,16 @@ using namespace maolan;
 
 
 std::vector<Worker *> Engine::_workers;
-static std::vector<std::string> audioNames =
-{
+static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
-  "AudioOSSOut",
+    "AudioOSSOut",
 #endif
-  "AudioTrack"
-};
-static std::vector<std::string> midiNames =
-{
+    "AudioTrack"};
+static std::vector<std::string> midiNames = {
 #ifdef OSS_ENABLED
-  "MidiOSSOut",
+    "MidiOSSOut",
 #endif
-  "MidiTrack"
-};
+    "MidiTrack"};
 
 
 void Engine::init(const int &threads)
@@ -85,11 +81,11 @@ nlohmann::json Engine::json()
     data["io"].push_back(io->json());
   }
   auto ioconns = maolan::audio::Connectable::json();
-  if (ioconns != nullptr) 
-  { 
-    for (auto &c : ioconns) 
-    { 
-      data["connections"].push_back(c); 
+  if (ioconns != nullptr)
+  {
+    for (auto &c : ioconns)
+    {
+      data["connections"].push_back(c);
     }
   }
   return data;
@@ -161,7 +157,7 @@ nlohmann::json Engine::load()
       if (bits == 32)
       {
         auto in = new maolan::audio::OSSIn<int32_t>(io["name"]);
-        ios[io["name"]] = in ;
+        ios[io["name"]] = in;
       }
       else if (bits == 16)
       {
@@ -176,18 +172,19 @@ nlohmann::json Engine::load()
     }
 #endif
   }
-  // for (const auto &c : result["connections"])
-  // {
-    // auto &fromio = ios[c["name"]];
-    // auto &fromch = c["channel"];
-    // for (auto &tojson : c["to"])
-    // {
-      // auto toio = (audio::IO *)ios[tojson["name"]];
-      // auto &toch = tojson["channel"];
-      // std::cout << "Connecting: " << fromio->name() << " and " << toio->name() << '\n';
+  for (const auto &c : result["connections"])
+  {
+    auto &fromio = ios[c["name"]];
+    auto &fromch = c["channel"];
+    for (auto &tojson : c["to"])
+    {
+      auto toio = (audio::IO *)ios[tojson["name"]];
+      auto &toch = tojson["channel"];
+      std::cout << "Connecting: " << fromio->name() << " and " << toio->name()
+                << '\n';
       // ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
-    // }
-  // }
+    }
+  }
   return result;
 }
 

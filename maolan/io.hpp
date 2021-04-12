@@ -1,12 +1,12 @@
 #pragma once
+#include "maolan/config.hpp"
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
-#include <string>
-#include <vector>
 #include <nlohmann/json.hpp>
 #include <pugixml.hpp>
-#include "maolan/config.hpp"
+#include <string>
+#include <vector>
 
 
 namespace maolan
@@ -15,7 +15,7 @@ class IO
 {
 public:
   IO(const std::string &argName = "", const bool &reg = false);
-  ~IO();
+  virtual ~IO();
 
   static void rec(bool record);
   static bool rec();
@@ -49,13 +49,13 @@ public:
   bool exists(const std::string_view);
 
   void data(void *d);
-  void * data();
+  void *data();
 
 protected:
   static bool check();
 
   static IO *ios;
-  static IO *last;
+  static IO *_last;
   static IO *_current;
   static unsigned _stage;
   static bool _rec;

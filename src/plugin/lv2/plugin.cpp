@@ -1,10 +1,10 @@
+#include "maolan/plugin/lv2/plugin.hpp"
+#include "maolan/config.hpp"
+#include "maolan/plugin/lv2/port.hpp"
 #include <algorithm>
 #include <cassert>
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/state/state.h>
-#include "maolan/config.hpp"
-#include "maolan/plugin/lv2/plugin.hpp"
-#include "maolan/plugin/lv2/port.hpp"
 
 
 namespace audio = maolan::audio;
@@ -20,8 +20,7 @@ float val = 0.0;
 
 
 Plugin::Plugin(const std::string &argUri)
-  : maolan::plugin::IO(argUri, true)
-  , _identifier{argUri}
+    : maolan::plugin::IO(argUri, true), _identifier{argUri}
 {
   if (world == nullptr)
   {
@@ -107,9 +106,9 @@ Plugin::Plugin(const std::string &argUri)
     instance = lilv_plugin_instantiate(rawPlugin, Config::samplerate, nullptr);
     lilv_instance_activate(instance);
 
-    delete []mins;
-    delete []maxes;
-    delete []defaults;
+    delete[] mins;
+    delete[] maxes;
+    delete[] defaults;
   }
   else
   {
@@ -344,10 +343,7 @@ void Plugin::fetch()
 }
 
 
-void Plugin::process()
-{
-  lilv_instance_run(instance, Config::audioBufferSize);
-}
+void Plugin::process() { lilv_instance_run(instance, Config::audioBufferSize); }
 
 
 void Plugin::destroyWorld() { lilv_world_free(world); }

@@ -1,10 +1,10 @@
+#include "maolan/plugin/lv2/port.hpp"
+#include "maolan/config.hpp"
+#include "maolan/io.hpp"
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/atom/forge.h>
 #include <lv2/lv2plug.in/ns/ext/midi/midi.h>
-#include "maolan/config.hpp"
-#include "maolan/io.hpp"
-#include "maolan/plugin/lv2/port.hpp"
 
 
 using namespace maolan::plugin::lv2;
@@ -24,7 +24,7 @@ struct MIDINoteEvent
 };
 
 
-static uint32_t _map(void *data, const char *uri)
+static uint32_t _map(void *data, const char *)
 {
   auto urid = (std::uint32_t *)data;
   return ++(*urid);
@@ -43,21 +43,21 @@ LilvNode *PluginPort::lv2_ConnectionOptional = nullptr;
 LV2_URID_Map PluginPort::map = {.handle = &uid, .map = _map};
 
 
-static inline LV2_Atom_Event *
-_lv2_atom_sequence_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
-                                const LV2_Atom_Event *event)
-{
-  const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
-  if (capacity - seq->atom.size < total_size)
-  {
-    return nullptr;
-  }
-
-  LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
-  memcpy(e, event, total_size);
-  seq->atom.size += lv2_atom_pad_size(total_size);
-  return e;
-}
+// static inline LV2_Atom_Event *
+// _lv2_atom_sequence_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
+// const LV2_Atom_Event *event)
+// {
+// const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
+// if (capacity - seq->atom.size < total_size)
+// {
+// return nullptr;
+// }
+//
+// LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
+// memcpy(e, event, total_size);
+// seq->atom.size += lv2_atom_pad_size(total_size);
+// return e;
+// }
 
 
 PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
@@ -146,7 +146,7 @@ void PluginPort::buffer(LilvInstance *instance, const midi::Buffer buf)
   ev.event.body.type = map.map(map.handle, LV2_MIDI__MidiEvent);
   ev.event.body.size = 3;
   ev.msg = &(buf->type);
-  LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
+  lv2_atom_sequence_end(&seq->body, seq->atom.size);
 
   lilv_instance_connect_port(instance, _index, seq);
 }

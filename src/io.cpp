@@ -1,12 +1,12 @@
-#include <iostream>
 #include "maolan/io.hpp"
+#include <iostream>
 
 
 using namespace maolan;
 
 
 IO *IO::ios = nullptr;
-IO *IO::last = nullptr;
+IO *IO::_last = nullptr;
 IO *IO::_current = nullptr;
 unsigned IO::_stage = 0;
 bool IO::_rec = false;
@@ -30,28 +30,47 @@ enum Stage
 };
 
 
-IO::IO(const std::string &argName, const bool &reg)
-  : _next{nullptr}
-  , _previous{nullptr}
-  , _name{argName}
-  , _data{nullptr}
+IO::IO(const std::string &name, const bool &reg)
+    : _next{nullptr}, _previous{nullptr}, _name{name}, _data{nullptr}
 {
   if (reg)
   {
-    this->_previous = last;
-    last = this;
-    if (ios == nullptr) { ios = this; }
+    _previous = _last;
+    if (_previous)
+    {
+      _previous->next(this);
+    }
+    _last = this;
+    if (ios == nullptr)
+    {
+      ios = this;
+    }
   }
-  if (_current == nullptr) { _current = ios; }
+  if (_current == nullptr)
+  {
+    _current = ios;
+  }
 }
 
 
 IO::~IO()
 {
-  if (this->_previous != nullptr) { this->_previous->next(this->_next); }
-  else { ios = this->_next; }
-  if (this->_next != nullptr) { this->_next->previous(this->_previous); }
-  else { last = this->_previous; }
+  if (_previous != nullptr)
+  {
+    _previous->next(_next);
+  }
+  else
+  {
+    ios = _next;
+  }
+  if (_next != nullptr)
+  {
+    _next->previous(_previous);
+  }
+  else
+  {
+    _last = _previous;
+  }
 }
 
 
@@ -62,7 +81,10 @@ void IO::work()
     setup();
     fetch();
   }
-  else if (_stage == PROCESS) { process(); }
+  else if (_stage == PROCESS)
+  {
+    process();
+  }
   --_count;
 }
 
@@ -71,10 +93,16 @@ IO *IO::task()
 {
   std::unique_lock<std::mutex> lk(m);
   cv.wait(lk, [] { return IO::check(); });
-  if (_quit) { return nullptr; }
+  if (_quit)
+  {
+    return nullptr;
+  }
   ++_count;
   auto result = _current;
-  if (_current != nullptr) { _current = _current->next(); }
+  if (_current != nullptr)
+  {
+    _current = _current->next();
+  }
   lk.unlock();
   cv.notify_one();
   return result;
@@ -83,9 +111,18 @@ IO *IO::task()
 
 bool IO::check()
 {
-  if (_quit) { return true; }
-  if (ios == nullptr) { return false; }
-  if (!_playing) { return false; }
+  if (_quit)
+  {
+    return true;
+  }
+  if (ios == nullptr)
+  {
+    return false;
+  }
+  if (!_playing)
+  {
+    return false;
+  }
   if (_current == nullptr)
   {
     if (_count == 0)
@@ -94,8 +131,14 @@ bool IO::check()
       _stage = ++_stage % TOTAL;
       if (_stage == FETCH)
       {
-        if (firstRun) { firstRun = false; }
-        else { _playHead += Config::audioBufferSize; }
+        if (firstRun)
+        {
+          firstRun = false;
+        }
+        else
+        {
+          _playHead += Config::audioBufferSize;
+        }
         if (Config::tempoIndex + 1 < Config::tempos.size())
         {
           auto tempo = Config::tempos[Config::tempoIndex];
@@ -150,7 +193,10 @@ bool IO::exists(std::string_view n)
 {
   for (auto io = begin(); io != nullptr; io = io->next())
   {
-    if (io->name() == n) { return true; }
+    if (io->name() == n)
+    {
+      return true;
+    }
   }
   return false;
 }
@@ -173,6 +219,6 @@ void IO::next(IO *n) { _next = n; }
 IO *IO::next() { return _next; }
 void IO::previous(IO *p) { _previous = p; }
 IO *IO::previous() { return _previous; }
-void * IO::data() { return _data; }
+void *IO::data() { return _data; }
 void IO::data(void *d) { _data = d; }
 void IO::init() {}

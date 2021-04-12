@@ -118,7 +118,7 @@ static void readMetaEvent(std::fstream &file, Buffer chunk)
 
 
 File::File(const std::string &path)
-  : file{path, std::ios::in | std::ios::binary}
+    : file{path, std::ios::in | std::ios::binary}
 {
   _name = path;
   _type = "MIDIFile";
@@ -157,7 +157,7 @@ Buffer File::read()
   else
   {
     chunk->type &= Event::NOTE_MASK;
-    switch(chunk->type)
+    switch (chunk->type)
     {
       case Event::NOTE_ON:
       case Event::NOTE_OFF:
@@ -221,7 +221,7 @@ void File::readHeaders()
   {
     throw std::invalid_argument("Expected track marker!");
   }
-  std::uint32_t length = bigEndianInt(file, 4);
+  bigEndianInt(file, 4);
   if (!file.good())
   {
     throw std::invalid_argument("Error reading track length!");

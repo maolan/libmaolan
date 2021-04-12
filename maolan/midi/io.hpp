@@ -3,10 +3,8 @@
 #include "maolan/midi/buffer.hpp"
 
 
-namespace maolan::midi
-{
-class IO : public maolan::IO
-{
+namespace maolan::midi {
+class IO : public maolan::IO {
 public:
   IO(const std::string &name = "", const bool &reg = false);
 

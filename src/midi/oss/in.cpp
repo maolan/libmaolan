@@ -1,8 +1,8 @@
-#include <iomanip>
-#include <unistd.h>
+#include "maolan/midi/oss/in.hpp"
 #include "maolan/constants.hpp"
 #include "maolan/midi/event.hpp"
-#include "maolan/midi/oss/in.hpp"
+#include <iomanip>
+#include <unistd.h>
 
 
 using namespace maolan::midi;
@@ -60,6 +60,4 @@ void OSSMIDIIn::fetch()
 
 
 void OSSMIDIIn::process() {}
-
-
-Buffer OSSMIDIIn::pull() { return data; }
+Buffer OSSMIDIIn::pull(const std::size_t &) { return data; }

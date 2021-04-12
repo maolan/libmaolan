@@ -66,6 +66,8 @@ void Track::process()
     {
       _outputs = frame->audio;
     }
+
+
     delete frame;
   }
   else if (!muted && _current != nullptr && _playHead >= _current->start())

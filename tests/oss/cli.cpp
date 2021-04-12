@@ -1,15 +1,15 @@
-#include <iostream>
 #include <cstdint>
+#include <iostream>
 #include <libgen.h>
 #include <unistd.h>
 
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/oss/out.hpp>
 #include <maolan/audio/track.hpp>
-#include <maolan/midi/clip.hpp>
-#include <maolan/midi/track.hpp>
 #include <maolan/config.hpp>
 #include <maolan/engine.hpp>
+#include <maolan/midi/clip.hpp>
+#include <maolan/midi/track.hpp>
 
 
 namespace lv2 = maolan::plugin::lv2;

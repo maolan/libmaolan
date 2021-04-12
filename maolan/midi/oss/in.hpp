@@ -1,6 +1,6 @@
 #pragma once
-#include <string>
 #include "maolan/midi/oss/base.hpp"
+#include <string>
 
 
 namespace maolan::midi
@@ -13,6 +13,6 @@ public:
   virtual void setup();
   virtual void fetch();
   virtual void process();
-  virtual Buffer pull();
+  virtual Buffer pull(const std::size_t &channel);
 };
 } // namespace maolan::midi
