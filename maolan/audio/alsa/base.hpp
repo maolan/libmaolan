@@ -10,7 +10,7 @@ namespace maolan::audio
 class ALSA : public IO
 {
 public:
-  ALSA(const std::string &device, const int &channels = 2,
+  ALSA(const std::string &device, const size_t &channels = 2,
        const snd_pcm_uframes_t &frames = 512);
   ~ALSA();
 

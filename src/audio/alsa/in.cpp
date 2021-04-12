@@ -4,7 +4,7 @@
 
 using namespace maolan::audio;
 
-ALSAIn::ALSAIn(const std::string &device, const int &chs,
+ALSAIn::ALSAIn(const std::string &device, const size_t &chs,
                const snd_pcm_uframes_t &frames)
     : ALSA(device, chs)
 {
@@ -22,17 +22,17 @@ void ALSAIn::fetch()
 void ALSAIn::process()
 {
   auto chs = channels();
-  int channel;
+  size_t channel;
   int index;
-  for (int i = 0; i < chs; ++i)
+  for (size_t i = 0; i < chs; ++i)
   {
-    outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
+    _outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
   auto sizeLimit = device->fragSize / sizeof(*frame);
-  for (int i = 0; i < sizeLimit; ++i)
+  for (size_t i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;
     index = i / chs;
-    outputs[channel]->data()[index] = frame[i] / floatMaxInt;
+    _outputs[channel]->data()[index] = frame[i] / floatMaxInt;
   }
 }

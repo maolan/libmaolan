@@ -9,7 +9,7 @@ Connectable::Connectable(const std::size_t &chs) { _inputs.resize(chs); }
 
 void Connectable::connect(IO *to)
 {
-  for (auto channel = 0; channel < _inputs.size(); ++channel)
+  for (size_t channel = 0; channel < _inputs.size(); ++channel)
   {
     connect(to, channel, channel);
   }
