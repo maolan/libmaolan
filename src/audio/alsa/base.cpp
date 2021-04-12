@@ -17,9 +17,9 @@ static void checkError(int &value, const std::string &message)
 using namespace maolan::audio;
 
 
-ALSA::ALSA(const std::string &deviceName, const int &chs,
+ALSA::ALSA(const std::string &deviceName, const size_t &chs,
            const snd_pcm_uframes_t &frames)
-    : IO(0, true, true, deviceName), device{nullptr}
+    : IO(deviceName, true, chs), device{nullptr}
 {
   bool found = false;
   for (const auto iter : IO::devices)
@@ -102,4 +102,4 @@ ALSA::~ALSA()
 }
 
 
-std::size_t ALSA::channels() const { return outputs.size(); }
+std::size_t ALSA::channels() const { return _outputs.size(); }

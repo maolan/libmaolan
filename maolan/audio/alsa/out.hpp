@@ -10,7 +10,7 @@ namespace maolan::audio
 class ALSAOut : public ALSA, public Connectable
 {
 public:
-  ALSAOut(const std::string &device, const int &channels,
+  ALSAOut(const std::string &device, const size_t &channels,
           const snd_pcm_uframes_t &frames = 512);
 
   virtual void fetch();

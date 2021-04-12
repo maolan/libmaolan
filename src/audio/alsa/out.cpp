@@ -10,19 +10,19 @@
 using namespace maolan::audio;
 
 
-ALSAOut::ALSAOut(const std::string &device, const int &chs,
+ALSAOut::ALSAOut(const std::string &device, const size_t &chs,
                  const snd_pcm_uframes_t &frames)
     : ALSA(device, chs), Connectable(chs)
 {
   _type = "AudioALSAOut";
   _name = device;
-  outputs.resize(chs);
+  _outputs.resize(chs);
 }
 
 
 void ALSAOut::fetch()
 {
-  for (size_t i = 0; i < channels(); ++i) { outputs[i] = _inputs[i].pull(); }
+  for (size_t i = 0; i < channels(); ++i) { _outputs[i] = _inputs[i]->pull(); }
 }
 
 
@@ -31,10 +31,10 @@ void ALSAOut::convertToRaw()
   auto chs = channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
-    auto buffer = outputs[channel];
+    auto buffer = _outputs[channel];
     if (buffer == nullptr)
     {
-      for (int i = 0; i < device->audioBufferSize; ++i)
+      for (size_t i = 0; i < device->audioBufferSize; ++i)
       {
         frame[i * chs + channel] = 0;
       }
