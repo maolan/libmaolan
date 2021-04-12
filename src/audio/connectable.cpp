@@ -1,5 +1,5 @@
-#include <iostream>
 #include "maolan/audio/connectable.hpp"
+#include <iostream>
 
 
 using namespace maolan::audio;
@@ -14,19 +14,25 @@ nlohmann::json Connectable::json()
   for (auto &c : _all)
   {
     auto result = c->connections();
-    if (result != nullptr) 
-    { 
-      for (auto &r : result) { data.push_back(r); }
+    if (result != nullptr)
+    {
+      for (auto &r : result)
+      {
+        data.push_back(r);
+      }
     }
   }
-  if (data.size() == 0) { return nullptr; }
+  if (data.size() == 0)
+  {
+    return nullptr;
+  }
   return data;
 }
 
 
-Connectable::Connectable(const std::size_t &chs) 
-{ 
-  _inputs.resize(chs); 
+Connectable::Connectable(const std::size_t &chs)
+{
+  _inputs.resize(chs);
   _all.push_back(this);
 }
 
@@ -66,7 +72,10 @@ void Connectable::process()
 
 nlohmann::json Connectable::conns(const std::string_view name)
 {
-  if (_inputs.size() == 0) { return nullptr; }
+  if (_inputs.size() == 0)
+  {
+    return nullptr;
+  }
   bool empty = true;
   auto result = R"([])"_json;
   for (std::size_t i = 0; i < _inputs.size(); ++i)
@@ -89,6 +98,27 @@ nlohmann::json Connectable::conns(const std::string_view name)
     data["name"] = name.data();
     result.push_back(data);
   }
-  if (empty) { return nullptr; }
+  if (empty)
+  {
+    return nullptr;
+  }
   return result;
+}
+
+
+void Connectable::setup()
+{
+  for (auto &input : _inputs)
+  {
+    input.setup();
+  }
+}
+
+
+void Connectable::init()
+{
+  for (auto &input : _inputs)
+  {
+    input.init();
+  }
 }

@@ -27,6 +27,7 @@ public:
   static IO *task();
   static IO *begin();
   static Config *devices();
+  static IO *find(const std::string &name);
 
   virtual void setup();
   virtual void init();

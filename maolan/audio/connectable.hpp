@@ -1,7 +1,7 @@
 #pragma once
+#include <nlohmann/json.hpp>
 #include <string>
 #include <vector>
-#include <nlohmann/json.hpp>
 
 #include "maolan/audio/input.hpp"
 
@@ -16,6 +16,8 @@ public:
   static nlohmann::json json();
 
   virtual nlohmann::json connections() = 0;
+  virtual void setup();
+  virtual void init();
   virtual void fetch();
   virtual void process();
   void connect(audio::IO *to);

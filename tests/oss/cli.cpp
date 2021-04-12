@@ -12,7 +12,6 @@
 #include <maolan/midi/track.hpp>
 
 
-namespace lv2 = maolan::plugin::lv2;
 using namespace maolan::audio;
 
 

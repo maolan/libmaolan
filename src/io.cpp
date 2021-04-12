@@ -202,6 +202,19 @@ bool IO::exists(std::string_view n)
 }
 
 
+IO *IO::find(const std::string &name)
+{
+  for (auto io = begin(); io != nullptr; io = io->next())
+  {
+    if (io->name() == name)
+    {
+      return io;
+    }
+  }
+  return nullptr;
+}
+
+
 void IO::parent(IO *) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }

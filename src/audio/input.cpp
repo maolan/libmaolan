@@ -68,9 +68,12 @@ Buffer Input::pull(const std::size_t &channel)
 
 nlohmann::json Input::connections()
 {
-  if (_connections.size() == 0) { return nullptr; }
+  if (_connections.size() == 0)
+  {
+    return nullptr;
+  }
   auto data = R"([])"_json;
-  for (auto &con: _connections)
+  for (auto &con : _connections)
   {
     auto to = R"({})"_json;
     to["name"] = con->get()->name();
@@ -81,6 +84,6 @@ nlohmann::json Input::connections()
 }
 
 
-Input::Input() : IO("Input", false, 1) { _type = "AudioInput"; }
+Input::Input() : IO("Input", true, 1) { _type = "AudioInput"; }
 Input::~Input() {}
 void Input::process() {}

@@ -87,6 +87,7 @@ void Track::process()
 
 void Track::setup()
 {
+  Connectable::setup();
   if (armed && recording == nullptr)
   {
     recording = new Clip(random_string(8), this);
@@ -248,6 +249,7 @@ nlohmann::json Track::json()
 
 void Track::init()
 {
+  Connectable::init();
   for (auto clip = first; clip != nullptr; clip = clip->next())
   {
     clip->init();

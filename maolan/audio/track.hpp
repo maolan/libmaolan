@@ -14,10 +14,10 @@ public:
 
   static std::vector<Track *> all;
 
+  virtual void init();
+  virtual void setup();
   virtual void fetch();
   virtual void process();
-  virtual void setup();
-  virtual void init();
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
   virtual std::size_t channels() const;
@@ -34,7 +34,7 @@ public:
   void remove(Clip *);
   void add(plugin::lv2::Plugin *);
   void remove(plugin::lv2::Plugin *);
-  Clip * clips();
+  Clip *clips();
 
 protected:
   bool muted;

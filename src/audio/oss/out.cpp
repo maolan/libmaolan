@@ -1,35 +1,35 @@
+#include "maolan/audio/oss/out.hpp"
+#include "maolan/constants.hpp"
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <sys/soundcard.h>
 #include <unistd.h>
-#include "maolan/audio/oss/out.hpp"
-#include "maolan/constants.hpp"
 
 
 using namespace maolan::audio;
 
 
-template <class T>
+template <typename T>
 OSSOut<T>::OSSOut(const std::string &device, const int &frag)
-    : OSS(device, frag, sizeof(T))
-    , Connectable(channels())
+    : OSS(device, frag, sizeof(T)), Connectable(channels())
 {
   _type = "AudioOSSOut";
   _name = device;
 }
 
 
-template <class T>
-void OSSOut<T>::fetch()
+template <typename T> void OSSOut<T>::fetch()
 {
   Connectable::fetch();
-  for (size_t i = 0; i < channels(); ++i) { _outputs[i] = _inputs[i].pull(); }
+  for (size_t i = 0; i < channels(); ++i)
+  {
+    _outputs[i] = _inputs[i].pull();
+  }
 }
 
 
-template <class T>
-void OSSOut<T>::convertToRaw()
+template <typename T> void OSSOut<T>::convertToRaw()
 {
   T *samples = (T *)bytes;
   auto chs = channels();
@@ -48,8 +48,14 @@ void OSSOut<T>::convertToRaw()
       for (std::size_t i = 0; i < device->audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
-        if (sample <= -1.0) { sample = -1.0; }
-        else if (sample >= 1.0) { sample = 1.0; }
+        if (sample <= -1.0)
+        {
+          sample = -1.0;
+        }
+        else if (sample >= 1.0)
+        {
+          sample = 1.0;
+        }
         samples[i * chs + channel] = sample * floatMaxInt;
       }
     }
@@ -57,8 +63,7 @@ void OSSOut<T>::convertToRaw()
 }
 
 
-template <class T>
-void OSSOut<T>::process()
+template <typename T> void OSSOut<T>::process()
 {
   Connectable::process();
   convertToRaw();
@@ -66,8 +71,14 @@ void OSSOut<T>::process()
 }
 
 
-template <class T>
-nlohmann::json OSSOut<T>::connections() { return conns(_name); }
+template <typename T> nlohmann::json OSSOut<T>::connections()
+{
+  return conns(_name);
+}
+
+
+template <typename T> void OSSOut<T>::init() { Connectable::init(); }
+template <typename T> void OSSOut<T>::setup() { Connectable::setup(); }
 
 
 namespace maolan::audio
@@ -75,4 +86,4 @@ namespace maolan::audio
 template class OSSOut<int32_t>;
 template class OSSOut<int16_t>;
 template class OSSOut<int8_t>;
-}
+} // namespace maolan::audio

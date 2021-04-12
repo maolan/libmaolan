@@ -77,7 +77,6 @@ nlohmann::json Engine::json()
   data["connections"] = nlohmann::json::array();
   for (auto io = IO::begin(); io != nullptr; io = io->next())
   {
-    std::cout << "Saving " << io->name() << '\n';
     data["io"].push_back(io->json());
   }
   auto ioconns = maolan::audio::Connectable::json();
@@ -107,28 +106,22 @@ nlohmann::json Engine::load()
   chdir(Config::root.data());
   std::ifstream session{"session.json"};
   auto result = nlohmann::json::parse(session);
-  std::map<std::string, IO *> ios;
   for (const auto &io : result["io"])
   {
     if (io["type"] == "AudioTrack")
     {
       auto track = new maolan::audio::Track(io["name"], io["channels"]);
-      ios[io["name"]] = track;
       for (const auto &clipio : io["clips"])
       {
-        const std::string &name = clipio["name"];
-        auto clip = new maolan::audio::Clip(name, track);
-        ios[name] = clip;
+        new maolan::audio::Clip(clipio["name"], track);
       }
     }
     else if (io["type"] == "MIDITrack")
     {
       auto track = new maolan::midi::Track(io["name"], 1);
-      ios[io["name"]] = track;
       for (const auto &clipio : io["clips"])
       {
-        auto clip = new maolan::midi::Clip(clipio["name"], track);
-        ios[clipio["name"]] = clip;
+        new maolan::midi::Clip(clipio["name"], track);
       }
     }
 #ifdef OSS_ENABLED
@@ -137,18 +130,15 @@ nlohmann::json Engine::load()
       auto bits = io["bits"];
       if (bits == 32)
       {
-        auto out = new maolan::audio::OSSOut<int32_t>(io["name"]);
-        ios[io["name"]] = out;
+        new maolan::audio::OSSOut<int32_t>(io["name"]);
       }
       else if (bits == 16)
       {
-        auto out = new maolan::audio::OSSOut<int16_t>(io["name"]);
-        ios[io["name"]] = out;
+        new maolan::audio::OSSOut<int16_t>(io["name"]);
       }
       else if (bits == 8)
       {
-        auto out = new maolan::audio::OSSOut<int8_t>(io["name"]);
-        ios[io["name"]] = out;
+        new maolan::audio::OSSOut<int8_t>(io["name"]);
       }
     }
     else if (io["type"] == "AudioOSSIn")
@@ -156,33 +146,38 @@ nlohmann::json Engine::load()
       auto bits = io["bits"];
       if (bits == 32)
       {
-        auto in = new maolan::audio::OSSIn<int32_t>(io["name"]);
-        ios[io["name"]] = in;
+        new maolan::audio::OSSIn<int32_t>(io["name"]);
       }
       else if (bits == 16)
       {
-        auto in = new maolan::audio::OSSIn<int16_t>(io["name"]);
-        ios[io["name"]] = in;
+        new maolan::audio::OSSIn<int16_t>(io["name"]);
       }
       else if (bits == 8)
       {
-        auto in = new maolan::audio::OSSIn<int8_t>(io["name"]);
-        ios[io["name"]] = in;
+        new maolan::audio::OSSIn<int8_t>(io["name"]);
       }
     }
 #endif
   }
   for (const auto &c : result["connections"])
   {
-    auto &fromio = ios[c["name"]];
+    auto fromio = (audio::IO *)IO::find(c["name"]);
+    if (fromio == nullptr)
+    {
+      std::cerr << "Could not find IO with name " << c["name"];
+      continue;
+    }
     auto &fromch = c["channel"];
     for (auto &tojson : c["to"])
     {
-      auto toio = (audio::IO *)ios[tojson["name"]];
+      auto toio = (audio::IO *)IO::find(tojson["name"]);
+      if (toio == nullptr)
+      {
+        std::cerr << "Could not find IO with name " << tojson["name"];
+        continue;
+      }
       auto &toch = tojson["channel"];
-      std::cout << "Connecting: " << fromio->name() << " and " << toio->name()
-                << '\n';
-      // ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
+      ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
     }
   }
   return result;
