@@ -118,7 +118,7 @@ Plugin::Plugin(const std::string &argUri)
 
 
 const void *Plugin::portValue(const char *port_symbol, void *user_data,
-                              uint32_t *size, uint32_t *type)
+                              uint32_t *, uint32_t *)
 {
   auto plugin = (Plugin *)user_data;
   assert(plugin != nullptr);
@@ -301,7 +301,7 @@ void Plugin::fetch()
   auto &iaudio = input.audio;
   for (std::size_t i = 0; i < portCount; ++i)
   {
-    auto buffer = audioins[i].pull();
+    auto buffer = audioins[i]->pull();
     if (buffer == nullptr)
     {
       iaudio[i]->buffer(instance, emptyBuffer);

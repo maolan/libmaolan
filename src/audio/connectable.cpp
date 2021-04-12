@@ -1,5 +1,4 @@
 #include "maolan/audio/connectable.hpp"
-#include <iostream>
 
 
 using namespace maolan::audio;
@@ -48,7 +47,7 @@ void Connectable::connect(IO *to)
 
 void Connectable::connect(IO *to, std::size_t inCh, std::size_t outCh)
 {
-  _inputs[inCh].connect(to, outCh);
+  _inputs[inCh]->connect(to, outCh);
 }
 
 
@@ -56,7 +55,7 @@ void Connectable::fetch()
 {
   for (auto &input : _inputs)
   {
-    input.fetch();
+    input->fetch();
   }
 }
 
@@ -65,7 +64,7 @@ void Connectable::process()
 {
   for (auto &input : _inputs)
   {
-    input.process();
+    input->process();
   }
 }
 
@@ -81,11 +80,11 @@ nlohmann::json Connectable::conns(const std::string_view name)
   for (std::size_t i = 0; i < _inputs.size(); ++i)
   {
     auto &input = _inputs[i];
-    if (input.channels() == 0)
+    if (input->channels() == 0)
     {
       continue;
     }
-    auto to = input.connections();
+    auto to = input->connections();
     if (to == nullptr)
     {
       continue;
@@ -110,7 +109,7 @@ void Connectable::setup()
 {
   for (auto &input : _inputs)
   {
-    input.setup();
+    input->setup();
   }
 }
 
@@ -119,6 +118,6 @@ void Connectable::init()
 {
   for (auto &input : _inputs)
   {
-    input.init();
+    input->init();
   }
 }

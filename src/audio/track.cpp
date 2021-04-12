@@ -59,7 +59,7 @@ void Track::process()
   {
     for (std::size_t channel = 0; channel < chs; ++channel)
     {
-      frame->audio[channel] = _inputs[channel].pull();
+      frame->audio[channel] = _inputs[channel]->pull();
     }
     recording->write(frame);
     if (!muted)

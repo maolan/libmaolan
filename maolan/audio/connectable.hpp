@@ -26,7 +26,7 @@ public:
 protected:
   static std::vector<Connectable *> _all;
 
-  std::vector<audio::Input> _inputs;
+  std::vector<audio::Input *> _inputs;
   nlohmann::json conns(std::string_view name);
 };
 } // namespace maolan::audio
