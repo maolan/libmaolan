@@ -19,6 +19,11 @@ IO::IO(const std::string &name, const bool &reg, const size_t &chs)
   {
     _outputs.resize(chs);
   }
+  for (size_t i = 0; i < chs; ++i)
+  {
+    auto input = new Input();
+    _inputs.push_back(input);
+  }
 }
 
 
@@ -53,7 +58,11 @@ void IO::connect(IO *to)
 
 void IO::connect(IO *to, std::size_t inCh, std::size_t outCh)
 {
-  _inputs[inCh]->connect(to, outCh);
+  if (inCh < _inputs.size())
+  {
+    std::cout << "Connecting " << _name << " and " << to->name() << '\n';
+    _inputs[inCh]->connect(to, outCh);
+  }
 }
 
 
@@ -62,6 +71,7 @@ void IO::fetch()
   for (auto &input : _inputs)
   {
     input->fetch();
+    input->pull();
   }
 }
 

@@ -7,9 +7,9 @@ namespace maolan::audio
 class Connection
 {
 public:
-  Connection(audio::IO *connectTo, const std::size_t &ch);
+  Connection(IO *connectTo, const std::size_t &ch);
 
-  IO * get();
+  IO *get();
   void target(audio::IO *connectTo, const std::size_t &ch);
   Buffer pull();
   std::size_t channel();

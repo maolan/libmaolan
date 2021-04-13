@@ -26,11 +26,11 @@ void Input::fetch()
   }
   if (empty)
   {
-    _outputs[0] = nullptr;
+    _output = nullptr;
   }
   else if (channels.size() == 1)
   {
-    _outputs[0] = channels[0];
+    _output = channels[0];
   }
   else
   {
@@ -48,42 +48,9 @@ void Input::fetch()
       }
       result->data()[i] = sum;
     }
-    _outputs[0] = result;
+    _output = result;
   }
 }
 
 
-size_t Input::channels() const { return _outputs.size(); }
-
-
-Buffer Input::pull(const std::size_t &channel)
-{
-  if (_outputs.size() == 0)
-  {
-    return nullptr;
-  }
-  return _outputs[channel];
-}
-
-
-nlohmann::json Input::connections()
-{
-  if (_connections.size() == 0)
-  {
-    return nullptr;
-  }
-  auto data = R"([])"_json;
-  for (auto &con : _connections)
-  {
-    auto to = R"({})"_json;
-    to["name"] = con->get()->name();
-    to["channel"] = con->channel();
-    data.push_back(to);
-  }
-  return data;
-}
-
-
-Input::Input() : IO("Input", false, 1) { _type = "AudioInput"; }
-Input::~Input() {}
-void Input::process() {}
+Buffer Input::pull() { return _output; }
