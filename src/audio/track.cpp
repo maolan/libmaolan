@@ -5,6 +5,7 @@
 
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/io.hpp"
+#include "maolan/audio/input.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/config.hpp"
 
@@ -207,6 +208,7 @@ void Track::remove(Clip *clip)
 }
 
 
+#ifdef LV2_ENABLED
 void Track::remove(plugin::lv2::Plugin *plugin)
 {
   for (std::size_t i = 0; i < _plugins.size(); ++i)
@@ -218,6 +220,10 @@ void Track::remove(plugin::lv2::Plugin *plugin)
     }
   }
 }
+
+
+void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
+#endif
 
 
 Buffer Track::pull(const std::size_t &channel)
@@ -251,7 +257,6 @@ void Track::init()
 }
 
 
-void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return IO::channels(); }
 bool Track::mute() { return muted; }
 bool Track::arm() { return armed; }

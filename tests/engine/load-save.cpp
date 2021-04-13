@@ -12,8 +12,8 @@ int main(int argc, char **argv)
     return 1;
   }
   maolan::Config::root = argv[1];
+  maolan::Engine::load();
   maolan::Engine::init();
-  auto result = maolan::Engine::load();
   maolan::Engine::save();
   return 0;
 }

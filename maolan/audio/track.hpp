@@ -1,7 +1,10 @@
 #pragma once
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/io.hpp"
+
+#ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
+#endif
 
 
 namespace maolan::audio
@@ -31,8 +34,10 @@ public:
 
   void add(Clip *);
   void remove(Clip *);
+#ifdef LV2_ENABLED
   void add(plugin::lv2::Plugin *);
   void remove(plugin::lv2::Plugin *);
+#endif
   Clip *clips();
 
 protected:
@@ -43,6 +48,8 @@ protected:
   Clip *_current;
   Clip *last;
   Clip *recording = nullptr;
+#ifdef LV2_ENABLED
   std::vector<plugin::lv2::Plugin *> _plugins;
+#endif
 };
 } // namespace maolan::audio

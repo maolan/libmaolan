@@ -4,7 +4,6 @@
 #include <condition_variable>
 #include <mutex>
 #include <nlohmann/json.hpp>
-#include <pugixml.hpp>
 #include <string>
 #include <vector>
 

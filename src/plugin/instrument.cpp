@@ -8,6 +8,7 @@ using namespace maolan::plugin;
 
 Instrument::Instrument(const std::string &name, const std::string &type)
 {
+#ifdef LV2_ENABLED
   if (type == "lv2")
   {
     std::stringstream s;
@@ -20,11 +21,10 @@ Instrument::Instrument(const std::string &name, const std::string &type)
     _midi->arm();
     _plugin->connect(_midi);
     _audio->connect(_plugin);
+    return;
   }
-  else
-  {
-    std::cerr << "No such plugin type!\n";
-  }
+#endif
+  std::cerr << "No such plugin type!\n";
 }
 
 

@@ -77,7 +77,6 @@ void IO::connect(IO *to, std::size_t inCh, std::size_t outCh)
 {
   if (inCh < _inputs.size())
   {
-    std::cout << "Connecting " << _name << " and " << to->name() << '\n';
     _inputs[inCh]->connect(to, outCh);
   }
 }
