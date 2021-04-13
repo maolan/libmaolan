@@ -13,8 +13,6 @@ public:
 
   static std::vector<maolan::Config *> devices;
 
-  virtual void fetch();
-  virtual void process();
   virtual std::size_t channels() const;
   virtual midi::Buffer pull(const std::size_t &channel);
   void connect(midi::IO *to);

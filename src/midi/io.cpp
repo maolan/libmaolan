@@ -1,6 +1,7 @@
-#include "maolan/midi/io.hpp"
+#include "maolan/io.hpp"
 #include "maolan/config.hpp"
 #include "maolan/midi/input.hpp"
+#include "maolan/midi/io.hpp"
 #include <vector>
 
 
