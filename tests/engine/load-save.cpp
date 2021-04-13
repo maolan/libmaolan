@@ -13,9 +13,7 @@ int main(int argc, char **argv)
   }
   maolan::Config::root = argv[1];
   maolan::Engine::init();
-  std::cout << "Load\n";
   auto result = maolan::Engine::load();
-  std::cout << "\nSave\n";
   maolan::Engine::save();
   return 0;
 }

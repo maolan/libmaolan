@@ -5,6 +5,7 @@
 #include <sys/soundcard.h>
 #include <unistd.h>
 
+#include "maolan/audio/input.hpp"
 #include "maolan/audio/oss/base.hpp"
 #include "maolan/config.hpp"
 #include "maolan/constants.hpp"
@@ -88,6 +89,10 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
       _device->audioInfo.dev = -1;
       ioctl(_device->fd, SNDCTL_ENGINEINFO, &(_device->audioInfo));
       _outputs.resize(_device->audioInfo.max_channels);
+      for (int i = 0; i < _device->audioInfo.max_channels; ++i)
+      {
+        _inputs.push_back(new Input());
+      }
 
       error =
           ioctl(_device->fd, SNDCTL_DSP_GETCAPS, &(_device->audioInfo.caps));

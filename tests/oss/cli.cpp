@@ -23,19 +23,11 @@ int main(int argc, char **argv)
     return 1;
   }
   maolan::Config::root = argv[1];
-  // OSSOut<int32_t> out("/dev/dsp");
-  // Track trackp("play", 2);
-  // Clip clip("audio/stereo.wav", &trackp, 0, 10000000, 0);
-  // maolan::midi::Track midiTrack("Midi Track", 1);
-  // maolan::midi::Clip midiClip("Midi Clip", &midiTrack);
-  // out.connect(&trackp);
 
   /* Background threads + main thread
    */
   maolan::Engine::init();
   auto result = maolan::Engine::load();
-  maolan::Engine::save();
-  return 0;
   std::cerr << "Playing ...";
   maolan::Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(14));
