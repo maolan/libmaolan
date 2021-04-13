@@ -44,7 +44,24 @@ nlohmann::json IO::json()
 }
 
 
-nlohmann::json IO::connections() { return nullptr; }
+nlohmann::json IO::connections()
+{
+  auto result = nlohmann::json::array();
+  for (size_t i = 0; i < _inputs.size(); ++i)
+  {
+    auto &input = _inputs[i];
+    auto injson = input->json(_name, i);
+    if (injson != nullptr)
+    {
+      result.push_back(injson);
+    }
+  }
+  if (result.size() == 0)
+  {
+    return nullptr;
+  }
+  return result;
+}
 
 
 void IO::connect(IO *to)

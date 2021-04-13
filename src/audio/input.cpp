@@ -54,3 +54,29 @@ void Input::fetch()
 
 
 Buffer Input::pull() { return _output; }
+
+
+nlohmann::json Input::json(const std::string &name, const size_t &channel)
+{
+  auto result = R"([])"_json;
+  for (auto connection : _connections)
+  {
+    if (connection == nullptr)
+    {
+      continue;
+    }
+    auto data = R"({})"_json;
+    data["name"] = connection->get()->name();
+    data["channel"] = connection->channel();
+    result.push_back(data);
+  }
+  if (result.size() > 0)
+  {
+    auto data = R"({})"_json;
+    data["name"] = name;
+    data["channel"] = channel;
+    data["to"] = result;
+    return data;
+  }
+  return nullptr;
+}

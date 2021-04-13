@@ -77,13 +77,13 @@ nlohmann::json Engine::json()
   for (auto io = IO::begin(); io != nullptr; io = io->next())
   {
     data["io"].push_back(io->json());
-  }
-  auto ioconns = maolan::audio::IO::connections();
-  if (ioconns != nullptr)
-  {
-    for (auto &c : ioconns)
+    auto connections = io->connections();
+    if (connections != nullptr)
     {
-      data["connections"].push_back(c);
+      for (auto &connection : connections)
+      {
+        data["connections"].push_back(connection);
+      }
     }
   }
   return data;

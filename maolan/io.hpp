@@ -35,6 +35,7 @@ public:
   virtual void process() = 0;
   virtual void parent(IO *p);
   virtual nlohmann::json json();
+  virtual nlohmann::json connections();
 
   void work();
   void next(IO *);

@@ -15,13 +15,13 @@ class IO : public maolan::IO
 public:
   IO(const std::string &name, const bool &reg = false, const size_t &outs = 0);
 
-  static nlohmann::json connections();
 
   virtual void fetch();
   virtual void process();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel = 0);
   virtual nlohmann::json json();
+  virtual nlohmann::json connections();
   void connect(audio::IO *to);
   void connect(audio::IO *to, std::size_t inCh, std::size_t outCh);
 

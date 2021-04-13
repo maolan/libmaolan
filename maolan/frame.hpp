@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include "maolan/audio/buffer.hpp"
 #include "maolan/midi/buffer.hpp"
+#include <vector>
 
 
 namespace maolan

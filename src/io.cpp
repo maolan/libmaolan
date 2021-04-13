@@ -235,3 +235,4 @@ IO *IO::previous() { return _previous; }
 void *IO::data() { return _data; }
 void IO::data(void *d) { _data = d; }
 void IO::init() {}
+nlohmann::json IO::connections() { return nullptr; }
