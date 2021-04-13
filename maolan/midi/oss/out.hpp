@@ -1,13 +1,12 @@
 #pragma once
-#include <string>
-#include "maolan/midi/connectable.hpp"
 #include "maolan/midi/input.hpp"
 #include "maolan/midi/oss/base.hpp"
+#include <string>
 
 
 namespace maolan::midi
 {
-class OSSMIDIOut : public OSSMIDI, public Connectable
+class OSSMIDIOut : public OSSMIDI
 {
 public:
   OSSMIDIOut(const std::string &device);

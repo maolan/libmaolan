@@ -12,19 +12,18 @@ using namespace maolan::audio;
 
 template <typename T>
 OSSOut<T>::OSSOut(const std::string &device, const int &frag)
-    : OSS(device, frag, sizeof(T)), Connectable(channels())
+    : OSS(device, frag, sizeof(T))
 {
-  _type = "AudioOSSOut";
-  _name = device;
+  OSS::_type = "AudioOSSOut";
+  OSS::_name = device;
 }
 
 
 template <typename T> void OSSOut<T>::fetch()
 {
-  Connectable::fetch();
-  for (size_t i = 0; i < channels(); ++i)
+  for (size_t i = 0; i < OSS::channels(); ++i)
   {
-    _outputs[i] = _inputs[i]->pull();
+    OSS::_outputs[i] = _inputs[i]->pull();
   }
 }
 
@@ -32,10 +31,10 @@ template <typename T> void OSSOut<T>::fetch()
 template <typename T> void OSSOut<T>::convertToRaw()
 {
   T *samples = (T *)bytes;
-  auto chs = channels();
+  auto chs = OSS::channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
-    auto buffer = _outputs[channel];
+    auto buffer = OSS::_outputs[channel];
     if (buffer == nullptr)
     {
       for (std::size_t i = 0; i < device->audioBufferSize; ++i)
@@ -65,20 +64,9 @@ template <typename T> void OSSOut<T>::convertToRaw()
 
 template <typename T> void OSSOut<T>::process()
 {
-  Connectable::process();
   convertToRaw();
   write(device->fd, bytes, device->bufferInfo.bytes);
 }
-
-
-template <typename T> nlohmann::json OSSOut<T>::connections()
-{
-  return conns(_name);
-}
-
-
-template <typename T> void OSSOut<T>::init() { Connectable::init(); }
-template <typename T> void OSSOut<T>::setup() { Connectable::setup(); }
 
 
 namespace maolan::audio

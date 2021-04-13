@@ -7,13 +7,8 @@ using namespace maolan::plugin;
 
 
 IO::IO(const std::string &name, const bool &reg)
-    : midi::IO(name, reg)
-    , audio::IO(0, false)
-    , midi::Connectable(0)
-    , audio::Connectable(0)
+    : audio::IO(name, reg), midi::IO(name, reg)
 {
-  midi::IO::_outputs.clear();
-  audio::IO::_outputs.clear();
 }
 
 
@@ -39,33 +34,22 @@ maolan::midi::Buffer IO::midi(const std::size_t &channel)
 
 void IO::fetch()
 {
-  midi::Connectable::fetch();
-  audio::Connectable::fetch();
-}
-
-
-void IO::connect(midi::IO *to)
-{
-  midi::Connectable::connect(to);
+  midi::IO::fetch();
+  audio::IO::fetch();
 }
 
 
 void IO::connect(midi::IO *to, std::size_t inCh, std::size_t outCh)
 {
-  midi::Connectable::connect(to, inCh, outCh);
-}
-
-
-void IO::connect(audio::IO *to)
-{
-  audio::Connectable::connect(to);
+  midi::IO::connect(to, inCh, outCh);
 }
 
 
 void IO::connect(audio::IO *to, std::size_t inCh, std::size_t outCh)
 {
-  audio::Connectable::connect(to, inCh, outCh);
+  audio::IO::connect(to, inCh, outCh);
 }
 
 
-nlohmann::json IO::connections() { return conns(audio::IO::_name); }
+void IO::connect(audio::IO *to) { audio::IO::connect(to); }
+void IO::connect(midi::IO *to) { midi::IO::connect(to); }

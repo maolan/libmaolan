@@ -9,6 +9,7 @@
 
 namespace maolan::audio
 {
+class Input;
 class IO : public maolan::IO
 {
 public:
@@ -16,11 +17,16 @@ public:
 
   static std::vector<maolan::Config *> devices;
 
+  virtual void fetch();
+  virtual void process();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel = 0);
   virtual nlohmann::json json();
+  void connect(audio::IO *to);
+  void connect(audio::IO *to, std::size_t inCh, std::size_t outCh);
 
 protected:
   std::vector<audio::Buffer> _outputs;
+  std::vector<audio::Input *> _inputs;
 };
 } // namespace maolan::audio

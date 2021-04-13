@@ -1,7 +1,7 @@
+#include "maolan/midi/oss/out.hpp"
+#include "maolan/midi/event.hpp"
 #include <iostream>
 #include <unistd.h>
-#include "maolan/midi/event.hpp"
-#include "maolan/midi/oss/out.hpp"
 
 
 using namespace maolan::midi;
@@ -19,8 +19,8 @@ OSSMIDIOut::OSSMIDIOut(const std::string &device) : OSSMIDI(device)
 
 void OSSMIDIOut::fetch()
 {
-  Connectable::fetch();
-  data = _inputs[0].pull();
+  OSSMIDI::fetch();
+  data = _inputs[0]->pull();
 }
 
 

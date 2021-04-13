@@ -1,12 +1,13 @@
 #include "maolan/midi/track.hpp"
 #include "maolan/midi/clip.hpp"
+#include "maolan/midi/input.hpp"
 
 
 using namespace maolan::midi;
 
 
 Track::Track(const std::string &name, const std::size_t &channel)
-    : IO(name, true), Connectable(1), muted{false}, armed{false}, soloed{false},
+    : IO(name, true), muted{false}, armed{false}, soloed{false},
       _channel{channel}, first{nullptr}, _current{nullptr}, last{nullptr}
 {
   _type = "MIDITrack";
@@ -16,7 +17,6 @@ Track::Track(const std::string &name, const std::size_t &channel)
 
 void Track::fetch()
 {
-  Connectable::fetch();
   if (_current != nullptr)
   {
     _current->fetch();
@@ -26,7 +26,6 @@ void Track::fetch()
 
 void Track::process()
 {
-  Connectable::process();
   if (_current == nullptr)
   {
     _outputs[0] = nullptr;
@@ -36,7 +35,7 @@ void Track::process()
   {
     for (std::size_t i = 0; i < _inputs.size() && i < _outputs.size(); ++i)
     {
-      _outputs[i] = _inputs[i].pull();
+      _outputs[i] = _inputs[i]->pull();
     }
     // recording->write(buffer);
   }

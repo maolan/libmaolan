@@ -4,7 +4,6 @@
 #include <string>
 
 #include "maolan/audio/clip.hpp"
-#include "maolan/audio/connectable.hpp"
 #include "maolan/audio/io.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/config.hpp"
@@ -27,8 +26,8 @@ std::string random_string(const std::size_t &size)
 
 
 Track::Track(const std::string &name, const std::size_t &ch)
-    : IO(name, true, 0), Connectable(ch), muted(false), armed(false),
-      soloed(false), first(nullptr), _current(nullptr), last(nullptr)
+    : IO{name, true, 0}, muted{false}, armed{false}, soloed{false},
+      first{nullptr}, _current{nullptr}, last{nullptr}
 {
   _type = "AudioTrack";
   _outputs.resize(ch);
@@ -38,7 +37,6 @@ Track::Track(const std::string &name, const std::size_t &ch)
 
 void Track::fetch()
 {
-  Connectable::fetch();
   if (_current != nullptr)
   {
     _current->fetch();
@@ -48,7 +46,6 @@ void Track::fetch()
 
 void Track::process()
 {
-  Connectable::process();
   if (_current != nullptr)
   {
     _current->process();
@@ -87,7 +84,6 @@ void Track::process()
 
 void Track::setup()
 {
-  Connectable::setup();
   if (armed && recording == nullptr)
   {
     recording = new Clip(random_string(8), this);
@@ -249,7 +245,6 @@ nlohmann::json Track::json()
 
 void Track::init()
 {
-  Connectable::init();
   for (auto clip = first; clip != nullptr; clip = clip->next())
   {
     clip->init();
@@ -257,7 +252,6 @@ void Track::init()
 }
 
 
-nlohmann::json Track::connections() { return conns(_name); }
 void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 std::size_t Track::channels() const { return IO::channels(); }
 bool Track::mute() { return muted; }

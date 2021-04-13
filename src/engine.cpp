@@ -4,7 +4,6 @@
 #include <unistd.h>
 
 #include "maolan/audio/clip.hpp"
-#include "maolan/audio/connectable.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/engine.hpp"
 #include "maolan/io.hpp"
@@ -79,14 +78,14 @@ nlohmann::json Engine::json()
   {
     data["io"].push_back(io->json());
   }
-  auto ioconns = maolan::audio::Connectable::json();
-  if (ioconns != nullptr)
-  {
-    for (auto &c : ioconns)
-    {
-      data["connections"].push_back(c);
-    }
-  }
+  // auto ioconns = maolan::audio::Connectable::jsonConns();
+  // if (ioconns != nullptr)
+  // {
+  // for (auto &c : ioconns)
+  // {
+  // data["connections"].push_back(c);
+  // }
+  // }
   return data;
 }
 
@@ -161,7 +160,7 @@ nlohmann::json Engine::load()
   }
   for (const auto &c : result["connections"])
   {
-    auto fromio = (audio::IO *)IO::find(c["name"]);
+    auto fromio = (audio::Track *)IO::find(c["name"]);
     if (fromio == nullptr)
     {
       std::cerr << "Could not find IO with name " << c["name"];
@@ -177,7 +176,7 @@ nlohmann::json Engine::load()
         continue;
       }
       auto &toch = tojson["channel"];
-      ((audio::Connectable *)fromio)->connect(toio, fromch, toch);
+      fromio->connect(toio, fromch, toch);
     }
   }
   return result;

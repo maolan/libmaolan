@@ -2,12 +2,12 @@
 #include <nlohmann/json.hpp>
 
 #include "maolan/midi/clip.hpp"
-#include "maolan/midi/connectable.hpp"
+#include "maolan/midi/io.hpp"
 
 
 namespace maolan::midi
 {
-class Track : public midi::IO, public midi::Connectable
+class Track : public midi::IO
 {
 public:
   Track(const std::string &name, const std::size_t &channel);
@@ -23,7 +23,7 @@ public:
   void solo(const bool &value = true);
   void add(midi::Clip *);
   void remove(midi::Clip *);
-  Clip * clips();
+  Clip *clips();
 
 protected:
   bool muted;

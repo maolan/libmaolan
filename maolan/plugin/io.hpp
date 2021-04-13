@@ -2,21 +2,16 @@
 #include <nlohmann/json.hpp>
 
 #include "maolan/audio/buffer.hpp"
-#include "maolan/audio/connectable.hpp"
 #include "maolan/audio/input.hpp"
 #include "maolan/audio/io.hpp"
 #include "maolan/midi/buffer.hpp"
-#include "maolan/midi/connectable.hpp"
 #include "maolan/midi/input.hpp"
 #include "maolan/midi/io.hpp"
 
 
 namespace maolan::plugin
 {
-class IO : public maolan::midi::IO,
-           public maolan::audio::IO,
-           public midi::Connectable,
-           public audio::Connectable
+class IO : public audio::IO, public midi::IO
 {
 public:
   IO(const std::string &name = "", const bool &reg = false);
@@ -31,6 +26,5 @@ public:
 
   virtual audio::Buffer audio(const std::size_t &channel);
   virtual midi::Buffer midi(const std::size_t &channel);
-  virtual nlohmann::json connections();
 };
 } // namespace maolan::plugin

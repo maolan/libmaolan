@@ -1,16 +1,16 @@
 #pragma once
 #include "maolan/audio/clip.hpp"
-#include "maolan/audio/connectable.hpp"
+#include "maolan/audio/io.hpp"
 #include "maolan/plugin/lv2/plugin.hpp"
 
 
 namespace maolan::audio
 {
-class Track : public audio::IO, public audio::Connectable
+class Track : public IO
 {
 public:
   Track(const std::string &name, const std::size_t &channel);
-  ~Track();
+  virtual ~Track();
 
   static std::vector<Track *> all;
 
@@ -19,7 +19,6 @@ public:
   virtual void fetch();
   virtual void process();
   virtual nlohmann::json json();
-  virtual nlohmann::json connections();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel = 0);
 
