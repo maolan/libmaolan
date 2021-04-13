@@ -20,8 +20,9 @@ public:
   virtual nlohmann::json json();
 
 protected:
-  int sampleSize;
-  int8_t *bytes;
-  OSSConfig *device;
+  static std::vector<OSSConfig *> _devices;
+
+  int8_t *_bytes;
+  OSSConfig *_device;
 };
 } // namespace maolan::audio

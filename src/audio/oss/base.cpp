@@ -13,6 +13,9 @@
 using namespace maolan::audio;
 
 
+std::vector<OSSConfig *> OSS::_devices;
+
+
 static void checkError(const int &value, const std::string &message)
 {
   if (value == -1)
@@ -36,17 +39,17 @@ static int size2frag(int x)
 
 OSS::OSS(const std::string &deviceName, const int &argFrag,
          const int &sampleSize)
-    : IO(deviceName, true, 0), device{nullptr}
+    : IO(deviceName, true, 0), _device{nullptr}
 {
 
   bool found = false;
-  for (const auto &iter : devices)
+  for (const auto &iter : _devices)
   {
     if (iter->name == "OSS" && iter->device == deviceName)
     {
       found = true;
-      device = (OSSConfig *)iter;
-      ++(device->count);
+      _device = (OSSConfig *)iter;
+      ++(_device->count);
       break;
     }
   }
@@ -55,76 +58,76 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
   {
     int error = 0;
     int tmp;
-    device = new OSSConfig;
-    device->frag = argFrag;
-    device->device = deviceName;
-    device->sampleSize = sampleSize;
+    _device = new OSSConfig;
+    _device->frag = argFrag;
+    _device->device = deviceName;
+    _device->sampleSize = sampleSize;
     if (sampleSize == 4)
     {
-      device->format = AFMT_S32_NE;
+      _device->format = AFMT_S32_NE;
     }
     else if (sampleSize == 2)
     {
-      device->format = AFMT_S16_NE;
+      _device->format = AFMT_S16_NE;
     }
     else if (sampleSize == 1)
     {
-      device->format = AFMT_S8;
+      _device->format = AFMT_S8;
     }
     else
     {
       std::cerr << "Unsupported sample size: " << sampleSize << '\n';
       exit(1);
     }
-    this->sampleSize = sampleSize;
     try
     {
       error = open(deviceName.data(), O_RDWR, 0);
       checkError(error, "open");
-      device->fd = error;
+      _device->fd = error;
 
-      device->audioInfo.dev = -1;
-      ioctl(device->fd, SNDCTL_ENGINEINFO, &(device->audioInfo));
-      _outputs.resize(device->audioInfo.max_channels);
+      _device->audioInfo.dev = -1;
+      ioctl(_device->fd, SNDCTL_ENGINEINFO, &(_device->audioInfo));
+      _outputs.resize(_device->audioInfo.max_channels);
 
-      error = ioctl(device->fd, SNDCTL_DSP_GETCAPS, &(device->audioInfo.caps));
+      error =
+          ioctl(_device->fd, SNDCTL_DSP_GETCAPS, &(_device->audioInfo.caps));
       checkError(error, "SNDCTL_DSP_GETCAPS");
-      if (!(device->audioInfo.caps & PCM_CAP_DUPLEX))
+      if (!(_device->audioInfo.caps & PCM_CAP_DUPLEX))
       {
         fprintf(stderr, "Device doesn't support full duplex!\n");
         exit(1);
       }
 
       tmp = channels();
-      error = ioctl(device->fd, SNDCTL_DSP_CHANNELS, &tmp);
+      error = ioctl(_device->fd, SNDCTL_DSP_CHANNELS, &tmp);
       checkError(error, "SNDCTL_DSP_CHANNELS");
 
-      tmp = device->format;
-      error = ioctl(device->fd, SNDCTL_DSP_SETFMT, &tmp);
+      tmp = _device->format;
+      error = ioctl(_device->fd, SNDCTL_DSP_SETFMT, &tmp);
       checkError(error, "SNDCTL_DSP_SETFMT");
-      if (tmp != device->format)
+      if (tmp != _device->format)
       {
         std::stringstream s;
-        s << device << " doesn't support chosen sample format (";
+        s << _device << " doesn't support chosen sample format (";
         s << tmp << ")";
         error = 0;
         checkError(1, s.str());
       }
 
       tmp = Config::samplerate;
-      error = ioctl(device->fd, SNDCTL_DSP_SPEED, &tmp);
+      error = ioctl(_device->fd, SNDCTL_DSP_SPEED, &tmp);
       checkError(error, "SNDCTL_DSP_SPEED");
 
-      int minFrag = size2frag(device->sampleSize * channels());
-      if (device->frag < minFrag)
+      int minFrag = size2frag(_device->sampleSize * channels());
+      if (_device->frag < minFrag)
       {
-        device->frag = minFrag;
+        _device->frag = minFrag;
       }
-      tmp = device->frag;
-      error = ioctl(device->fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
+      tmp = _device->frag;
+      error = ioctl(_device->fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
       checkError(error, "SNDCTL_DSP_SETFRAGMENT");
 
-      error = ioctl(device->fd, SNDCTL_DSP_GETOSPACE, &(device->bufferInfo));
+      error = ioctl(_device->fd, SNDCTL_DSP_GETOSPACE, &(_device->bufferInfo));
       checkError(error, "SNDCTL_DSP_GETOSPACE");
     }
     catch (const std::invalid_argument &ex)
@@ -134,10 +137,10 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
       exit(1);
     }
 
-    device->sampleCount = device->bufferInfo.bytes / device->sampleSize;
-    Config::audioBufferSize = device->sampleCount / channels();
-    bytes = new int8_t[device->bufferInfo.bytes];
-    devices.emplace(devices.begin(), device);
+    _device->sampleCount = _device->bufferInfo.bytes / _device->sampleSize;
+    Config::audioBufferSize = _device->sampleCount / channels();
+    _bytes = new int8_t[_device->bufferInfo.bytes];
+    _devices.emplace(_devices.begin(), _device);
   }
 }
 
@@ -145,19 +148,19 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
 nlohmann::json OSS::json()
 {
   auto data = IO::json();
-  data["bits"] = sampleSize * 8;
-  data["samplerate"] = device->samplerate;
+  data["bits"] = _device->sampleSize * 8;
+  data["samplerate"] = _device->samplerate;
   return data;
 }
 
 
 OSS::~OSS()
 {
-  --(device->count);
-  if (device->count < 1)
+  --(_device->count);
+  if (_device->count < 1)
   {
-    close(device->fd);
-    devices.erase(std::find(devices.begin(), devices.end(), device));
+    close(_device->fd);
+    _devices.erase(std::find(_devices.begin(), _devices.end(), _device));
   }
 }
 

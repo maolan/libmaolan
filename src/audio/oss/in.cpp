@@ -16,22 +16,23 @@ OSSIn<T>::OSSIn(const std::string &device, const int &frag)
 }
 
 
-template <class T>
-void OSSIn<T>::fetch() { read(device->fd, bytes, device->bufferInfo.bytes); }
+template <class T> void OSSIn<T>::fetch()
+{
+  read(_device->fd, _bytes, _device->bufferInfo.bytes);
+}
 
 
-template <class T>
-void OSSIn<T>::process()
+template <class T> void OSSIn<T>::process()
 {
   const auto &chs = channels();
-  int channel;
-  int index;
-  T *samples = (T *)bytes;
-  for (int i = 0; i < chs; ++i)
+  size_t channel;
+  size_t index;
+  T *samples = (T *)_bytes;
+  for (size_t i = 0; i < chs; ++i)
   {
     _outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
-  for (int i = 0; i < Config::audioBufferSize; ++i)
+  for (size_t i = 0; i < Config::audioBufferSize; ++i)
   {
     channel = i % chs;
     index = i / chs;
@@ -45,4 +46,4 @@ namespace maolan::audio
 template class OSSIn<int32_t>;
 template class OSSIn<int16_t>;
 template class OSSIn<int8_t>;
-}
+} // namespace maolan::audio

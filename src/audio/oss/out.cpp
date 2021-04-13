@@ -30,21 +30,21 @@ template <typename T> void OSSOut<T>::fetch()
 
 template <typename T> void OSSOut<T>::convertToRaw()
 {
-  T *samples = (T *)bytes;
+  T *samples = (T *)_bytes;
   auto chs = OSS::channels();
   for (std::size_t channel = 0; channel < chs; ++channel)
   {
     auto buffer = OSS::_outputs[channel];
     if (buffer == nullptr)
     {
-      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < _device->audioBufferSize; ++i)
       {
         samples[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < _device->audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
         if (sample <= -1.0)
@@ -65,7 +65,7 @@ template <typename T> void OSSOut<T>::convertToRaw()
 template <typename T> void OSSOut<T>::process()
 {
   convertToRaw();
-  write(device->fd, bytes, device->bufferInfo.bytes);
+  write(_device->fd, _bytes, _device->bufferInfo.bytes);
 }
 
 

@@ -15,7 +15,7 @@ class IO : public maolan::IO
 public:
   IO(const std::string &name, const bool &reg = false, const size_t &outs = 0);
 
-  static std::vector<maolan::Config *> devices;
+  static nlohmann::json connections();
 
   virtual void fetch();
   virtual void process();

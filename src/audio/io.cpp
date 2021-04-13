@@ -9,9 +9,6 @@
 using namespace maolan::audio;
 
 
-std::vector<maolan::Config *> IO::devices;
-
-
 IO::IO(const std::string &name, const bool &reg, const size_t &chs)
     : maolan::IO(name, reg)
 {
@@ -45,6 +42,9 @@ nlohmann::json IO::json()
   result["channels"] = channels();
   return result;
 }
+
+
+nlohmann::json IO::connections() { return nullptr; }
 
 
 void IO::connect(IO *to)

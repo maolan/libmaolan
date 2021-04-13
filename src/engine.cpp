@@ -78,14 +78,14 @@ nlohmann::json Engine::json()
   {
     data["io"].push_back(io->json());
   }
-  // auto ioconns = maolan::audio::Connectable::jsonConns();
-  // if (ioconns != nullptr)
-  // {
-  // for (auto &c : ioconns)
-  // {
-  // data["connections"].push_back(c);
-  // }
-  // }
+  auto ioconns = maolan::audio::IO::connections();
+  if (ioconns != nullptr)
+  {
+    for (auto &c : ioconns)
+    {
+      data["connections"].push_back(c);
+    }
+  }
   return data;
 }
 
