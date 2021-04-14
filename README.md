@@ -5,6 +5,7 @@ Dependencies:
 * libsndfile
 * nlohmann-json
 * lilv
+* lv2
 
 Build
 ```
