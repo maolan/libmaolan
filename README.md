@@ -35,12 +35,12 @@ cmake .. -D<option>=On
 | LV2  | Support for LV2 plugins           | -DLV2         |
 
 ### List of useful CMake options
-|              Option                |                                  Description                               | 
-|------------------------------------|:--------------------------------------------------------------------------:|
-| -DCMAKE_BUILD_TYPE={Release,Debug} | Build with or without debugging symbols                                    |
-| -DCMAKE_EXPORT_COMPILE_COMMANDS=1  | Generate `compile_commands.json` (useful with language server like clangd) |
-| -DBUILD_STATIC={On,Off}            | Build static library                                                       |
-| -DBUILD_SHARED={On,Off}            | Build shared library (.so or .dll)                                         |
+|                 Option                   |                                  Description                               | 
+|------------------------------------------|:--------------------------------------------------------------------------:|
+| -DCMAKE_BUILD_TYPE={Release,Debug}       | Build with or without debugging symbols                                    |
+| -DCMAKE_EXPORT_COMPILE_COMMANDS={On,Off  | Generate `compile_commands.json` (useful with language server like clangd) |
+| -DBUILD_STATIC={On,Off}                  | Build static library                                                       |
+| -DBUILD_SHARED={On,Off}                  | Build shared library (.so or .dll)                                         |
 
 
 You can point cmake where to search for `pkg-config` .pc files and where to
