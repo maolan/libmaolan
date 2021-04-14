@@ -14,6 +14,7 @@ template <typename T>
 OSSOut<T>::OSSOut(const std::string &device, const int &frag)
     : OSS(device, frag, sizeof(T))
 {
+  std::cout << "OSSOut::OSSOut() " << _name << '\n';
   OSS::_type = "AudioOSSOut";
   OSS::_name = device;
 }
@@ -32,19 +33,19 @@ template <typename T> void OSSOut<T>::convertToRaw()
 {
   T *samples = (T *)_bytes;
   auto chs = OSS::channels();
-  for (std::size_t channel = 0; channel < chs; ++channel)
+  for (size_t channel = 0; channel < chs; ++channel)
   {
     auto buffer = OSS::_outputs[channel];
     if (buffer == nullptr)
     {
-      for (std::size_t i = 0; i < _device->audioBufferSize; ++i)
+      for (size_t i = 0; i < _device->audioBufferSize; ++i)
       {
         samples[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (std::size_t i = 0; i < _device->audioBufferSize; ++i)
+      for (size_t i = 0; i < _device->audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
         if (sample <= -1.0)
@@ -64,10 +65,10 @@ template <typename T> void OSSOut<T>::convertToRaw()
 
 template <typename T> void OSSOut<T>::process()
 {
-  std::cout << "OSSOut::process() " << _name << '\n';
   convertToRaw();
+  std::cout << "Writing " << _device->bufferInfo.bytes << " bytes"
+    << " to file descriptor " << _device->fd << '\n';
   write(_device->fd, _bytes, _device->bufferInfo.bytes);
-  std::cout << "OSSOut::process() " << _name << " ended\n";
 }
 
 
