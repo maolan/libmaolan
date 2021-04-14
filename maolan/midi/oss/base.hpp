@@ -13,6 +13,8 @@ public:
   ~OSSMIDI();
 
 protected:
+  static std::vector<OSSMIDIConfig *> _devices;
+
   OSSMIDIConfig *device;
   Buffer data;
 };

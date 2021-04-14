@@ -9,13 +9,16 @@
 using namespace maolan::midi;
 
 
+std::vector<OSSMIDIConfig *> OSSMIDI::_devices;
+
+
 OSSMIDI::OSSMIDI(const std::string &deviceName)
     : IO(deviceName, true), device{nullptr}
 {
 
   data = std::make_shared<BufferData>();
   bool found = false;
-  for (const auto iter : devices)
+  for (const auto iter : _devices)
   {
     if (iter->name == "OSSMIDI" && iter->device == deviceName)
     {
@@ -33,7 +36,7 @@ OSSMIDI::OSSMIDI(const std::string &deviceName)
     {
       std::cerr << deviceName.data() << ' ' << std::strerror(errno) << '\n';
     }
-    devices.emplace(devices.begin(), device);
+    _devices.emplace(_devices.begin(), device);
   }
 }
 

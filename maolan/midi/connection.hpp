@@ -7,7 +7,6 @@ namespace maolan::midi
 class Connection
 {
 public:
-  Connection();
   Connection(midi::IO *connectTo, const std::size_t &ch);
 
   IO *get();
@@ -16,6 +15,6 @@ public:
 
 protected:
   midi::IO *to;
-  std::size_t channel;
+  size_t _channel;
 };
 } // namespace maolan::midi

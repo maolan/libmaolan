@@ -1,32 +1,24 @@
-#include "maolan/config.hpp"
 #include "maolan/midi/input.hpp"
+#include "maolan/config.hpp"
+#include <iostream>
 
 
 using namespace maolan::midi;
 
 
-Input::Input() : IO("MIDIInput")
-{
-  _type = "MIDIInput";
-  connections.clear();
-  _outputs.resize(1);
-}
-
-
 void Input::connect(IO *to, const std::size_t &ch)
 {
-  auto it = connections.emplace(connections.end());
-  it->target(to, ch);
+  _connections.push_back(new Connection(to, ch));
 }
 
 
 void Input::fetch()
 {
-  std::vector<Buffer> channels(connections.size());
+  std::vector<Buffer> channels(_connections.size());
   bool empty = true;
-  for (std::size_t i = 0; i < connections.size(); ++i)
+  for (std::size_t i = 0; i < _connections.size(); ++i)
   {
-    const auto element = connections[i].pull();
+    const auto element = _connections[i]->pull();
     channels[i] = element;
     if (element != nullptr)
     {
@@ -35,15 +27,15 @@ void Input::fetch()
   }
   if (empty)
   {
-    _outputs[0] = nullptr;
+    _output = nullptr;
   }
   else if (channels.size() == 1)
   {
-    _outputs[0] = channels[0];
+    _output = channels[0];
   }
   else
   {
-    _outputs[0] = nullptr;
+    _output = nullptr;
     Buffer lastBuffer;
     Buffer chunk;
     for (auto channel : channels)
@@ -52,10 +44,10 @@ void Input::fetch()
       {
         continue;
       }
-      if (_outputs[0] == nullptr)
+      if (_output == nullptr)
       {
         chunk = std::make_shared<BufferData>();
-        _outputs[0] = chunk;
+        _output = chunk;
       }
       else
       {
@@ -73,11 +65,30 @@ void Input::fetch()
 }
 
 
-Buffer Input::pull(const std::size_t &channel)
+nlohmann::json Input::json(const std::string &name)
 {
-  return _outputs[channel];
+  auto result = R"([])"_json;
+  for (auto connection : _connections)
+  {
+    if (connection == nullptr)
+    {
+      continue;
+    }
+    auto data = R"({})"_json;
+    data["name"] = connection->get()->name();
+    result.push_back(data);
+  }
+  if (result.size() > 0)
+  {
+    auto data = R"({})"_json;
+    data["name"] = name;
+    data["to"] = result;
+    return data;
+  }
+  return nullptr;
+  return nullptr;
 }
 
 
+Buffer Input::pull() { return _output; }
 void Input::process() {}
-Input::~Input() {}

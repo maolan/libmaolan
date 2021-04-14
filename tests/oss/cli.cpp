@@ -26,8 +26,8 @@ int main(int argc, char **argv)
 
   /* Background threads + main thread
    */
+  maolan::Engine::load();
   maolan::Engine::init();
-  auto result = maolan::Engine::load();
   std::cerr << "Playing ...";
   maolan::Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(14));
@@ -39,24 +39,22 @@ int main(int argc, char **argv)
   maolan::Engine::quit();
   std::cerr << " done\n";
 
-  /* Only main thread (foreground)
-  while (true)
-  {
-    for (auto io = IO::begin(); io != nullptr; io = io->next())
-    {
-      io->setup();
-    }
-    for (auto io = IO::begin(); io != nullptr; io = io->next())
-    {
-      io->fetch();
-    }
-    for (auto io = IO::begin(); io != nullptr; io = io->next())
-    {
-      io->process();
-    }
-    auto playhead = IO::playHead();
-    IO::playHead(playhead + Config::audioBufferSize);
-  }
-  */
+  // while (true)
+  // {
+  // for (auto io = IO::begin(); io != nullptr; io = io->next())
+  // {
+  // io->setup();
+  // }
+  // for (auto io = IO::begin(); io != nullptr; io = io->next())
+  // {
+  // io->fetch();
+  // }
+  // for (auto io = IO::begin(); io != nullptr; io = io->next())
+  // {
+  // io->process();
+  // }
+  // auto playhead = IO::playHead();
+  // IO::playHead(playhead + maolan::Config::audioBufferSize);
+  // }
   return 0;
 }

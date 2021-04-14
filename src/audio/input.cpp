@@ -53,9 +53,6 @@ void Input::fetch()
 }
 
 
-Buffer Input::pull() { return _output; }
-
-
 nlohmann::json Input::json(const std::string &name, const size_t &channel)
 {
   auto result = R"([])"_json;
@@ -80,3 +77,6 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel)
   }
   return nullptr;
 }
+
+
+Buffer Input::pull() { return _output; }

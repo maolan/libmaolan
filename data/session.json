@@ -11,6 +11,16 @@
       ]
     },
     {
+      "channel": 0,
+      "name": "Midi Track",
+      "to": [
+        {
+          "channel": 0,
+          "name": "Midi Track 2"
+        }
+      ]
+    },
+    {
       "channel": 1,
       "name": "/dev/dsp",
       "to": [
@@ -30,6 +40,16 @@
         }
       ],
       "name": "Midi Track",
+      "type": "MIDITrack"
+    },
+    {
+      "clips": [
+        {
+          "name": "Midi Clip",
+          "type": "MIDIClip"
+        }
+      ],
+      "name": "Midi Track 2",
       "type": "MIDITrack"
     },
     {

@@ -12,6 +12,7 @@ Track::Track(const std::string &name, const std::size_t &channel)
 {
   _type = "MIDITrack";
   _outputs.resize(1);
+  _inputs.push_back(new Input());
 }
 
 

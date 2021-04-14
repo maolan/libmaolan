@@ -160,7 +160,7 @@ nlohmann::json Engine::load()
   }
   for (const auto &c : result["connections"])
   {
-    auto fromio = (audio::Track *)IO::find(c["name"]);
+    auto fromio = IO::find(c["name"]);
     if (fromio == nullptr)
     {
       std::cerr << "Could not find IO with name " << c["name"];
@@ -169,14 +169,23 @@ nlohmann::json Engine::load()
     auto &fromch = c["channel"];
     for (auto &tojson : c["to"])
     {
-      auto toio = (audio::IO *)IO::find(tojson["name"]);
+      auto toio = IO::find(tojson["name"]);
       if (toio == nullptr)
       {
         std::cerr << "Could not find IO with name " << tojson["name"];
         continue;
       }
       auto &toch = tojson["channel"];
-      fromio->connect(toio, fromch, toch);
+      if (fromio->type().substr(0, 5) == "Audio" &&
+          toio->type().substr(0, 5) == "Audio")
+      {
+        ((audio::IO *)fromio)->connect(((audio::IO *)toio), fromch, toch);
+      }
+      else if (fromio->type().substr(0, 4) == "MIDI" &&
+               toio->type().substr(0, 4) == "MIDI")
+      {
+        ((midi::IO *)fromio)->connect(((midi::IO *)toio), fromch, toch);
+      }
     }
   }
   return result;
