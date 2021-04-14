@@ -12,10 +12,13 @@ class Engine
 {
 public:
   static void init(const int &threads = -1);
+  static void fetch();
   static void play();
-  static void stop();
+  static void process();
   static void quit();
   static void save();
+  static void setup();
+  static void stop();
   static nlohmann::json json();
   static nlohmann::json load();
 

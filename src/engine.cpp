@@ -192,5 +192,32 @@ nlohmann::json Engine::load()
 }
 
 
+void Engine::setup()
+{
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    io->setup();
+  }
+}
+
+
+void Engine::fetch()
+{
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    io->fetch();
+  }
+}
+
+
+void Engine::process()
+{
+  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  {
+    io->process();
+  }
+}
+
+
 void Engine::play() { IO::play(); }
 void Engine::stop() { IO::stop(); }
