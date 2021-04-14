@@ -39,7 +39,7 @@ cmake .. -D<option>=On
 |                 Option                   |                                  Description                               | 
 |------------------------------------------|:--------------------------------------------------------------------------:|
 | -DCMAKE_BUILD_TYPE={Release,Debug}       | Build with or without debugging symbols                                    |
-| -DCMAKE_EXPORT_COMPILE_COMMANDS={On,Off  | Generate `compile_commands.json` (useful with language server like clangd) |
+| -DCMAKE_EXPORT_COMPILE_COMMANDS={On,Off} | Generate `compile_commands.json` (useful with language server like clangd) |
 | -DBUILD_STATIC={On,Off}                  | Build static library                                                       |
 | -DBUILD_SHARED={On,Off}                  | Build shared library (.so or .dll)                                         |
 
