@@ -1,11 +1,16 @@
 #include <cstdint>
 #include <iostream>
-#include <libgen.h>
-#include <unistd.h>
 
+#include <maolan/audio/clip.hpp>
+#include <maolan/audio/oss/out.hpp>
+#include <maolan/audio/track.hpp>
 #include <maolan/config.hpp>
 #include <maolan/engine.hpp>
 #include <maolan/io.hpp>
+#include <unistd.h>
+
+
+using namespace maolan;
 
 
 int main(int argc, char **argv)
@@ -15,28 +20,22 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <session dir>" << std::endl;
     return 1;
   }
-  maolan::Config::root = argv[1];
+  Config::root = argv[1];
+  audio::OSSOut<int32_t> out("/dev/dsp");
+  audio::Track trackp("play", 2);
+  audio::Clip clip("../data/audio/stereo.wav", &trackp, 0, 10000000, 0);
+  out.connect(&trackp);
+  Engine::init(0);
 
-  maolan::Engine::load();
-  maolan::Engine::init(0);
-  std::cerr << "Playing ...";
-  // maolan::Engine::play();
-  // std::this_thread::sleep_for(std::chrono::seconds(14));
-  // std::cerr << " done\n";
-  // std::cerr << "Stopping ...";
-  // maolan::Engine::stop();
-  // std::cerr << " done\n";
-  // std::cerr << "Exiting ...";
-  // maolan::Engine::quit();
-  // std::cerr << " done\n";
-
+  std::cout << "Playing ...\n";
   while (true)
   {
-    maolan::Engine::setup();
-    maolan::Engine::fetch();
-    maolan::Engine::process();
-    auto playhead = maolan::IO::playHead();
-    maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+    Engine::setup();
+    Engine::fetch();
+    Engine::process();
+    std::cout << "\n\n";
+    auto playhead = IO::playHead();
+    IO::playHead(playhead + Config::audioBufferSize);
   }
   return 0;
 }

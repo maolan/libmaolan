@@ -68,7 +68,7 @@ void Clip::next(Clip *n) { _next = n; }
 Clip *Clip::next() { return _next; }
 void Clip::previous(Clip *p) { _previous = p; }
 Clip *Clip::previous() { return _previous; }
-void Clip::fetch() { if (_playHead >= _start) { file.fetch(); } }
+void Clip::fetch()  { if (_playHead >= _start) { file.fetch(); }  }
 void Clip::process() {}
 std::size_t Clip::channels() const { return file.channels(); }
 std::size_t Clip::offset() { return _offset; }

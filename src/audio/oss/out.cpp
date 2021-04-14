@@ -64,8 +64,10 @@ template <typename T> void OSSOut<T>::convertToRaw()
 
 template <typename T> void OSSOut<T>::process()
 {
+  std::cout << "OSSOut::process() " << _name << '\n';
   convertToRaw();
   write(_device->fd, _bytes, _device->bufferInfo.bytes);
+  std::cout << "OSSOut::process() " << _name << " ended\n";
 }
 
 
