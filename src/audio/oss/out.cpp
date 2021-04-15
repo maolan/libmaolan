@@ -21,6 +21,7 @@ OSSOut<T>::OSSOut(const std::string &device, const int &frag)
 
 template <typename T> void OSSOut<T>::fetch()
 {
+  OSS::fetch();
   for (size_t i = 0; i < OSS::channels(); ++i)
   {
     OSS::_outputs[i] = _inputs[i]->pull();

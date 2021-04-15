@@ -37,6 +37,7 @@ Track::Track(const std::string &name, const std::size_t &ch)
 
 void Track::fetch()
 {
+  IO::fetch();
   if (_current != nullptr)
   {
     _current->fetch();
@@ -46,6 +47,7 @@ void Track::fetch()
 
 void Track::process()
 {
+  IO::process();
   if (_current != nullptr)
   {
     _current->process();
