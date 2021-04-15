@@ -20,7 +20,7 @@ public:
   static void setup();
   static void stop();
   static nlohmann::json json();
-  static nlohmann::json load();
+  static nlohmann::json load(const std::string &path);
 
 protected:
   static std::vector<Worker *> _workers;

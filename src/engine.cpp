@@ -100,8 +100,9 @@ void Engine::save()
 }
 
 
-nlohmann::json Engine::load()
+nlohmann::json Engine::load(const std::string &path)
 {
+  Config::root = path;
   chdir(Config::root.data());
   std::ifstream session{"session.json"};
   auto result = nlohmann::json::parse(session);

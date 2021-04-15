@@ -11,8 +11,7 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <session dir>" << std::endl;
     return 1;
   }
-  maolan::Config::root = argv[1];
-  maolan::Engine::load();
+  maolan::Engine::load(argv[1]);
   maolan::Engine::init();
   maolan::Engine::save();
   return 0;
