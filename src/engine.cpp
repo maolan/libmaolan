@@ -112,7 +112,8 @@ nlohmann::json Engine::load()
       auto track = new maolan::audio::Track(io["name"], io["channels"]);
       for (const auto &clipio : io["clips"])
       {
-        new maolan::audio::Clip(clipio["name"], track);
+        new maolan::audio::Clip(clipio["name"], track, clipio["start"],
+                                clipio["end"], clipio["offset"]);
       }
     }
     else if (io["type"] == "MIDITrack")

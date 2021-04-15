@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 
   maolan::Engine::load();
   maolan::Engine::init(0);
-  std::cerr << "Playing ...";
+  std::cerr << "Playing ...\n";
   // maolan::Engine::play();
   // std::this_thread::sleep_for(std::chrono::seconds(14));
   // std::cerr << " done\n";

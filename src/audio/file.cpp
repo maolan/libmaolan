@@ -15,7 +15,10 @@ File::File(const std::size_t &ch) : IO(0, false), recording(true), frame{}
                              ch, Config::samplerate);
   _type = "File";
   _name = path;
-  if (Config::audioBufferSize > 0) { init(); }
+  if (Config::audioBufferSize > 0)
+  {
+    init();
+  }
 }
 
 
@@ -35,7 +38,10 @@ File::File(const std::string &path, const uint64_t &offset)
   }
   _type = "File";
   _name = path;
-  if (Config::audioBufferSize > 0) { init(); }
+  if (Config::audioBufferSize > 0)
+  {
+    init();
+  }
 }
 
 
