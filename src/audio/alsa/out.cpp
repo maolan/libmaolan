@@ -56,7 +56,7 @@ void ALSAOut::convertToRaw()
         {
           sample = 1.0;
         }
-        _frame[i * chs + channel] = sample * maxInt;
+        _frame[i * chs + channel] = sample * floatMaxInt;
       }
     }
   }
