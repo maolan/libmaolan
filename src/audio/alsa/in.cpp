@@ -15,7 +15,7 @@ ALSAIn::ALSAIn(const std::string &device, const size_t &chs,
 
 void ALSAIn::fetch()
 {
-  auto err = snd_pcm_readi(device->handle, frame, device->fragSize);
+  auto err = snd_pcm_readi(_device->handle, _frame, _device->fragSize);
 }
 
 
@@ -28,11 +28,11 @@ void ALSAIn::process()
   {
     _outputs[i] = std::make_shared<BufferData>(Config::audioBufferSize);
   }
-  auto sizeLimit = device->fragSize / sizeof(*frame);
+  auto sizeLimit = _device->fragSize / sizeof(*_frame);
   for (size_t i = 0; i < sizeLimit; ++i)
   {
     channel = i % chs;
     index = i / chs;
-    _outputs[channel]->data()[index] = frame[i] / floatMaxInt;
+    _outputs[channel]->data()[index] = _frame[i] / floatMaxInt;
   }
 }
