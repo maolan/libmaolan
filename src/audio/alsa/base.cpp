@@ -17,55 +17,55 @@ static void checkError(int &value, const std::string &message)
 using namespace maolan::audio;
 
 
-ALSA::ALSA(const std::string &deviceName, const size_t &chs,
+ALSA::ALSA(const std::string &_deviceName, const size_t &chs,
            const snd_pcm_uframes_t &frames)
-    : IO(deviceName, true, chs), device{nullptr}
+    : IO(_deviceName, true, chs), _device{nullptr}
 {
   bool found = false;
-  for (const auto iter : IO::devices)
+  for (const auto iter : _devices)
   {
-    if (iter == device)
+    if (iter == _device)
     {
       found = true;
-      device = (ALSAConfig *)iter;
-      ++(device->count);
+      _device = (ALSAConfig *)iter;
+      ++(_device->count);
     }
   }
 
   int error = 0;
   if (!found)
   {
-    device = new ALSAConfig;
-    device->frames = frames;
-    device->audioChannels = chs;
-    error = snd_pcm_open(&(device->handle), deviceName.data(), SND_PCM_STREAM_PLAYBACK, 0);
+    _device = new ALSAConfig;
+    _device->frames = frames;
+    _device->audioChannels = chs;
+    error = snd_pcm_open(&(_device->handle), _deviceName.data(), SND_PCM_STREAM_PLAYBACK, 0);
     checkError(error, "snd_pcm_open");
-    if (device->handle == nullptr)
+    if (_device->handle == nullptr)
     {
       return;
     }
     // Allocate and init a hardware parameters object
-    snd_pcm_hw_params_alloca(&(device->params));
+    snd_pcm_hw_params_alloca(&(_device->params));
     try
     {
-      error = snd_pcm_hw_params_any(device->handle, device->params);
+      error = snd_pcm_hw_params_any(_device->handle, _device->params);
       checkError(error, "params");
-      error = snd_pcm_hw_params_set_access(device->handle, device->params,
+      error = snd_pcm_hw_params_set_access(_device->handle, _device->params,
                                            SND_PCM_ACCESS_RW_INTERLEAVED);
       checkError(error, "access");
-      error = snd_pcm_hw_params_set_format(device->handle, device->params,
+      error = snd_pcm_hw_params_set_format(_device->handle, _device->params,
                                            SND_PCM_FORMAT_FLOAT);
       checkError(error, "format");
-      error = snd_pcm_hw_params_set_channels(device->handle, device->params,
-                                             device->audioChannels);
+      error = snd_pcm_hw_params_set_channels(_device->handle, _device->params,
+                                             _device->audioChannels);
       checkError(error, "channels");
-      error = snd_pcm_hw_params_set_rate_near(device->handle, device->params,
+      error = snd_pcm_hw_params_set_rate_near(_device->handle, _device->params,
                                               &(Config::samplerate), 0);
       checkError(error, "sample rate");
       error = snd_pcm_hw_params_set_period_size_near(
-          device->handle, device->params, &(device->frames), 0);
+          _device->handle, _device->params, &(_device->frames), 0);
       checkError(error, "period size");
-      error = snd_pcm_hw_params(device->handle, device->params);
+      error = snd_pcm_hw_params(_device->handle, _device->params);
       checkError(error, "hw params");
     }
     catch (const std::invalid_argument &ex)
@@ -78,24 +78,24 @@ ALSA::ALSA(const std::string &deviceName, const size_t &chs,
       std::cerr << '\n';
       exit(1);
     }
-    Config::audioBufferSize = device->frames;
+    Config::audioBufferSize = _device->frames;
     std::cerr << Config::audioBufferSize << '\n';
   }
-  frame = new float[Config::audioBufferSize * sizeof(float)];
+  _frame = new float[Config::audioBufferSize * sizeof(float)];
 }
 
 
 ALSA::~ALSA()
 {
-  delete[] frame;
-  --(device->count);
-  if (device->count < 1)
+  delete[] _frame;
+  --(_device->count);
+  if (_device->count < 1)
   {
-    for (auto iter = IO::devices.begin(); iter != IO::devices.end(); ++iter)
+    for (auto iter = _devices.begin(); iter != _devices.end(); ++iter)
     {
-      if (*iter == device)
+      if (*iter == _device)
       {
-        devices.erase(iter);
+        _devices.erase(iter);
       }
     }
   }

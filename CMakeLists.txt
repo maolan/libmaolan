@@ -78,7 +78,7 @@ if (ALSA)
     target_link_directories(test-alsa PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
     target_link_libraries(test-alsa maolan ${MY_LIBRARIES})
     add_dependencies(build-tests test-alsa)
-    add_test(NAME alsa COMMAND ./test-alsa http://lv2plug.in/plugins/eg-amp)
+    add_test(NAME alsa COMMAND ./test-alsa 48000 2 <${CMAKE_CURRENT_SOURCE_DIR}/data/audio/stereo.wav)
 endif()
 
 option(LV2 "LADSPA version 2 plugins" OFF)

@@ -17,7 +17,7 @@ public:
   virtual std::size_t channels() const;
 
 protected:
-  float *frame;
-  ALSAConfig *device;
+  float *_frame;
+  ALSAConfig *_device;
 };
 } // namespace maolan::audio
