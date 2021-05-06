@@ -1,10 +1,10 @@
+#include "maolan/audio/alsa/out.hpp"
+#include "maolan/constants.hpp"
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <sys/soundcard.h>
 #include <unistd.h>
-#include "maolan/audio/alsa/out.hpp"
-#include "maolan/constants.hpp"
 
 
 using namespace maolan::audio;
@@ -22,7 +22,10 @@ ALSAOut::ALSAOut(const std::string &device, const size_t &chs,
 
 void ALSAOut::fetch()
 {
-  for (size_t i = 0; i < channels(); ++i) { _outputs[i] = _inputs[i]->pull(); }
+  for (size_t i = 0; i < channels(); ++i)
+  {
+    _outputs[i] = _inputs[i]->pull();
+  }
 }
 
 
@@ -34,20 +37,26 @@ void ALSAOut::convertToRaw()
     auto buffer = _outputs[channel];
     if (buffer == nullptr)
     {
-      for (size_t i = 0; i < device->audioBufferSize; ++i)
+      for (size_t i = 0; i < _device->audioBufferSize; ++i)
       {
-        frame[i * chs + channel] = 0;
+        _frame[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (std::size_t i = 0; i < device->audioBufferSize; ++i)
+      for (std::size_t i = 0; i < _device->audioBufferSize; ++i)
       {
         float sample = buffer->data()[i];
 
-        if (sample <= -1.0) { sample = -1.0; }
-        else if (sample >= 1.0) { sample = 1.0; }
-        frame[i * chs + channel] = sample * maxInt;
+        if (sample <= -1.0)
+        {
+          sample = -1.0;
+        }
+        else if (sample >= 1.0)
+        {
+          sample = 1.0;
+        }
+        _frame[i * chs + channel] = sample * maxInt;
       }
     }
   }
@@ -57,11 +66,11 @@ void ALSAOut::convertToRaw()
 void ALSAOut::process()
 {
   convertToRaw();
-  play(frame, device->fragSize);
+  play(_device->fragSize);
 }
 
 
-void ALSAOut::play(float *frame, std::size_t dataSize)
+void ALSAOut::play(std::size_t dataSize)
 {
-  snd_pcm_writei(device->handle, frame, dataSize);
+  snd_pcm_writei(_device->handle, _frame, dataSize);
 }

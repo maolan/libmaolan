@@ -1,6 +1,6 @@
-#include <unistd.h>
 #include "maolan/audio/alsa/in.hpp"
 #include "maolan/constants.hpp"
+#include <unistd.h>
 
 using namespace maolan::audio;
 
@@ -15,7 +15,7 @@ ALSAIn::ALSAIn(const std::string &device, const size_t &chs,
 
 void ALSAIn::fetch()
 {
-  auto err = snd_pcm_readi(_device->handle, _frame, _device->fragSize);
+  snd_pcm_readi(_device->handle, _frame, _device->fragSize);
 }
 
 

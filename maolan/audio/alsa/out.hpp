@@ -1,8 +1,8 @@
 #pragma once
-#include <string>
 #include "maolan/audio/alsa/base.hpp"
 #include "maolan/audio/connectable.hpp"
 #include "maolan/audio/input.hpp"
+#include <string>
 
 
 namespace maolan::audio
@@ -16,6 +16,6 @@ public:
   virtual void fetch();
   virtual void process();
   void convertToRaw();
-  void play(float *frame, std::size_t dataSize);
+  void play(std::size_t dataSize);
 };
 } // namespace maolan::audio
