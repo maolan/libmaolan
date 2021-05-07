@@ -63,7 +63,7 @@ int main(int argc, char **argv)
     printf("ERROR: Can't set interleaved mode. %s\n", snd_strerror(pcm));
 
   if ((pcm = snd_pcm_hw_params_set_format(pcm_handle, params,
-                                          SND_PCM_FORMAT_S16_LE)) < 0)
+                                          SND_PCM_FORMAT_S32_LE)) < 0)
     printf("ERROR: Can't set format. %s\n", snd_strerror(pcm));
 
   if ((pcm = snd_pcm_hw_params_set_channels(pcm_handle, params, channels)) < 0)
@@ -97,7 +97,7 @@ int main(int argc, char **argv)
   /* Allocate buffer to hold single period */
   snd_pcm_hw_params_get_period_size(params, &frames, 0);
 
-  buff_size = frames * channels * 2 /* 2 -> sample size */;
+  buff_size = frames * channels * 4 /* 4 -> sample size */;
   buff = (char *)malloc(buff_size);
 
   snd_pcm_hw_params_get_period_time(params, &tmp, NULL);

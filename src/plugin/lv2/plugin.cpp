@@ -121,6 +121,7 @@ const void *Plugin::portValue(const char *port_symbol, void *user_data,
                               uint32_t *, uint32_t *)
 {
   auto plugin = (Plugin *)user_data;
+  (void)plugin;
   assert(plugin != nullptr);
   std::cout << port_symbol << '\n';
   return nullptr;
