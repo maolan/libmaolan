@@ -237,3 +237,4 @@ void IO::data(void *d) { _data = d; }
 void IO::init() {}
 nlohmann::json IO::connections() { return nullptr; }
 void IO::fetch() {}
+void IO::process() {}
