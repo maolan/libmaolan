@@ -1,130 +1,185 @@
-/*
- * Simple sound playback using ALSA API and libasound.
- *
- * Compile:
- * $ cc -o play sound_playback.c -lasound
- *
- * Usage:
- * $ ./play <sample_rate> <channels> <seconds> < <file>
- *
- * Examples:
- * $ ./play 44100 2 5 < /dev/urandom
- * $ ./play 22050 1 8 < /path/to/file.wav
- *
- * Copyright (C) 2009 Alessandro Ghedini <al3xbio@gmail.com>
- * --------------------------------------------------------------
- * "THE BEER-WARE LICENSE" (Revision 42):
- * Alessandro Ghedini wrote this file. As long as you retain this
- * notice you can do whatever you want with this stuff. If we
- * meet some day, and you think this stuff is worth it, you can
- * buy me a beer in return.
- * --------------------------------------------------------------
- */
-
 #include <alsa/asoundlib.h>
 #include <stdio.h>
 
-#define PCM_DEVICE "default"
+// source: http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
+
+int restarting;
+
+int nchannels = 1;
+int buffer_size = 512;
+int sample_rate = 44100;
+int bits = 16;
+
+char *snd_device_in = "plughw:0,0";
+char *snd_device_out = "plughw:0,0";
+snd_pcm_t *playback_handle;
+snd_pcm_t *capture_handle;
+
+int configure_alsa_audio(snd_pcm_t *device, int channels)
+{
+  snd_pcm_hw_params_t *hw_params;
+  int err;
+  unsigned int tmp;
+  snd_pcm_uframes_t frames;
+  int fragments = 2;
+
+  /* allocate memory for hardware parameter structure */
+  if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0)
+  {
+    fprintf(stderr, "cannot allocate parameter structure (%s)\n",
+            snd_strerror(err));
+    return 1;
+  }
+  /* fill structure from current audio parameters */
+  if ((err = snd_pcm_hw_params_any(device, hw_params)) < 0)
+  {
+    fprintf(stderr, "cannot initialize parameter structure (%s)\n",
+            snd_strerror(err));
+    return 1;
+  }
+
+  /* set access type, sample rate, sample format, channels */
+  if ((err = snd_pcm_hw_params_set_access(device, hw_params,
+                                          SND_PCM_ACCESS_RW_INTERLEAVED)) < 0)
+  {
+    fprintf(stderr, "cannot set access type: %s\n", snd_strerror(err));
+    return 1;
+  }
+  // bits = 16
+  if ((err = snd_pcm_hw_params_set_format(device, hw_params,
+                                          SND_PCM_FORMAT_S16_LE)) < 0)
+  {
+    fprintf(stderr, "cannot set sample format: %s\n", snd_strerror(err));
+    return 1;
+  }
+  tmp = sample_rate;
+  if ((err = snd_pcm_hw_params_set_rate_near(device, hw_params, &tmp, 0)) < 0)
+  {
+    fprintf(stderr, "cannot set sample rate: %s\n", snd_strerror(err));
+    return 1;
+  }
+  if (tmp != sample_rate)
+  {
+    fprintf(stderr,
+            "Could not set requested sample rate, asked for %d got %d\n",
+            sample_rate, tmp);
+    sample_rate = tmp;
+  }
+  if ((err = snd_pcm_hw_params_set_channels(device, hw_params, channels)) < 0)
+  {
+    fprintf(stderr, "cannot set channel count: %s\n", snd_strerror(err));
+    return 1;
+  }
+
+  int frame_size = channels * (bits / 8);
+  frames = buffer_size / frame_size * fragments;
+  if ((err = snd_pcm_hw_params_set_buffer_size_near(device, hw_params,
+                                                    &frames)) < 0)
+  {
+    fprintf(stderr, "Error setting buffer_size %d frames: %s\n", frames,
+            snd_strerror(err));
+    return 1;
+  }
+  if (buffer_size != frames * frame_size / fragments)
+  {
+    fprintf(stderr,
+            "Could not set requested buffer size, asked for %d got %d\n",
+            buffer_size, frames * frame_size / fragments);
+    buffer_size = frames * frame_size / fragments;
+  }
+
+  if ((err = snd_pcm_hw_params(device, hw_params)) < 0)
+  {
+    fprintf(stderr, "Error setting HW params: %s\n", snd_strerror(err));
+    return 1;
+  }
+  return 0;
+}
 
 int main(int argc, char **argv)
 {
-  unsigned int tmp, rate;
-  int pcm, channels, seconds;
-  snd_pcm_t *pcm_handle;
-  snd_pcm_hw_params_t *params;
-  snd_pcm_uframes_t frames;
-  char *buff;
-  int buff_size, loops;
 
-  if (argc < 4)
+  int err;
+
+  if ((err = snd_pcm_open(&playback_handle, snd_device_out,
+                          SND_PCM_STREAM_PLAYBACK, 0)) < 0)
   {
-    printf("Usage: %s <sample_rate> <channels> <seconds>\n", argv[0]);
-    return -1;
+    fprintf(stderr, "cannot open output audio device %s: %s\n", snd_device_out,
+            snd_strerror(err));
+    exit(1);
   }
 
-  rate = atoi(argv[1]);
-  channels = atoi(argv[2]);
-  seconds = atoi(argv[3]);
-
-  /* Open the PCM device in playback mode */
-  if ((pcm = snd_pcm_open(&pcm_handle, PCM_DEVICE, SND_PCM_STREAM_PLAYBACK,
-                          0)) < 0)
-    printf("ERROR: Can't open \"%s\" PCM device. %s\n", PCM_DEVICE,
-           snd_strerror(pcm));
-
-  /* Allocate parameters object and fill it with default values*/
-  snd_pcm_hw_params_alloca(&params);
-
-  snd_pcm_hw_params_any(pcm_handle, params);
-
-  /* Set parameters */
-  if ((pcm = snd_pcm_hw_params_set_access(pcm_handle, params,
-                                          SND_PCM_ACCESS_RW_INTERLEAVED)) < 0)
-    printf("ERROR: Can't set interleaved mode. %s\n", snd_strerror(pcm));
-
-  if ((pcm = snd_pcm_hw_params_set_format(pcm_handle, params,
-                                          SND_PCM_FORMAT_S32_LE)) < 0)
-    printf("ERROR: Can't set format. %s\n", snd_strerror(pcm));
-
-  if ((pcm = snd_pcm_hw_params_set_channels(pcm_handle, params, channels)) < 0)
-    printf("ERROR: Can't set channels number. %s\n", snd_strerror(pcm));
-
-  if ((pcm = snd_pcm_hw_params_set_rate_near(pcm_handle, params, &rate, 0)) < 0)
-    printf("ERROR: Can't set rate. %s\n", snd_strerror(pcm));
-
-  /* Write parameters */
-  if ((pcm = snd_pcm_hw_params(pcm_handle, params)) < 0)
-    printf("ERROR: Can't set harware parameters. %s\n", snd_strerror(pcm));
-
-  /* Resume information */
-  printf("PCM name: '%s'\n", snd_pcm_name(pcm_handle));
-
-  printf("PCM state: %s\n", snd_pcm_state_name(snd_pcm_state(pcm_handle)));
-
-  snd_pcm_hw_params_get_channels(params, &tmp);
-  printf("channels: %i ", tmp);
-
-  if (tmp == 1)
-    printf("(mono)\n");
-  else if (tmp == 2)
-    printf("(stereo)\n");
-
-  snd_pcm_hw_params_get_rate(params, &tmp, 0);
-  printf("rate: %d bps\n", tmp);
-
-  printf("seconds: %d\n", seconds);
-
-  /* Allocate buffer to hold single period */
-  snd_pcm_hw_params_get_period_size(params, &frames, 0);
-
-  buff_size = frames * channels * 4 /* 4 -> sample size */;
-  buff = (char *)malloc(buff_size);
-
-  snd_pcm_hw_params_get_period_time(params, &tmp, NULL);
-
-  for (loops = (seconds * 1000000) / tmp; loops > 0; loops--)
+  if ((err = snd_pcm_open(&capture_handle, snd_device_in,
+                          SND_PCM_STREAM_CAPTURE, 0)) < 0)
   {
-
-    if ((pcm = read(0, buff, buff_size)) == 0)
-    {
-      printf("Early end of file.\n");
-      return 0;
-    }
-
-    if ((pcm = snd_pcm_writei(pcm_handle, buff, frames)) == -EPIPE)
-    {
-      printf("XRUN.\n");
-      snd_pcm_prepare(pcm_handle);
-    }
-    else if (pcm < 0)
-    {
-      printf("ERROR. Can't write to PCM device. %s\n", snd_strerror(pcm));
-    }
+    fprintf(stderr, "cannot open input audio device %s: %s\n", snd_device_in,
+            snd_strerror(err));
+    exit(1);
   }
 
-  snd_pcm_drain(pcm_handle);
-  snd_pcm_close(pcm_handle);
-  free(buff);
+  configure_alsa_audio(/*snd_device_out*/ playback_handle, nchannels);
+  configure_alsa_audio(/*snd_device_in*/ capture_handle, nchannels);
+
+  restarting = 1;
+
+  int frames, inframes, outframes, frame_size;
+
+  while (/*! exit_program*/ true)
+  {
+    frame_size = nchannels * (bits / 8);
+    frames = buffer_size / frame_size;
+
+    const int MIN_BUFFER_SIZE = 1024;
+    const int MAX_BUFFERS = 10;
+
+    char rdbuf[MIN_BUFFER_SIZE * MAX_BUFFERS]; /* receive buffer */
+    if (restarting)
+    {
+      restarting = 0;
+      /* drop any output we might got and stop */
+      snd_pcm_drop(capture_handle);
+      snd_pcm_drop(playback_handle);
+      /* prepare for use */
+      snd_pcm_prepare(capture_handle);
+      snd_pcm_prepare(playback_handle);
+
+      int fragments = 2;
+
+
+      /* fill the whole output buffer */
+      for (int i = 0; i < fragments; i += 1)
+        snd_pcm_writei(playback_handle, rdbuf, frames);
+    }
+
+    while ((inframes = snd_pcm_readi(capture_handle, rdbuf, frames)) < 0)
+    {
+      if (inframes == -EAGAIN)
+        continue;
+      // by the way, writing to terminal emulator is costly if you use
+      // bad emulators like gnome-terminal, so don't do this.
+      fprintf(stderr, "Input buffer overrun\n");
+      restarting = 1;
+      snd_pcm_prepare(capture_handle);
+    }
+    if (inframes != frames)
+      fprintf(stderr, "Short read from capture device: %d, expecting %d\n",
+              inframes, frames);
+
+    /* now processes the frames */
+    // do_something(rdbuf, inframes);
+
+    while ((outframes = snd_pcm_writei(playback_handle, rdbuf, inframes)) < 0)
+    {
+      if (outframes == -EAGAIN)
+        continue;
+      fprintf(stderr, "Output buffer underrun\n");
+      restarting = 1;
+      snd_pcm_prepare(playback_handle);
+    }
+    if (outframes != inframes)
+      fprintf(stderr, "Short write to playback device: %d, expecting %d\n",
+              outframes, frames);
+  }
 
   return 0;
 }
