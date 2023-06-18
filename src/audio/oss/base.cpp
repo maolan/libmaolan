@@ -14,9 +14,6 @@
 using namespace maolan::audio;
 
 
-std::vector<OSSConfig *> OSS::_devices;
-
-
 static void checkError(const int &value, const std::string &message)
 {
   if (value == -1)
@@ -40,134 +37,106 @@ static int size2frag(int x)
 
 OSS::OSS(const std::string &deviceName, const int &argFrag,
          const int &sampleSize)
-    : IO(deviceName, true, 0), _device{nullptr}
+    : IO(deviceName, true, 0)
 {
 
-  bool found = false;
-  for (const auto &iter : _devices)
+  int error = 0;
+  int tmp;
+  _frag = argFrag;
+  _device = deviceName;
+  _sampleSize = sampleSize;
+  if (_sampleSize == 4)
   {
-    if (iter->name == "OSS" && iter->device == deviceName)
-    {
-      found = true;
-      _device = (OSSConfig *)iter;
-      ++(_device->count);
-      break;
-    }
+    _format = AFMT_S32_NE;
   }
-
-  if (!found)
+  else if (_sampleSize == 2)
   {
-    int error = 0;
-    int tmp;
-    _device = new OSSConfig;
-    _device->frag = argFrag;
-    _device->device = deviceName;
-    _device->sampleSize = sampleSize;
-    if (sampleSize == 4)
+    _format = AFMT_S16_NE;
+  }
+  else if (_sampleSize == 1)
+  {
+    _format = AFMT_S8;
+  }
+  else
+  {
+    std::cerr << "Unsupported sample size: " << sampleSize << '\n';
+    exit(1);
+  }
+  try
+  {
+    error = open(deviceName.data(), O_RDWR, 0);
+    checkError(error, "open");
+    _fd = error;
+
+    _audioInfo.dev = -1;
+    ioctl(_fd, SNDCTL_ENGINEINFO, &_audioInfo);
+    _outputs.resize(_audioInfo.max_channels);
+    for (int i = 0; i < _audioInfo.max_channels; ++i)
     {
-      _device->format = AFMT_S32_NE;
+      _inputs.push_back(new Input());
     }
-    else if (sampleSize == 2)
+
+    error = ioctl(_fd, SNDCTL_DSP_GETCAPS, &(_audioInfo.caps));
+    checkError(error, "SNDCTL_DSP_GETCAPS");
+    if (!(_audioInfo.caps & PCM_CAP_DUPLEX))
     {
-      _device->format = AFMT_S16_NE;
-    }
-    else if (sampleSize == 1)
-    {
-      _device->format = AFMT_S8;
-    }
-    else
-    {
-      std::cerr << "Unsupported sample size: " << sampleSize << '\n';
-      exit(1);
-    }
-    try
-    {
-      error = open(deviceName.data(), O_RDWR, 0);
-      checkError(error, "open");
-      _device->fd = error;
-
-      _device->audioInfo.dev = -1;
-      ioctl(_device->fd, SNDCTL_ENGINEINFO, &(_device->audioInfo));
-      _outputs.resize(_device->audioInfo.max_channels);
-      for (int i = 0; i < _device->audioInfo.max_channels; ++i)
-      {
-        _inputs.push_back(new Input());
-      }
-
-      error =
-          ioctl(_device->fd, SNDCTL_DSP_GETCAPS, &(_device->audioInfo.caps));
-      checkError(error, "SNDCTL_DSP_GETCAPS");
-      if (!(_device->audioInfo.caps & PCM_CAP_DUPLEX))
-      {
-        fprintf(stderr, "Device doesn't support full duplex!\n");
-        exit(1);
-      }
-
-      tmp = channels();
-      error = ioctl(_device->fd, SNDCTL_DSP_CHANNELS, &tmp);
-      checkError(error, "SNDCTL_DSP_CHANNELS");
-
-      tmp = _device->format;
-      error = ioctl(_device->fd, SNDCTL_DSP_SETFMT, &tmp);
-      checkError(error, "SNDCTL_DSP_SETFMT");
-      if (tmp != _device->format)
-      {
-        std::stringstream s;
-        s << _device << " doesn't support chosen sample format (";
-        s << tmp << ")";
-        error = 0;
-        checkError(1, s.str());
-      }
-
-      tmp = Config::samplerate;
-      error = ioctl(_device->fd, SNDCTL_DSP_SPEED, &tmp);
-      checkError(error, "SNDCTL_DSP_SPEED");
-
-      int minFrag = size2frag(_device->sampleSize * channels());
-      if (_device->frag < minFrag)
-      {
-        _device->frag = minFrag;
-      }
-      tmp = _device->frag;
-      error = ioctl(_device->fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
-      checkError(error, "SNDCTL_DSP_SETFRAGMENT");
-
-      error = ioctl(_device->fd, SNDCTL_DSP_GETOSPACE, &(_device->bufferInfo));
-      checkError(error, "SNDCTL_DSP_GETOSPACE");
-    }
-    catch (const std::invalid_argument &ex)
-    {
-      std::cerr << _type << " error: " << ex.what();
-      std::cerr << ' ' << strerror(errno) << '\n';
+      fprintf(stderr, "Device doesn't support full duplex!\n");
       exit(1);
     }
 
-    _device->sampleCount = _device->bufferInfo.bytes / _device->sampleSize;
-    Config::audioBufferSize = _device->sampleCount / channels();
-    _bytes = new int8_t[_device->bufferInfo.bytes];
-    _devices.emplace(_devices.begin(), _device);
+    tmp = channels();
+    error = ioctl(_fd, SNDCTL_DSP_CHANNELS, &tmp);
+    checkError(error, "SNDCTL_DSP_CHANNELS");
+
+    tmp = _format;
+    error = ioctl(_fd, SNDCTL_DSP_SETFMT, &tmp);
+    checkError(error, "SNDCTL_DSP_SETFMT");
+    if (tmp != _format)
+    {
+      std::stringstream s;
+      s << _device << " doesn't support chosen sample format (";
+      s << tmp << ")";
+      error = 0;
+      checkError(1, s.str());
+    }
+
+    tmp = Config::samplerate;
+    error = ioctl(_fd, SNDCTL_DSP_SPEED, &tmp);
+    checkError(error, "SNDCTL_DSP_SPEED");
+
+    int minFrag = size2frag(_sampleSize * channels());
+    if (_frag < minFrag)
+    {
+      _frag = minFrag;
+    }
+    tmp = _frag;
+    error = ioctl(_fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
+    checkError(error, "SNDCTL_DSP_SETFRAGMENT");
+
+    error = ioctl(_fd, SNDCTL_DSP_GETOSPACE, &_bufferInfo);
+    checkError(error, "SNDCTL_DSP_GETOSPACE");
   }
+  catch (const std::invalid_argument &ex)
+  {
+    std::cerr << _type << " error: " << ex.what();
+    std::cerr << ' ' << strerror(errno) << '\n';
+    exit(1);
+  }
+
+  _sampleCount = _bufferInfo.bytes / _sampleSize;
+  Config::audioBufferSize = _sampleCount / channels();
+  _bytes = new int8_t[_bufferInfo.bytes];
 }
 
 
 nlohmann::json OSS::json()
 {
   auto data = IO::json();
-  data["bits"] = _device->sampleSize * 8;
-  data["samplerate"] = _device->samplerate;
+  data["bits"] = _sampleSize * 8;
+  data["samplerate"] = Config::samplerate;
   return data;
 }
 
 
-OSS::~OSS()
-{
-  --(_device->count);
-  if (_device->count < 1)
-  {
-    close(_device->fd);
-    _devices.erase(std::find(_devices.begin(), _devices.end(), _device));
-  }
-}
-
-
+OSS::~OSS() { close(_fd); }
 size_t OSS::channels() const { return _outputs.size(); }

@@ -1,4 +1,4 @@
-#include "maolan/config.hpp"
+#include <maolan/config.hpp>
 
 
 using namespace maolan;

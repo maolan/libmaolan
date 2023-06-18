@@ -238,3 +238,5 @@ void IO::init() {}
 nlohmann::json IO::connections() { return nullptr; }
 void IO::fetch() {}
 void IO::process() {}
+void IO::readhw() {}
+void IO::writehw() {}

@@ -1,9 +1,9 @@
 #pragma once
 #include <nlohmann/json.hpp>
 #include <string>
+#include <sys/soundcard.h>
 
 #include "maolan/audio/io.hpp"
-#include "maolan/audio/oss/config.hpp"
 #include "maolan/constants.hpp"
 
 
@@ -20,9 +20,15 @@ public:
   virtual nlohmann::json json();
 
 protected:
-  static std::vector<OSSConfig *> _devices;
-
   int8_t *_bytes;
-  OSSConfig *_device;
+  int _fd;
+  int _format;
+  int _frag;
+  int _sampleCount;
+  oss_audioinfo _audioInfo;
+  audio_buf_info _bufferInfo;
+  static std::size_t _audioBufferSize;
+  std::string _device;
+  std::size_t _sampleSize;
 };
 } // namespace maolan::audio

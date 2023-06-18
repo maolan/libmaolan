@@ -42,7 +42,7 @@ void Engine::init(const int &threads)
   {
     int maxWorkers = std::thread::hardware_concurrency();
     auto realWorkerNumber =
-        threads == -1 || threads > maxWorkers ? maxWorkers : threads;
+        threads == -1 || threads >= maxWorkers ? maxWorkers - 1 : threads;
     _workers.resize(realWorkerNumber);
     for (std::size_t i = 0; i < _workers.size(); ++i)
     {

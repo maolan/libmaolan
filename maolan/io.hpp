@@ -35,6 +35,8 @@ public:
   virtual void parent(IO *p);
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
+  virtual void readhw();
+  virtual void writehw();
 
   void work();
   void next(IO *);

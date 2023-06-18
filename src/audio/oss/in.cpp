@@ -16,9 +16,9 @@ OSSIn<T>::OSSIn(const std::string &device, const int &frag)
 }
 
 
-template <class T> void OSSIn<T>::fetch()
+template <class T> void OSSIn<T>::readhw()
 {
-  read(_device->fd, _bytes, _device->bufferInfo.bytes);
+  read(_fd, _bytes, _bufferInfo.bytes);
 }
 
 
