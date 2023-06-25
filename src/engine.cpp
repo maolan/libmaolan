@@ -11,8 +11,8 @@
 #include "maolan/midi/track.hpp"
 
 #ifdef OSS_ENABLED
-#include "maolan/audio/oss/in.hpp"
-#include "maolan/audio/oss/out.hpp"
+#include "maolan/oss/audio/in.hpp"
+#include "maolan/oss/audio/out.hpp"
 #endif
 
 #ifdef LV2_ENABLED
@@ -43,6 +43,9 @@ void Engine::init(const int &threads)
     int maxWorkers = std::thread::hardware_concurrency();
     auto realWorkerNumber =
         threads == -1 || threads >= maxWorkers ? maxWorkers - 1 : threads;
+    if (realWorkerNumber < 1) {
+      realWorkerNumber = 1;
+    }
     _workers.resize(realWorkerNumber);
     for (std::size_t i = 0; i < _workers.size(); ++i)
     {

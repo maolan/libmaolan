@@ -6,7 +6,7 @@
 #include <unistd.h>
 
 #include "maolan/audio/input.hpp"
-#include "maolan/audio/oss/base.hpp"
+#include "maolan/oss/audio/base.hpp"
 #include "maolan/config.hpp"
 #include "maolan/constants.hpp"
 
@@ -37,7 +37,7 @@ static int size2frag(int x)
 
 OSS::OSS(const std::string &deviceName, const int &argFrag,
          const int &sampleSize)
-    : IO(deviceName, true, 0)
+    : maolan::audio::oss::IO(deviceName)
 {
 
   int error = 0;

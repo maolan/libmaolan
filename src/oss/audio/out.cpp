@@ -1,11 +1,11 @@
-#include "maolan/audio/oss/out.hpp"
-#include "maolan/constants.hpp"
 #include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <sys/soundcard.h>
 #include <unistd.h>
 
+#include "maolan/constants.hpp"
+#include "maolan/oss/audio/out.hpp"
 
 using namespace maolan::audio;
 

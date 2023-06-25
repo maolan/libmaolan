@@ -1,8 +1,8 @@
 #pragma once
-#include "maolan/midi/input.hpp"
-#include "maolan/midi/oss/base.hpp"
 #include <string>
 
+#include "maolan/midi/input.hpp"
+#include "maolan/oss/midi/base.hpp"
 
 namespace maolan::midi
 {

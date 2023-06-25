@@ -3,13 +3,13 @@
 #include <string>
 #include <sys/soundcard.h>
 
-#include "maolan/audio/io.hpp"
+#include "maolan/oss/io.hpp"
 #include "maolan/constants.hpp"
 
 
 namespace maolan::audio
 {
-class OSS : public IO
+class OSS : public maolan::audio::oss::IO
 {
 public:
   OSS(const std::string &device, const int &fragSize = defaultFrag,

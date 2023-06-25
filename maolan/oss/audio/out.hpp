@@ -3,7 +3,7 @@
 #include <string>
 
 #include "maolan/audio/input.hpp"
-#include "maolan/audio/oss/base.hpp"
+#include "maolan/oss/audio/base.hpp"
 
 
 namespace maolan::audio

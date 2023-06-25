@@ -1,7 +1,7 @@
 #pragma once
 #include "maolan/midi/buffer.hpp"
 #include "maolan/midi/io.hpp"
-#include "maolan/midi/oss/config.hpp"
+#include "maolan/oss/midi/config.hpp"
 
 
 namespace maolan::midi

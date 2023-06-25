@@ -1,6 +1,6 @@
 #include <unistd.h>
 
-#include "maolan/audio/oss/in.hpp"
+#include "maolan/oss/audio/in.hpp"
 #include "maolan/constants.hpp"
 
 

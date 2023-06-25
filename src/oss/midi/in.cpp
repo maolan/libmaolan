@@ -1,8 +1,9 @@
-#include "maolan/midi/oss/in.hpp"
-#include "maolan/constants.hpp"
-#include "maolan/midi/event.hpp"
 #include <iomanip>
 #include <unistd.h>
+
+#include "maolan/oss/midi/in.hpp"
+#include "maolan/constants.hpp"
+#include "maolan/midi/event.hpp"
 
 
 using namespace maolan::midi;
