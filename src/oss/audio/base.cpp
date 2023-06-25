@@ -1,4 +1,3 @@
-#include <cstring>
 #include <fcntl.h>
 #include <iostream>
 #include <sstream>
@@ -6,9 +5,9 @@
 #include <unistd.h>
 
 #include "maolan/audio/input.hpp"
-#include "maolan/oss/audio/base.hpp"
 #include "maolan/config.hpp"
 #include "maolan/constants.hpp"
+#include "maolan/oss/audio/base.hpp"
 
 
 using namespace maolan::audio;
@@ -59,8 +58,9 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
   }
   else
   {
-    std::cerr << "Unsupported sample size: " << sampleSize << '\n';
-    exit(1);
+    std::stringstream s;
+    s << "Unsupported sample size: " << sampleSize << '\n';
+    throw std::invalid_argument(s.str());
   }
   try
   {

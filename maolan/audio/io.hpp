@@ -13,7 +13,7 @@ class Input;
 class IO : public maolan::IO
 {
 public:
-  IO(const std::string &name, const bool &reg = false, const size_t &outs = 0);
+  IO(const std::string &name, const bool &reg = true, const size_t &outs = 0);
 
 
   virtual void fetch();

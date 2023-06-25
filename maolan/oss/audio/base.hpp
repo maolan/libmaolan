@@ -3,8 +3,8 @@
 #include <string>
 #include <sys/soundcard.h>
 
-#include "maolan/oss/io.hpp"
 #include "maolan/constants.hpp"
+#include "maolan/oss/io.hpp"
 
 
 namespace maolan::audio
@@ -27,7 +27,6 @@ protected:
   int _sampleCount;
   oss_audioinfo _audioInfo;
   audio_buf_info _bufferInfo;
-  static std::size_t _audioBufferSize;
   std::string _device;
   std::size_t _sampleSize;
 };

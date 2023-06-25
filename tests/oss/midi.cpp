@@ -1,12 +1,12 @@
 #include <chrono>
-#include <iostream>
 #include <cstdint>
-#include <maolan/audio/oss/out.hpp>
+#include <iostream>
 #include <maolan/engine.hpp>
 #include <maolan/midi/clip.hpp>
-#include <maolan/midi/oss/in.hpp>
-#include <maolan/midi/oss/out.hpp>
 #include <maolan/midi/track.hpp>
+#include <maolan/oss/audio/out.hpp>
+#include <maolan/oss/midi/in.hpp>
+#include <maolan/oss/midi/out.hpp>
 #include <thread>
 
 namespace audio = maolan::audio;
@@ -47,20 +47,20 @@ int main(int argc, char **argv)
   // No threads/background
   // while (true)
   // {
-    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
-    // {
-      // io->setup();
-    // }
-    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
-    // {
-      // io->fetch();
-    // }
-    // for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
-    // {
-      // io->process();
-    // }
-    // auto playhead = maolan::IO::playHead();
-    // maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
+  //   for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+  //   {
+  //     io->setup();
+  //   }
+  //   for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+  //   {
+  //     io->fetch();
+  //   }
+  //   for (auto io = maolan::IO::begin(); io != nullptr; io = io->next())
+  //   {
+  //     io->process();
+  //   }
+  //   auto playhead = maolan::IO::playHead();
+  //   maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   // }
   return 0;
 }

@@ -38,14 +38,14 @@ template <typename T> void OSSOut<T>::convertToRaw()
     auto buffer = OSS::_outputs[channel];
     if (buffer == nullptr)
     {
-      for (std::size_t i = 0; i < _audioBufferSize; ++i)
+      for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
       {
         samples[i * chs + channel] = 0;
       }
     }
     else
     {
-      for (std::size_t i = 0; i < _audioBufferSize; ++i)
+      for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
         if (sample <= -1.0)
