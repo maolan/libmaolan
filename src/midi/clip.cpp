@@ -153,7 +153,7 @@ void Clip::load()
   {
     std::cerr << "Error loading file " << _name << ": ";
     std::cerr << e.what() << '\n';
-    std::cerr << "Read bytes so far: " << file.tellg() << '\n';
+    std::cerr << "Read bytes so far: " << file.tellg() << "\n\n";
   }
 }
 

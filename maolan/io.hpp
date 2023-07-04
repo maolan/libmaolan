@@ -1,5 +1,4 @@
 #pragma once
-#include "maolan/config.hpp"
 #include <atomic>
 #include <condition_variable>
 #include <mutex>
@@ -7,6 +6,7 @@
 #include <string>
 #include <vector>
 
+#include "maolan/config.hpp"
 
 namespace maolan
 {
@@ -27,6 +27,7 @@ public:
   static IO *begin();
   static Config *devices();
   static IO *find(const std::string &name);
+  static void serialize();
 
   virtual void setup();
   virtual void init();
@@ -37,6 +38,7 @@ public:
   virtual nlohmann::json connections();
   virtual void readhw();
   virtual void writehw();
+  virtual bool leaf();
 
   void work();
   void next(IO *);
@@ -57,7 +59,7 @@ public:
 protected:
   static bool check();
 
-  static IO *ios;
+  static IO *_all;
   static IO *_last;
   static IO *_current;
   static unsigned _stage;

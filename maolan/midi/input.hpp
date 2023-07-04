@@ -15,6 +15,7 @@ public:
   void connect(IO *to, const std::size_t &ch = 0);
   Buffer pull();
   virtual nlohmann::json json(const std::string &name);
+  std::size_t conns();
 
 protected:
   std::vector<midi::Connection *> _connections;

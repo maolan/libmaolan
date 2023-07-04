@@ -5,7 +5,7 @@
 using namespace maolan;
 
 
-IO *IO::ios = nullptr;
+IO *IO::_all = nullptr;
 IO *IO::_last = nullptr;
 IO *IO::_current = nullptr;
 unsigned IO::_stage = 0;
@@ -42,16 +42,16 @@ IO::IO(const std::string &name, const bool &reg)
       _previous->next(this);
     }
     _last = this;
-    if (ios == nullptr)
+    if (_all == nullptr)
     {
-      ios = this;
+      _all = this;
     }
     ++_size;
     // serialize()
   }
   if (_current == nullptr)
   {
-    _current = ios;
+    _current = _all;
   }
 }
 
@@ -66,7 +66,7 @@ IO::~IO()
   }
   else
   {
-    ios = _next;
+    _all = _next;
   }
   if (_next != nullptr)
   {
@@ -100,6 +100,18 @@ void IO::work()
 }
 
 
+void IO::serialize()
+{
+  for (IO *io = _all; io != nullptr; io = io->next())
+  {
+    if (io->leaf())
+    {
+      std::cout << io->name() << std::endl;
+    }
+  }
+}
+
+
 IO *IO::task()
 {
   std::unique_lock<std::mutex> lk(m);
@@ -126,7 +138,7 @@ bool IO::check()
   {
     return true;
   }
-  if (ios == nullptr)
+  if (_all == nullptr)
   {
     return false;
   }
@@ -138,7 +150,7 @@ bool IO::check()
   {
     if (_count == 0)
     {
-      _current = ios;
+      _current = _all;
       _stage = ++_stage % TOTAL;
       if (_stage == FETCH)
       {
@@ -231,7 +243,7 @@ void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
 void IO::stage(const bool &s) { _stage = s; }
 bool IO::stage() { return _stage; }
-IO *IO::begin() { return ios; }
+IO *IO::begin() { return _all; }
 std::string IO::type() { return _type; }
 void IO::type(const std::string &argType) { _type = argType; }
 std::string IO::name() { return _name; }
@@ -251,3 +263,4 @@ void IO::fetch() {}
 void IO::process() {}
 void IO::readhw() {}
 void IO::writehw() {}
+bool IO::leaf() {return false;}

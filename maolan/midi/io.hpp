@@ -15,7 +15,8 @@ public:
   virtual midi::Buffer pull(const std::size_t &channel);
   virtual nlohmann::json connections();
   void connect(midi::IO *to);
-  void connect(midi::IO *to, std::size_t inCh, std::size_t outCh);
+  void connect(midi::IO *to, std::size_t inch, std::size_t outch);
+  virtual bool leaf();
 
 protected:
   std::vector<midi::Buffer> _outputs;

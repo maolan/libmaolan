@@ -81,3 +81,4 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel)
 
 Buffer Input::pull() { return _output; }
 void Input::process() {}
+std::size_t Input::conns() { return _connections.size(); }

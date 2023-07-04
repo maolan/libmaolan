@@ -22,8 +22,9 @@ public:
   virtual Buffer pull(const std::size_t &channel = 0);
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
+  virtual bool leaf();
   void connect(audio::IO *to);
-  void connect(audio::IO *to, std::size_t inCh, std::size_t outCh);
+  void connect(audio::IO *to, std::size_t inch, std::size_t outch);
 
 protected:
   std::vector<audio::Buffer> _outputs;

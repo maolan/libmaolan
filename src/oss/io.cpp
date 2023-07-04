@@ -54,7 +54,8 @@ IO::~IO()
   ios.erase(std::remove(ios.begin(), ios.end(), this), ios.end()); 
 }
 
-maolan::IO * IO::wait() {
+maolan::IO * IO::wait()
+{
   // kqueue/kevent stuff
   return nullptr;
 }
