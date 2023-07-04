@@ -66,6 +66,7 @@ protected:
   static bool _quit;
   static std::size_t _playHead;
   static std::atomic_size_t _count;
+  static std::atomic_size_t _size;
   static std::mutex m;
   static std::condition_variable cv;
   static std::vector<Config *> _devices;

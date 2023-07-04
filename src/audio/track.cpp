@@ -267,4 +267,4 @@ void Track::mute(const bool &value) { muted = value; }
 void Track::arm(const bool &value) { armed = value; }
 void Track::solo(const bool &value) { soloed = value; }
 Clip *Track::clips() { return first; }
-Track::~Track() { std::remove(all.begin(), all.end(), this); }
+Track::~Track() { (void)std::remove(all.begin(), all.end(), this); }

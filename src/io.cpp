@@ -14,6 +14,7 @@ bool IO::_playing = false;
 bool IO::_quit = false;
 std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
+std::atomic_size_t IO::_size{0};
 std::mutex IO::m;
 std::condition_variable IO::cv;
 std::vector<maolan::Config *> IO::_devices;
@@ -45,6 +46,8 @@ IO::IO(const std::string &name, const bool &reg)
     {
       ios = this;
     }
+    ++_size;
+    // serialize()
   }
   if (_current == nullptr)
   {
@@ -55,9 +58,11 @@ IO::IO(const std::string &name, const bool &reg)
 
 IO::~IO()
 {
+  bool removed = false;
   if (_previous != nullptr)
   {
     _previous->next(_next);
+    removed = true;
   }
   else
   {
@@ -66,10 +71,16 @@ IO::~IO()
   if (_next != nullptr)
   {
     _next->previous(_previous);
+    removed = true;
   }
   else
   {
     _last = _previous;
+  }
+  if (removed)
+  {
+    --_size;
+    // serialize()
   }
 }
 

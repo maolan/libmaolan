@@ -13,12 +13,11 @@ public:
   IO(const std::string &device);
   ~IO();
 
-  static maolan::IO * wait();
+  static maolan::IO *wait();
 
 protected:
   static std::vector<IO *> ios;
   static int kq;
   struct kevent *event;
 };
-} // namespace maolan::audio
-
+} // namespace maolan::audio::oss
