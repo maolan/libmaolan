@@ -53,10 +53,7 @@ void Engine::init(const int &threads)
       _workers[i] = new Worker();
     }
   }
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
-  {
-    io->init();
-  }
+  IO::initall();
 #ifdef LV2_ENABLED
   plugin::lv2::Plugin::allocate();
 #endif
@@ -78,7 +75,7 @@ nlohmann::json Engine::json()
   nlohmann::json data;
   data["io"] = nlohmann::json::array();
   data["connections"] = nlohmann::json::array();
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  for (const auto &io : IO::all())
   {
     data["io"].push_back(io->json());
     auto connections = io->connections();
@@ -200,7 +197,7 @@ nlohmann::json Engine::load(const std::string &path)
 
 void Engine::setup()
 {
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  for (const auto &io : IO::all())
   {
     io->setup();
   }
@@ -209,7 +206,7 @@ void Engine::setup()
 
 void Engine::fetch()
 {
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  for (const auto &io : IO::all())
   {
     io->fetch();
   }
@@ -218,7 +215,7 @@ void Engine::fetch()
 
 void Engine::process()
 {
-  for (auto io = IO::begin(); io != nullptr; io = io->next())
+  for (const auto &io : IO::all())
   {
     io->process();
   }

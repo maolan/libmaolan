@@ -102,12 +102,3 @@ void IO::process()
 
 
 std::size_t IO::channels() const { return _outputs.size(); }
-bool IO::leaf()
-{
-  std::size_t count = 0;
-  for (const auto &input : _inputs)
-  {
-    count += input->conns();
-  }
-  return count == 0;
-}

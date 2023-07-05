@@ -1,6 +1,5 @@
-#include <iostream>
-#include "maolan/io.hpp"
 #include "maolan/worker.hpp"
+#include "maolan/io.hpp"
 
 
 using namespace maolan;

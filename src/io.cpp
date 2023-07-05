@@ -5,19 +5,17 @@
 using namespace maolan;
 
 
-IO *IO::_all = nullptr;
-IO *IO::_last = nullptr;
-IO *IO::_current = nullptr;
-unsigned IO::_stage = 0;
 bool IO::_rec = false;
 bool IO::_playing = false;
 bool IO::_quit = false;
 std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
-std::atomic_size_t IO::_size{0};
+std::atomic_size_t IO::_stage{0};
+std::atomic_size_t ioindex{0};
 std::mutex IO::m;
-std::condition_variable IO::cv;
+std::condition_variable IO::_cv;
 std::vector<maolan::Config *> IO::_devices;
+std::vector<IO *> IO::_all;
 
 
 static bool firstRun = false;
@@ -31,57 +29,18 @@ enum Stage
 };
 
 
-IO::IO(const std::string &name, const bool &reg)
-    : _next{nullptr}, _previous{nullptr}, _name{name}, _data{nullptr}
+IO::IO(const std::string &name, const bool &reg) : _name{name}, _data{nullptr}
 {
   if (reg)
   {
-    _previous = _last;
-    if (_previous)
-    {
-      _previous->next(this);
-    }
-    _last = this;
-    if (_all == nullptr)
-    {
-      _all = this;
-    }
-    ++_size;
-    // serialize()
-  }
-  if (_current == nullptr)
-  {
-    _current = _all;
+    _all.push_back(this);
   }
 }
 
 
 IO::~IO()
 {
-  bool removed = false;
-  if (_previous != nullptr)
-  {
-    _previous->next(_next);
-    removed = true;
-  }
-  else
-  {
-    _all = _next;
-  }
-  if (_next != nullptr)
-  {
-    _next->previous(_previous);
-    removed = true;
-  }
-  else
-  {
-    _last = _previous;
-  }
-  if (removed)
-  {
-    --_size;
-    // serialize()
-  }
+  _all.erase(std::remove(_all.begin(), _all.end(), this), _all.end());
 }
 
 
@@ -100,34 +59,19 @@ void IO::work()
 }
 
 
-void IO::serialize()
-{
-  for (IO *io = _all; io != nullptr; io = io->next())
-  {
-    if (io->leaf())
-    {
-      std::cout << io->name() << std::endl;
-    }
-  }
-}
-
-
 IO *IO::task()
 {
   std::unique_lock<std::mutex> lk(m);
-  cv.wait(lk, [] { return IO::check(); });
+  _cv.wait(lk, IO::check);
   if (_quit)
   {
     return nullptr;
   }
+  auto result = _all[ioindex];
   ++_count;
-  auto result = _current;
-  if (_current != nullptr)
-  {
-    _current = _current->next();
-  }
+  ++ioindex;
   lk.unlock();
-  cv.notify_one();
+  _cv.notify_one();
   return result;
 }
 
@@ -138,7 +82,7 @@ bool IO::check()
   {
     return true;
   }
-  if (_all == nullptr)
+  if (_all.size() == 0)
   {
     return false;
   }
@@ -146,11 +90,11 @@ bool IO::check()
   {
     return false;
   }
-  if (_current == nullptr)
+  if (ioindex >= _all.size())
   {
     if (_count == 0)
     {
-      _current = _all;
+      ioindex = 0;
       _stage = ++_stage % TOTAL;
       if (_stage == FETCH)
       {
@@ -173,7 +117,7 @@ bool IO::check()
           }
         }
       }
-      return _current != nullptr;
+      return _all.size() != 0;
     }
     return false;
   }
@@ -185,21 +129,21 @@ void IO::play()
 {
   _playing = true;
   firstRun = true;
-  cv.notify_all();
+  _cv.notify_all();
 }
 
 
 void IO::stop()
 {
   _playing = false;
-  cv.notify_all();
+  _cv.notify_all();
 }
 
 
 void IO::quit()
 {
   _quit = true;
-  cv.notify_all();
+  _cv.notify_all();
 }
 
 
@@ -214,7 +158,7 @@ nlohmann::json IO::json()
 
 bool IO::exists(std::string_view n)
 {
-  for (auto io = begin(); io != nullptr; io = io->next())
+  for (const auto &io : _all)
   {
     if (io->name() == n)
     {
@@ -225,9 +169,18 @@ bool IO::exists(std::string_view n)
 }
 
 
+void IO::initall()
+{
+  for (const auto &io : _all)
+  {
+    io->init();
+  }
+}
+
+
 IO *IO::find(const std::string &name)
 {
-  for (auto io = begin(); io != nullptr; io = io->next())
+  for (const auto &io : _all)
   {
     if (io->name() == name)
     {
@@ -243,7 +196,6 @@ void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
 void IO::stage(const bool &s) { _stage = s; }
 bool IO::stage() { return _stage; }
-IO *IO::begin() { return _all; }
 std::string IO::type() { return _type; }
 void IO::type(const std::string &argType) { _type = argType; }
 std::string IO::name() { return _name; }
@@ -251,10 +203,6 @@ void IO::name(const std::string &argName) { _name = argName; }
 uint64_t IO::playHead() { return _playHead; }
 void IO::playHead(const std::size_t &argPlayHead) { _playHead = argPlayHead; }
 void IO::setup() {}
-void IO::next(IO *n) { _next = n; }
-IO *IO::next() { return _next; }
-void IO::previous(IO *p) { _previous = p; }
-IO *IO::previous() { return _previous; }
 void *IO::data() { return _data; }
 void IO::data(void *d) { _data = d; }
 void IO::init() {}
@@ -263,4 +211,4 @@ void IO::fetch() {}
 void IO::process() {}
 void IO::readhw() {}
 void IO::writehw() {}
-bool IO::leaf() {return false;}
+const std::vector<IO *> IO::all() { return _all; }

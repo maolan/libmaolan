@@ -19,16 +19,16 @@ int main(int argc, char **argv)
   maolan::Engine::init();
 
   // Multi-threaded mode
-  // std::cerr << "Playing ...";
-  // maolan::Engine::play();
-  // std::this_thread::sleep_for(std::chrono::seconds(14));
-  // std::cerr << " done\n";
-  // std::cerr << "Stopping ...";
-  // maolan::Engine::stop();
-  // std::cerr << " done\n";
-  // std::cerr << "Exiting ...";
-  // maolan::Engine::quit();
-  // std::cerr << " done\n";
+  std::cerr << "Playing ...";
+  maolan::Engine::play();
+  std::this_thread::sleep_for(std::chrono::seconds(14));
+  std::cerr << " done\n";
+  std::cerr << "Stopping ...";
+  maolan::Engine::stop();
+  std::cerr << " done\n";
+  std::cerr << "Exiting ...";
+  maolan::Engine::quit();
+  std::cerr << " done\n";
 
   // Single-threaded mode
   // while (true)
@@ -40,6 +40,5 @@ int main(int argc, char **argv)
   //   maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
   // }
 
-  maolan::IO::serialize();
   return 0;
 }

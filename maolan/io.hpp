@@ -24,10 +24,10 @@ public:
   static void playHead(const std::size_t &argPlayHead);
   static std::size_t playHead();
   static IO *task();
-  static IO *begin();
   static Config *devices();
+  static void initall();
   static IO *find(const std::string &name);
-  static void serialize();
+  static const std::vector<IO *> all();
 
   virtual void setup();
   virtual void init();
@@ -38,13 +38,8 @@ public:
   virtual nlohmann::json connections();
   virtual void readhw();
   virtual void writehw();
-  virtual bool leaf();
 
   void work();
-  void next(IO *);
-  IO *next();
-  void previous(IO *);
-  IO *previous();
   void stage(const bool &s);
   bool stage();
   void type(const std::string &);
@@ -59,22 +54,17 @@ public:
 protected:
   static bool check();
 
-  static IO *_all;
-  static IO *_last;
-  static IO *_current;
-  static unsigned _stage;
   static bool _rec;
   static bool _playing;
   static bool _quit;
   static std::size_t _playHead;
   static std::atomic_size_t _count;
-  static std::atomic_size_t _size;
+  static std::atomic_size_t _stage;
   static std::mutex m;
-  static std::condition_variable cv;
+  static std::condition_variable _cv;
   static std::vector<Config *> _devices;
+  static std::vector<IO *> _all;
 
-  IO *_next;
-  IO *_previous;
   std::string _type;
   std::string _name;
   void *_data;
