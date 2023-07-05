@@ -1,4 +1,0 @@
--std=c++17
--I.
--I/usr/local/include
--I/usr/local/include/lilv-0
