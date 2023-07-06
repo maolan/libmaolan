@@ -8,8 +8,9 @@
 using namespace maolan::audio;
 
 
-Clip::Clip(const std::string &path, Track *parent, const std::size_t &start,
-           const std::size_t &end, const std::size_t &offset)
+Clip::Clip(const std::filesystem::path &path, Track *parent,
+           const std::size_t &start, const std::size_t &end,
+           const std::size_t &offset)
     : IO{path, false, 0}, _offset{offset}, _start{start}, _end{end},
       file{path, offset}, _parent{parent}, _next{nullptr}, _previous{nullptr}
 {

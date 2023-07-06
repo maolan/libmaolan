@@ -1,6 +1,6 @@
 #pragma once
+#include <filesystem>
 #include <nlohmann/json.hpp>
-#include <string>
 #include <vector>
 
 #include "maolan/worker.hpp"
@@ -20,7 +20,7 @@ public:
   static void setup();
   static void stop();
   static nlohmann::json json();
-  static nlohmann::json load(const std::string &path);
+  static nlohmann::json load(const std::filesystem::path &path);
 
 protected:
   static std::vector<Worker *> _workers;

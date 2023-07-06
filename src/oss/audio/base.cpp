@@ -36,7 +36,7 @@ static int size2frag(int x)
 
 OSS::OSS(const std::string &deviceName, const int &argFrag,
          const int &sampleSize)
-    : maolan::audio::oss::IO(deviceName)
+    : maolan::audio::oss::IO(deviceName, true)
 {
 
   int error = 0;

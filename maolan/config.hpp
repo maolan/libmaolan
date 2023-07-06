@@ -1,7 +1,9 @@
 #pragma once
+#include <filesystem>
 #include <memory>
 #include <string>
 #include <vector>
+
 #include "maolan/tempo.hpp"
 
 
@@ -15,7 +17,7 @@ public:
   static std::size_t tempoIndex;
   static std::vector<Tempo> tempos;
   static std::uint16_t division;
-  static std::string root;
+  static std::filesystem::path root;
 
   std::size_t count;
   std::string name;

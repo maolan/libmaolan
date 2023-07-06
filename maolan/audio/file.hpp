@@ -1,7 +1,9 @@
 #pragma once
+#include <filesystem>
 #include <sndfile.hh>
 #include <string>
 #include <vector>
+
 #include "maolan/audio/io.hpp"
 #include "maolan/frame.hpp"
 
@@ -11,8 +13,8 @@ namespace maolan::audio
 class File : public audio::IO
 {
 public:
-  File(const std::size_t &channels);
-  File(const std::string &path, const uint64_t &offset = 0);
+  File(const size_t &channels);
+  File(const std::filesystem::path &path, const uint64_t &offset = 0);
   ~File();
 
   virtual void fetch();

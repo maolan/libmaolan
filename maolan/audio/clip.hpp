@@ -1,4 +1,5 @@
 #pragma once
+#include <filesystem>
 #include <nlohmann/json.hpp>
 
 #include "maolan/audio/file.hpp"
@@ -12,7 +13,7 @@ class Track;
 class Clip : public audio::IO
 {
 public:
-  Clip(const std::string &path, Track *parent = nullptr,
+  Clip(const std::filesystem::path &path, Track *parent = nullptr,
        const std::size_t &start = 0, const std::size_t &end = 0,
        const std::size_t &offset = 0);
   ~Clip();

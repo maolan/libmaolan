@@ -7,7 +7,7 @@
 using namespace maolan::audio;
 
 
-File::File(const std::size_t &ch) : IO(0, false), recording(true), frame{}
+File::File(const size_t &ch) : IO(0, false), recording(true), frame{}
 {
   _type = "AudioFile";
   std::string path = "recording.wav";
@@ -22,7 +22,7 @@ File::File(const std::size_t &ch) : IO(0, false), recording(true), frame{}
 }
 
 
-File::File(const std::string &path, const uint64_t &offset)
+File::File(const std::filesystem::path &path, const uint64_t &offset)
     : IO(path, false, 0), recording{false}
 {
   _audioFile = SndfileHandle(path);

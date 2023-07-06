@@ -1,4 +1,5 @@
 #include <cstdint>
+#include <filesystem>
 #include <iostream>
 #include <unistd.h>
 
@@ -14,11 +15,12 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <session dir>" << std::endl;
     return 1;
   }
-  maolan::Engine::load(argv[1]);
-  // If single threaded mode, use init(0)
+  if (maolan::Engine::load(argv[1]) == nullptr)
+  {
+    return 1;
+  }
   maolan::Engine::init();
 
-  // Multi-threaded mode
   std::cerr << "Playing ...";
   maolan::Engine::play();
   std::this_thread::sleep_for(std::chrono::seconds(14));
@@ -29,16 +31,5 @@ int main(int argc, char **argv)
   std::cerr << "Exiting ...";
   maolan::Engine::quit();
   std::cerr << " done\n";
-
-  // Single-threaded mode
-  // while (true)
-  // {
-  //   maolan::Engine::setup();
-  //   maolan::Engine::fetch();
-  //   maolan::Engine::process();
-  //   auto playhead = maolan::IO::playHead();
-  //   maolan::IO::playHead(playhead + maolan::Config::audioBufferSize);
-  // }
-
   return 0;
 }

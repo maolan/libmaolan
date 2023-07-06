@@ -101,10 +101,16 @@ void Engine::save()
 }
 
 
-nlohmann::json Engine::load(const std::string &path)
+nlohmann::json Engine::load(const std::filesystem::path &path)
 {
+  if (!exists(path))
+  {
+    std::cerr << "Path " << path << " does not exist!" << std::endl;
+    return nullptr;
+  }
+
   Config::root = path;
-  chdir(Config::root.data());
+  chdir(Config::root.string().data());
   std::ifstream session{"session.json"};
   auto result = nlohmann::json::parse(session);
   for (const auto &io : result["io"])
