@@ -65,6 +65,7 @@ IO *IO::task()
   _cv.wait(lk, IO::check);
   if (_quit)
   {
+    lk.unlock();
     return nullptr;
   }
   auto result = _all[ioindex];

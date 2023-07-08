@@ -26,3 +26,9 @@ HW::~HW()
     --_audio_size;
   }
 }
+
+
+IO * HW::wait()
+{
+  return nullptr;
+}
