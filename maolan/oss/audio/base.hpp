@@ -3,9 +3,9 @@
 #include <string>
 #include <sys/soundcard.h>
 
-#include "maolan/constants.hpp"
-#include "maolan/audio/io.hpp"
 #include "maolan/audio/hw.hpp"
+#include "maolan/audio/io.hpp"
+#include "maolan/constants.hpp"
 
 
 namespace maolan::audio

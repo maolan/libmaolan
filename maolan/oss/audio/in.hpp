@@ -14,6 +14,5 @@ public:
 
   virtual void readhw();
   virtual void process();
-  virtual struct pollfd pollfd();
 };
 } // namespace maolan::audio

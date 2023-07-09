@@ -15,7 +15,6 @@ public:
 
   virtual void fetch();
   virtual void process();
-  virtual struct pollfd pollfd();
   void convertToRaw();
 };
 } // namespace maolan::audio

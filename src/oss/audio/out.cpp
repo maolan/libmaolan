@@ -3,7 +3,6 @@
 #include <iostream>
 #include <sys/soundcard.h>
 #include <unistd.h>
-#include <poll.h>
 
 #include "maolan/constants.hpp"
 #include "maolan/oss/audio/out.hpp"
@@ -15,8 +14,7 @@ template <typename T>
 OSSOut<T>::OSSOut(const std::string &device, const int &frag)
     : OSS(device, frag, sizeof(T))
 {
-  OSS::_type = "AudioOSSOut";
-  OSS::_name = device;
+  _type = "AudioOSSOut";
 }
 
 
@@ -68,15 +66,6 @@ template <typename T> void OSSOut<T>::process()
 {
   convertToRaw();
   write(_fd, _bytes, _bufferInfo.bytes);
-}
-
-
-template <class T> struct pollfd OSSOut<T>::pollfd()
-{
-  struct pollfd pfd;
-  pfd.fd = _fd;
-  pfd.events = POLLOUT;
-  return pfd;
 }
 
 

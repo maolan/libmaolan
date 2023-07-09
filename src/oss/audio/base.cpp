@@ -34,8 +34,7 @@ static int size2frag(int x)
 }
 
 
-OSS::OSS(const std::string &name, const int &frag,
-         const int &sampleSize)
+OSS::OSS(const std::string &name, const int &frag, const int &sampleSize)
     : HW{name}
 {
 

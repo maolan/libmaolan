@@ -1,8 +1,7 @@
 #include <unistd.h>
-#include <poll.h>
 
-#include "maolan/oss/audio/in.hpp"
 #include "maolan/constants.hpp"
+#include "maolan/oss/audio/in.hpp"
 
 
 using namespace maolan::audio;
@@ -13,7 +12,6 @@ OSSIn<T>::OSSIn(const std::string &device, const int &frag)
     : OSS(device, frag, sizeof(T))
 {
   _type = "AudioOSSIn";
-  _name = device;
 }
 
 
@@ -39,15 +37,6 @@ template <class T> void OSSIn<T>::process()
     index = i / chs;
     _outputs[channel]->data()[index] = samples[i] / floatMaxInt;
   }
-}
-
-
-template <class T> struct pollfd OSSIn<T>::pollfd()
-{
-  struct pollfd pfd;
-  pfd.fd = _fd;
-  pfd.events = POLLIN;
-  return pfd;
 }
 
 

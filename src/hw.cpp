@@ -1,7 +1,7 @@
 #include <poll.h>
 
-#include "maolan/hw.hpp"
 #include "maolan/audio/hw.hpp"
+#include "maolan/hw.hpp"
 
 
 using namespace maolan;
@@ -25,14 +25,14 @@ void HW::prepare()
   }
 }
 
-IO * HW::wait()
+IO *HW::wait()
 {
   int ret = poll(pfds.data(), pfds.size(), -1);
   if (ret == -1)
   {
     return nullptr;
   }
-  for (const auto &pfd: pfds)
+  for (const auto &pfd : pfds)
   {
     if (pfd.revents != 0)
     {
