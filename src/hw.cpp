@@ -10,7 +10,7 @@ using namespace maolan;
 static std::vector<struct pollfd> pfds;
 
 
-void HW::prepare()
+HW::HW()
 {
   struct pollfd pfd;
   const auto &audiohw = audio::HW::all();
@@ -23,7 +23,9 @@ void HW::prepare()
     pfd.revents = 0;
     pfds.push_back(pfd);
   }
+  _thread = std::thread(&HW::_process, this);
 }
+
 
 IO *HW::wait()
 {
@@ -47,3 +49,17 @@ IO *HW::wait()
   }
   return nullptr;
 }
+
+
+void HW::_process()
+{
+  while (IO::playing() && !IO::quitting())
+  {
+    auto *hwio = wait();
+    hwio->readhw();
+    hwio->writehw();
+  }
+}
+
+
+HW::~HW() { _thread.join(); }

@@ -3,6 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 
+#include "maolan/hw.hpp"
 #include "maolan/worker.hpp"
 
 
@@ -24,5 +25,6 @@ public:
 
 protected:
   static std::vector<Worker *> _workers;
+  static HW *_hw;
 };
 } // namespace maolan

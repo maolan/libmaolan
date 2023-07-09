@@ -28,6 +28,8 @@ public:
   static void initall();
   static IO *find(const std::string &name);
   static const std::vector<IO *> all();
+  static bool playing();
+  static bool quitting();
 
   virtual void setup();
   virtual void init();

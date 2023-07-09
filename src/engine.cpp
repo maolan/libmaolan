@@ -6,6 +6,7 @@
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/engine.hpp"
+#include "maolan/hw.hpp"
 #include "maolan/io.hpp"
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
@@ -23,6 +24,7 @@
 using namespace maolan;
 
 
+HW *Engine::_hw;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
@@ -228,5 +230,15 @@ void Engine::process()
 }
 
 
-void Engine::play() { IO::play(); }
-void Engine::stop() { IO::stop(); }
+void Engine::play()
+{
+  IO::play();
+  _hw = new HW();
+}
+
+
+void Engine::stop()
+{
+  IO::stop();
+  delete _hw;
+}

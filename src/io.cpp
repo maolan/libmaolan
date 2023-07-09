@@ -213,3 +213,5 @@ void IO::process() {}
 void IO::readhw() {}
 void IO::writehw() {}
 const std::vector<IO *> IO::all() { return _all; }
+bool IO::playing() { return _playing; }
+bool IO::quitting() { return _quit; }
