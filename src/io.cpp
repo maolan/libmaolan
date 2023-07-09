@@ -12,7 +12,7 @@ std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
 std::atomic_size_t IO::_stage{0};
 std::atomic_size_t ioindex{0};
-std::mutex IO::m;
+std::mutex IO::_m;
 std::condition_variable IO::_cv;
 std::vector<maolan::Config *> IO::_devices;
 std::vector<IO *> IO::_all;
@@ -61,7 +61,7 @@ void IO::work()
 
 IO *IO::task()
 {
-  std::unique_lock<std::mutex> lk(m);
+  std::unique_lock<std::mutex> lk(_m);
   _cv.wait(lk, IO::check);
   if (_quit)
   {

@@ -34,15 +34,14 @@ static int size2frag(int x)
 }
 
 
-OSS::OSS(const std::string &deviceName, const int &argFrag,
+OSS::OSS(const std::string &name, const int &frag,
          const int &sampleSize)
-    : maolan::audio::oss::IO(deviceName, true)
+    : HW{name}
 {
 
   int error = 0;
   int tmp;
-  _frag = argFrag;
-  _device = deviceName;
+  _frag = frag;
   _sampleSize = sampleSize;
   if (_sampleSize == 4)
   {
@@ -64,7 +63,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
   }
   try
   {
-    error = open(deviceName.data(), O_RDWR, 0);
+    error = open(name.data(), O_RDWR, 0);
     checkError(error, "open");
     _fd = error;
 
@@ -94,7 +93,7 @@ OSS::OSS(const std::string &deviceName, const int &argFrag,
     if (tmp != _format)
     {
       std::stringstream s;
-      s << _device << " doesn't support chosen sample format (";
+      s << _name << " doesn't support chosen sample format (";
       s << tmp << ")";
       error = 0;
       checkError(1, s.str());

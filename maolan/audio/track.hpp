@@ -15,7 +15,7 @@ public:
   Track(const std::string &name, const std::size_t &channel);
   virtual ~Track();
 
-  static std::vector<Track *> all;
+  static std::vector<Track *> _all;
 
   virtual void init();
   virtual void setup();
@@ -41,13 +41,13 @@ public:
   Clip *clips();
 
 protected:
-  bool muted;
-  bool armed;
-  bool soloed;
-  Clip *first;
+  bool _muted;
+  bool _armed;
+  bool _soloed;
+  Clip *_first;
   Clip *_current;
-  Clip *last;
-  Clip *recording = nullptr;
+  Clip *_last;
+  Clip *_recording = nullptr;
 #ifdef LV2_ENABLED
   std::vector<plugin::lv2::Plugin *> _plugins;
 #endif

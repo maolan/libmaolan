@@ -1,34 +1,49 @@
+#include <poll.h>
+
 #include "maolan/hw.hpp"
+#include "maolan/audio/hw.hpp"
 
 
 using namespace maolan;
 
 
-std::atomic_size_t HW::_size = 0;
-std::atomic_size_t HW::_audio_size = 0;
+static std::vector<struct pollfd> pfds;
 
 
-HW::HW(const bool &audio) : _audio{audio}
+void HW::prepare()
 {
-  ++_size;
-  if (_audio)
+  struct pollfd pfd;
+  const auto &audiohw = audio::HW::all();
+  pfds.clear();
+  pfds.reserve(audiohw.size());
+  for (const auto &hw : audiohw)
   {
-    ++_audio_size;
+    pfd.fd = hw->fd();
+    pfd.events = POLLIN;
+    pfd.revents = 0;
+    pfds.push_back(pfd);
   }
 }
-
-
-HW::~HW()
-{
-  --_size;
-  if (_audio)
-  {
-    --_audio_size;
-  }
-}
-
 
 IO * HW::wait()
 {
+  int ret = poll(pfds.data(), pfds.size(), -1);
+  if (ret == -1)
+  {
+    return nullptr;
+  }
+  for (const auto &pfd: pfds)
+  {
+    if (pfd.revents != 0)
+    {
+      for (const auto &hw : audio::HW::all())
+      {
+        if (hw->fd() == pfd.fd)
+        {
+          return hw;
+        }
+      }
+    }
+  }
   return nullptr;
 }
