@@ -1,5 +1,4 @@
 #include "maolan/io.hpp"
-#include <iostream>
 
 
 using namespace maolan;
@@ -9,24 +8,11 @@ bool IO::_rec = false;
 bool IO::_playing = false;
 bool IO::_quit = false;
 std::size_t IO::_playHead = 0;
-std::atomic_size_t IO::_count{0};
-std::atomic_size_t IO::_stage{0};
-std::atomic_size_t IO::_ioindex{0};
+std::atomic_size_t IO::_index{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 std::vector<maolan::Config *> IO::_devices;
 std::vector<IO *> IO::_all;
-
-
-static bool firstRun = false;
-
-
-enum Stage
-{
-  FETCH = 0,
-  PROCESS,
-  TOTAL
-};
 
 
 IO::IO(const std::string &name, const bool &reg) : _name{name}, _data{nullptr}
@@ -46,16 +32,9 @@ IO::~IO()
 
 void IO::work()
 {
-  if (_stage == FETCH)
-  {
-    setup();
-    fetch();
-  }
-  else if (_stage == PROCESS)
-  {
-    process();
-  }
-  --_count;
+  setup();
+  fetch();
+  process();
 }
 
 
@@ -68,9 +47,8 @@ IO *IO::task()
     lk.unlock();
     return nullptr;
   }
-  auto result = _all[_ioindex];
-  ++_count;
-  ++_ioindex;
+  auto result = _all[_index];
+  ++_index;
   lk.unlock();
   _cv.notify_one();
   return result;
@@ -83,53 +61,44 @@ bool IO::check()
   {
     return true;
   }
-  if (_all.size() == 0)
-  {
-    return false;
-  }
   if (!_playing)
   {
     return false;
   }
-  if (_ioindex >= _all.size())
+  if (_all.size() == 0)
   {
-    if (_count == 0)
-    {
-      _ioindex = 0;
-      _stage = ++_stage % TOTAL;
-      if (_stage == FETCH)
-      {
-        if (firstRun)
-        {
-          firstRun = false;
-        }
-        else
-        {
-          _playHead += Config::audioBufferSize;
-        }
-        if (Config::tempoIndex + 1 < Config::tempos.size())
-        {
-          auto tempo = Config::tempos[Config::tempoIndex];
-          while (Config::tempoIndex < Config::tempos.size() &&
-                 _playHead <= tempo.time)
-          {
-            ++Config::tempoIndex;
-            tempo = Config::tempos[Config::tempoIndex];
-          }
-        }
-      }
-      return _all.size() != 0;
-    }
+    return false;
+  }
+  if (_index >= _all.size())
+  {
     return false;
   }
   return true;
 }
 
 
+void IO::tick()
+{
+  _index = 0;
+  _playHead += Config::audioBufferSize;
+  // if (Config::tempoIndex + 1 < Config::tempos.size())
+  // {
+  //   auto tempo = Config::tempos[Config::tempoIndex];
+  //   while (Config::tempoIndex < Config::tempos.size() &&
+  //          _playHead <= tempo.time)
+  //   {
+  //     ++Config::tempoIndex;
+  //     tempo = Config::tempos[Config::tempoIndex];
+  //   }
+  // }
+  _cv.notify_all();
+}
+
+
 void IO::play()
 {
+  _playHead -= Config::audioBufferSize;
   _playing = true;
-  firstRun = true;
   _cv.notify_all();
 }
 
@@ -195,8 +164,6 @@ IO *IO::find(const std::string &name)
 void IO::parent(IO *) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
-void IO::stage(const size_t &s) { _stage = s; }
-bool IO::stage() { return _stage; }
 std::string IO::type() { return _type; }
 void IO::type(const std::string &argType) { _type = argType; }
 std::string IO::name() { return _name; }

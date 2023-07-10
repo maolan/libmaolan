@@ -6,7 +6,6 @@
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/engine.hpp"
-#include "maolan/hw.hpp"
 #include "maolan/io.hpp"
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
@@ -24,7 +23,7 @@
 using namespace maolan;
 
 
-HW *Engine::_hw;
+scheduler::Poll *Engine::_scheduler;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
@@ -203,42 +202,15 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
 }
 
 
-void Engine::setup()
-{
-  for (const auto &io : IO::all())
-  {
-    io->setup();
-  }
-}
-
-
-void Engine::fetch()
-{
-  for (const auto &io : IO::all())
-  {
-    io->fetch();
-  }
-}
-
-
-void Engine::process()
-{
-  for (const auto &io : IO::all())
-  {
-    io->process();
-  }
-}
-
-
 void Engine::play()
 {
+  _scheduler = new scheduler::Poll();
   IO::play();
-  _hw = new HW();
 }
 
 
 void Engine::stop()
 {
   IO::stop();
-  delete _hw;
+  delete _scheduler;
 }

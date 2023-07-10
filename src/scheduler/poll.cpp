@@ -1,18 +1,17 @@
 #include <atomic>
-#include <iostream>
 #include <poll.h>
 
 #include "maolan/audio/hw.hpp"
-#include "maolan/hw.hpp"
+#include "maolan/scheduler/poll.hpp"
 
 
-using namespace maolan;
+using namespace maolan::scheduler;
 
 
 static std::vector<struct pollfd> pfds;
 
 
-HW::HW()
+Poll::Poll()
 {
   struct pollfd pfd;
   const auto &audiohw = audio::HW::all();
@@ -24,12 +23,14 @@ HW::HW()
     pfd.events = POLLIN;
     pfd.revents = 0;
     pfds.push_back(pfd);
+    hw->readhw();
+    hw->process();
   }
-  _thread = std::thread(&HW::_process, this);
+  _thread = std::thread(&Poll::_process, this);
 }
 
 
-IO *HW::wait()
+maolan::IO *Poll::wait()
 {
   int ret = poll(pfds.data(), pfds.size(), -1);
   if (ret == -1)
@@ -53,22 +54,29 @@ IO *HW::wait()
 }
 
 
-void HW::_process()
+void Poll::_process()
 {
   std::atomic_size_t pindex = 0;
+  const size_t size = pfds.size();
   while (IO::playing() && !IO::quitting())
   {
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
-    pindex = ++pindex / pfds.size();
+    if (size == 1)
+    {
+      pindex = 0;
+    }
+    else
+    {
+      pindex = ++pindex / size;
+    }
     if (pindex == 0)
     {
-      // set IO::stage
-      // set IO::ioindex
+      IO::tick();
     }
   }
 }
 
 
-HW::~HW() { _thread.join(); }
+Poll::~Poll() { _thread.join(); }

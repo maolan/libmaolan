@@ -4,13 +4,13 @@
 #include "maolan/io.hpp"
 
 
-namespace maolan
+namespace maolan::scheduler
 {
-class HW
+class Poll
 {
 public:
-  HW();
-  ~HW();
+  Poll();
+  ~Poll();
 
   static IO *wait();
 
@@ -19,3 +19,4 @@ protected:
   void _process();
 };
 } // namespace maolan
+

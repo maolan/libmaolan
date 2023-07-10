@@ -65,6 +65,11 @@ template <typename T> void OSSOut<T>::convertToRaw()
 template <typename T> void OSSOut<T>::process()
 {
   convertToRaw();
+}
+
+
+template <class T> void OSSOut<T>::writehw()
+{
   write(_fd, _bytes, _bufferInfo.bytes);
 }
 

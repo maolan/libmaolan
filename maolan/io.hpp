@@ -30,6 +30,7 @@ public:
   static const std::vector<IO *> all();
   static bool playing();
   static bool quitting();
+  static void tick();
 
   virtual void setup();
   virtual void init();
@@ -42,8 +43,6 @@ public:
   virtual void writehw();
 
   void work();
-  void stage(const size_t &s);
-  bool stage();
   void type(const std::string &);
   std::string type();
   void name(const std::string &);
@@ -60,13 +59,11 @@ protected:
   static bool _playing;
   static bool _quit;
   static std::size_t _playHead;
-  static std::atomic_size_t _count;
-  static std::atomic_size_t _stage;
   static std::mutex _m;
   static std::condition_variable _cv;
   static std::vector<Config *> _devices;
   static std::vector<IO *> _all;
-  static std::atomic_size_t _ioindex;
+  static std::atomic_size_t _index;
 
   std::string _type;
   std::string _name;

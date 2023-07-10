@@ -15,6 +15,7 @@ public:
 
   virtual void fetch();
   virtual void process();
+  virtual void writehw();
   void convertToRaw();
 };
 } // namespace maolan::audio

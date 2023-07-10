@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_SHARED_LINKER_FLAGS "-pthread")
 include(GNUInstallDirs)
 
-file(GLOB SRCS src/*.cpp src/audio/*.cpp src/midi/*.cpp src/plugin/*.cpp)
+file(GLOB SRCS src/*.cpp src/audio/*.cpp src/midi/*.cpp src/plugin/*.cpp src/scheduler/*.cpp )
 file(GLOB HEADERS maolan/*.hpp)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan)
 set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
@@ -18,6 +18,9 @@ install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/midi
 set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 file(GLOB HEADERS maolan/plugin/*.hpp)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/plugin)
+set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
+file(GLOB HEADERS maolan/scheduler/*.hpp)
+install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/scheduler)
 set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 
 enable_testing()
