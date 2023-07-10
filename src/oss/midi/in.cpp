@@ -26,7 +26,7 @@ void OSSIn::setup()
 }
 
 
-void OSSIn::fetch()
+void OSSIn::readhw()
 {
   static int l = -1;
   static unsigned char buf[8];

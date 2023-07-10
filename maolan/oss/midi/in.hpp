@@ -11,7 +11,7 @@ public:
   OSSIn(const std::string &device);
 
   virtual void setup();
-  virtual void fetch();
+  virtual void readhw();
   virtual void process();
   virtual Buffer pull(const std::size_t &channel);
 };
