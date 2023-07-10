@@ -1,4 +1,3 @@
-#include <atomic>
 #include <poll.h>
 
 #include "maolan/audio/hw.hpp"
@@ -56,23 +55,16 @@ maolan::IO *Poll::wait()
 
 void Poll::_process()
 {
-  std::atomic_size_t pindex = 0;
-  const size_t size = pfds.size();
+  size_t pindex = 0;
   while (IO::playing() && !IO::quitting())
   {
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
-    if (size == 1)
+    ++pindex;
+    if (pindex >= pfds.size())
     {
       pindex = 0;
-    }
-    else
-    {
-      pindex = ++pindex / size;
-    }
-    if (pindex == 0)
-    {
       IO::tick();
     }
   }
