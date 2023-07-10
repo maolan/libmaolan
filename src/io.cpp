@@ -11,7 +11,7 @@ bool IO::_quit = false;
 std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_count{0};
 std::atomic_size_t IO::_stage{0};
-std::atomic_size_t ioindex{0};
+std::atomic_size_t IO::_ioindex{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 std::vector<maolan::Config *> IO::_devices;
@@ -68,9 +68,9 @@ IO *IO::task()
     lk.unlock();
     return nullptr;
   }
-  auto result = _all[ioindex];
+  auto result = _all[_ioindex];
   ++_count;
-  ++ioindex;
+  ++_ioindex;
   lk.unlock();
   _cv.notify_one();
   return result;
@@ -91,11 +91,11 @@ bool IO::check()
   {
     return false;
   }
-  if (ioindex >= _all.size())
+  if (_ioindex >= _all.size())
   {
     if (_count == 0)
     {
-      ioindex = 0;
+      _ioindex = 0;
       _stage = ++_stage % TOTAL;
       if (_stage == FETCH)
       {
@@ -195,7 +195,7 @@ IO *IO::find(const std::string &name)
 void IO::parent(IO *) {}
 void IO::rec(bool record) { _rec = record; }
 bool IO::rec() { return _rec; }
-void IO::stage(const bool &s) { _stage = s; }
+void IO::stage(const size_t &s) { _stage = s; }
 bool IO::stage() { return _stage; }
 std::string IO::type() { return _type; }
 void IO::type(const std::string &argType) { _type = argType; }

@@ -1,3 +1,5 @@
+#include <atomic>
+#include <iostream>
 #include <poll.h>
 
 #include "maolan/audio/hw.hpp"
@@ -53,11 +55,18 @@ IO *HW::wait()
 
 void HW::_process()
 {
+  std::atomic_size_t pindex = 0;
   while (IO::playing() && !IO::quitting())
   {
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
+    pindex = ++pindex / pfds.size();
+    if (pindex == 0)
+    {
+      // set IO::stage
+      // set IO::ioindex
+    }
   }
 }
 

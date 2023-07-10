@@ -42,7 +42,7 @@ public:
   virtual void writehw();
 
   void work();
-  void stage(const bool &s);
+  void stage(const size_t &s);
   bool stage();
   void type(const std::string &);
   std::string type();
@@ -66,6 +66,7 @@ protected:
   static std::condition_variable _cv;
   static std::vector<Config *> _devices;
   static std::vector<IO *> _all;
+  static std::atomic_size_t _ioindex;
 
   std::string _type;
   std::string _name;
