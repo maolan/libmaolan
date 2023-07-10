@@ -59,7 +59,7 @@ static void writeVarLen(std::fstream &file, std::uint32_t value)
     file << (std::uint8_t)buffer;
     if (!file.good())
     {
-      std::cerr << "Error: " << strerror(errno) << '\n';
+      std::cerr << "Error: " << strerror(errno) << std::endl;
     }
     if (buffer & 0x80)
     {

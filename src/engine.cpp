@@ -2,6 +2,10 @@
 #include <iostream>
 #include <thread>
 #include <unistd.h>
+#ifdef __FreeBSD__
+#include <sys/types.h>
+#include <sys/rtprio.h>
+#endif
 
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
@@ -39,6 +43,18 @@ static std::vector<std::string> midiNames = {
 
 void Engine::init(const int &threads)
 {
+  int rc;
+#ifdef __FreeBSD__
+  struct rtprio rtp;
+  rtp.type = RTP_PRIO_REALTIME;
+  rtp.prio = 16;
+  rc = rtprio(RTP_SET, getpid(), &rtp);
+  if (rc)
+  {
+    std::cerr << "Warning! Setting real time priority failed: ";
+    std::cerr << strerror(errno) << std::endl;
+  }
+#endif
   if (threads != 0)
   {
     int maxWorkers = std::thread::hardware_concurrency();
