@@ -61,7 +61,6 @@ protected:
   static std::size_t _playHead;
   static std::mutex _m;
   static std::condition_variable _cv;
-  static std::vector<Config *> _devices;
   static std::vector<IO *> _all;
   static std::atomic_size_t _index;
 

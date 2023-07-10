@@ -11,7 +11,6 @@ std::size_t IO::_playHead = 0;
 std::atomic_size_t IO::_index{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
-std::vector<maolan::Config *> IO::_devices;
 std::vector<IO *> IO::_all;
 
 

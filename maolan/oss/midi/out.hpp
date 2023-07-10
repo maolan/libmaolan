@@ -4,12 +4,13 @@
 #include "maolan/midi/input.hpp"
 #include "maolan/oss/midi/base.hpp"
 
+
 namespace maolan::midi
 {
-class OSSMIDIOut : public OSSMIDI
+class OSSOut : public OSS
 {
 public:
-  OSSMIDIOut(const std::string &device);
+  OSSOut(const std::string &device);
 
   virtual void fetch();
   virtual void process();

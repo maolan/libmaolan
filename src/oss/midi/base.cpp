@@ -3,49 +3,25 @@
 #include <iostream>
 #include <unistd.h>
 
-#include "maolan/oss/midi/base.hpp"
 #include "maolan/midi/event.hpp"
+#include "maolan/oss/midi/base.hpp"
 
 using namespace maolan::midi;
 
 
-std::vector<OSSMIDIConfig *> OSSMIDI::_devices;
-
-
-OSSMIDI::OSSMIDI(const std::string &deviceName)
-    : IO(deviceName, true), device{nullptr}
+OSS::OSS(const std::string &name) : HW{name}
 {
-
-  data = std::make_shared<BufferData>();
-  bool found = false;
-  for (const auto iter : _devices)
+  _data = std::make_shared<BufferData>();
+  if ((_fd = open(_name.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
   {
-    if (iter->name == "OSSMIDI" && iter->device == deviceName)
-    {
-      found = true;
-      device = (OSSMIDIConfig *)iter;
-      ++(device->count);
-      break;
-    }
+    std::cerr << name << ' ' << std::strerror(errno) << '\n';
   }
-  if (!found)
-  {
-    device = new OSSMIDIConfig;
-    device->device = deviceName;
-    if ((device->fd = open(deviceName.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
-    {
-      std::cerr << deviceName.data() << ' ' << std::strerror(errno) << '\n';
-    }
-    _devices.emplace(_devices.begin(), device);
-  }
+  _all.push_back(this);
 }
 
 
-OSSMIDI::~OSSMIDI()
+OSS::~OSS()
 {
-  --(device->count);
-  if (device->count < 1)
-  {
-    close(device->fd);
-  }
+  close(_fd);
+  (void)std::remove(_all.begin(), _all.end(), this);
 }

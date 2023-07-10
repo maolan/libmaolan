@@ -5,10 +5,10 @@
 
 namespace maolan::midi
 {
-class OSSMIDIIn : public OSSMIDI
+class OSSIn : public OSS
 {
 public:
-  OSSMIDIIn(const std::string &device);
+  OSSIn(const std::string &device);
 
   virtual void setup();
   virtual void fetch();

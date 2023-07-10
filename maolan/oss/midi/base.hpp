@@ -1,21 +1,18 @@
 #pragma once
 #include "maolan/midi/buffer.hpp"
+#include "maolan/midi/hw.hpp"
 #include "maolan/midi/io.hpp"
-#include "maolan/oss/midi/config.hpp"
 
 
 namespace maolan::midi
 {
-class OSSMIDI : public IO
+class OSS : public maolan::midi::HW
 {
 public:
-  OSSMIDI(const std::string &device);
-  ~OSSMIDI();
+  OSS(const std::string &device);
+  ~OSS();
 
 protected:
-  static std::vector<OSSMIDIConfig *> _devices;
-
-  OSSMIDIConfig *device;
-  Buffer data;
+  Buffer _data;
 };
 } // namespace maolan::midi

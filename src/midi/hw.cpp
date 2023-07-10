@@ -1,7 +1,7 @@
-#include "maolan/audio/hw.hpp"
+#include "maolan/midi/hw.hpp"
 
 
-using namespace maolan::audio;
+using namespace maolan::midi;
 
 
 std::vector<HW *> HW::_all;

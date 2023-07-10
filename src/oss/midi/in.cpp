@@ -1,9 +1,9 @@
 #include <iomanip>
 #include <unistd.h>
 
-#include "maolan/oss/midi/in.hpp"
 #include "maolan/constants.hpp"
 #include "maolan/midi/event.hpp"
+#include "maolan/oss/midi/in.hpp"
 
 
 using namespace maolan::midi;
@@ -12,31 +12,31 @@ using namespace maolan::midi;
 static Buffer lastBuffer = nullptr;
 
 
-OSSMIDIIn::OSSMIDIIn(const std::string &device) : OSSMIDI(device)
+OSSIn::OSSIn(const std::string &device) : OSS{device}
 {
   _type = "MIDIOSSIn";
   _name = device;
 }
 
 
-void OSSMIDIIn::setup()
+void OSSIn::setup()
 {
-  data = std::make_shared<BufferData>();
+  _data = std::make_shared<BufferData>();
   lastBuffer = nullptr;
 }
 
 
-void OSSMIDIIn::fetch()
+void OSSIn::fetch()
 {
   static int l = -1;
   static unsigned char buf[8];
   Buffer chunk;
 
-  while ((l = read(device->fd, buf, sizeof(buf))) != -1)
+  while ((l = read(_fd, buf, sizeof(buf))) != -1)
   {
     if (lastBuffer == nullptr)
     {
-      chunk = data;
+      chunk = _data;
     }
     else
     {
@@ -60,5 +60,5 @@ void OSSMIDIIn::fetch()
 }
 
 
-void OSSMIDIIn::process() {}
-Buffer OSSMIDIIn::pull(const std::size_t &) { return data; }
+void OSSIn::process() {}
+Buffer OSSIn::pull(const std::size_t &) { return _data; }
