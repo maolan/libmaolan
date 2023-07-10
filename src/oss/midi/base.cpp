@@ -14,7 +14,7 @@ OSS::OSS(const std::string &name) : HW{name}
   _data = std::make_shared<BufferData>();
   if ((_fd = open(_name.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
   {
-    std::cerr << name << ' ' << std::strerror(errno) << '\n';
+    std::cerr << _name << ' ' << std::strerror(errno) << '\n';
   }
   _all.push_back(this);
 }
@@ -22,6 +22,6 @@ OSS::OSS(const std::string &name) : HW{name}
 
 OSS::~OSS()
 {
-  close(_fd);
   (void)std::remove(_all.begin(), _all.end(), this);
+  close(_fd);
 }

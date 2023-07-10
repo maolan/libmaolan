@@ -1,6 +1,7 @@
 #include <poll.h>
 
 #include "maolan/audio/hw.hpp"
+#include "maolan/midi/hw.hpp"
 #include "maolan/scheduler/poll.hpp"
 
 
@@ -14,12 +15,22 @@ Poll::Poll()
 {
   struct pollfd pfd;
   const auto &audiohw = audio::HW::all();
+  const auto &midihw = midi::HW::all();
   pfds.clear();
-  pfds.reserve(audiohw.size());
+  pfds.reserve(audiohw.size() + midihw.size());
   for (const auto &hw : audiohw)
   {
     pfd.fd = hw->fd();
-    pfd.events = POLLIN;
+    pfd.events = POLLIN | POLLOUT;
+    pfd.revents = 0;
+    pfds.push_back(pfd);
+    hw->readhw();
+    hw->process();
+  }
+  for (const auto &hw : midihw)
+  {
+    pfd.fd = hw->fd();
+    pfd.events = POLLIN | POLLOUT;
     pfd.revents = 0;
     pfds.push_back(pfd);
     hw->readhw();
@@ -41,6 +52,13 @@ maolan::IO *Poll::wait()
     if (pfd.revents != 0)
     {
       for (const auto &hw : audio::HW::all())
+      {
+        if (hw->fd() == pfd.fd)
+        {
+          return hw;
+        }
+      }
+      for (const auto &hw : midi::HW::all())
       {
         if (hw->fd() == pfd.fd)
         {
