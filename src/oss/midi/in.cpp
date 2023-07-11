@@ -12,7 +12,8 @@ using namespace maolan::midi;
 static Buffer lastBuffer = nullptr;
 
 
-OSSIn::OSSIn(const std::string &device) : OSS{device}
+OSSIn::OSSIn(const std::string &name, const std::string &device)
+  : OSS{name, device}
 {
   _type = "MIDIOSSIn";
   _name = device;

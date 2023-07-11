@@ -9,12 +9,12 @@
 using namespace maolan::midi;
 
 
-OSS::OSS(const std::string &name) : HW{name}
+OSS::OSS(const std::string &name, const std::string &device) : HW{name, device}
 {
   _data = std::make_shared<BufferData>();
-  if ((_fd = open(_name.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
+  if ((_fd = open(_device.data(), O_RDWR | O_NONBLOCK, 0)) == -1)
   {
-    std::cerr << _name << ' ' << std::strerror(errno) << '\n';
+    std::cerr << _device << ' ' << std::strerror(errno) << '\n';
   }
   _all.push_back(this);
 }

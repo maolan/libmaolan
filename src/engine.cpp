@@ -156,15 +156,15 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
       auto bits = io["bits"];
       if (bits == 32)
       {
-        new maolan::audio::OSSOut<int32_t>(io["name"]);
+        new maolan::audio::OSSOut<int32_t>(io["name"], io["device"]);
       }
       else if (bits == 16)
       {
-        new maolan::audio::OSSOut<int16_t>(io["name"]);
+        new maolan::audio::OSSOut<int16_t>(io["name"], io["device"]);
       }
       else if (bits == 8)
       {
-        new maolan::audio::OSSOut<int8_t>(io["name"]);
+        new maolan::audio::OSSOut<int8_t>(io["name"], io["device"]);
       }
     }
     else if (io["type"] == "AudioOSSIn")
@@ -172,15 +172,15 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
       auto bits = io["bits"];
       if (bits == 32)
       {
-        new maolan::audio::OSSIn<int32_t>(io["name"]);
+        new maolan::audio::OSSIn<int32_t>(io["name"], io["device"]);
       }
       else if (bits == 16)
       {
-        new maolan::audio::OSSIn<int16_t>(io["name"]);
+        new maolan::audio::OSSIn<int16_t>(io["name"], io["device"]);
       }
       else if (bits == 8)
       {
-        new maolan::audio::OSSIn<int8_t>(io["name"]);
+        new maolan::audio::OSSIn<int8_t>(io["name"], io["device"]);
       }
     }
 #endif

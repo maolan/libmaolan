@@ -8,7 +8,7 @@ namespace maolan::midi
 class OSSIn : public OSS
 {
 public:
-  OSSIn(const std::string &device);
+  OSSIn(const std::string &name, const std::string &device);
 
   virtual void setup();
   virtual void readhw();

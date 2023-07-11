@@ -10,7 +10,8 @@ using namespace maolan::midi;
 static unsigned char buf[4];
 
 
-OSSOut::OSSOut(const std::string &device) : OSS(device)
+OSSOut::OSSOut(const std::string &name, const std::string &device)
+  : OSS{name, device}
 {
   _type = "MIDIOSSOut";
   _name = device;

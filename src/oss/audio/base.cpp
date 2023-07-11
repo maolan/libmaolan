@@ -34,8 +34,8 @@ static int size2frag(int x)
 }
 
 
-OSS::OSS(const std::string &name, const int &frag, const int &sampleSize)
-    : HW{name}
+OSS::OSS(const std::string &name, const std::string &device, const int &frag, const int &sampleSize)
+    : HW{name, device}
 {
 
   int error = 0;
@@ -62,7 +62,7 @@ OSS::OSS(const std::string &name, const int &frag, const int &sampleSize)
   }
   try
   {
-    error = open(name.data(), O_RDWR, 0);
+    error = open(_device.data(), O_RDWR, 0);
     checkError(error, "open");
     _fd = error;
 
@@ -92,7 +92,7 @@ OSS::OSS(const std::string &name, const int &frag, const int &sampleSize)
     if (tmp != _format)
     {
       std::stringstream s;
-      s << _name << " doesn't support chosen sample format (";
+      s << _device << " doesn't support chosen sample format (";
       s << tmp << ")";
       error = 0;
       checkError(1, s.str());

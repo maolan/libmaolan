@@ -10,7 +10,7 @@ namespace maolan::midi
 class OSSOut : public OSS
 {
 public:
-  OSSOut(const std::string &device);
+  OSSOut(const std::string &name, const std::string &device);
 
   virtual void fetch();
   virtual void process();

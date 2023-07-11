@@ -11,8 +11,8 @@ using namespace maolan::audio;
 
 
 template <typename T>
-OSSOut<T>::OSSOut(const std::string &device, const int &frag)
-    : OSS(device, frag, sizeof(T))
+OSSOut<T>::OSSOut(const std::string &name, const std::string &device, const int &frag)
+    : OSS{name, device, frag, sizeof(T)}
 {
   _type = "AudioOSSOut";
 }

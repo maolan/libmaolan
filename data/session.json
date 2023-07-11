@@ -2,7 +2,7 @@
   "connections": [
     {
       "channel": 0,
-      "name": "/dev/dsp",
+      "name": "OSS Out",
       "to": [
         {
           "channel": 0,
@@ -22,7 +22,7 @@
     },
     {
       "channel": 1,
-      "name": "/dev/dsp",
+      "name": "OSS Out",
       "to": [
         {
           "channel": 1,
@@ -70,7 +70,8 @@
     {
       "bits": 32,
       "channels": 2,
-      "name": "/dev/dsp",
+      "name": "OSS Out",
+      "device": "/dev/dsp",
       "samplerate": 48000,
       "type": "AudioOSSOut"
     }

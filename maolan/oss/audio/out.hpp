@@ -11,7 +11,8 @@ namespace maolan::audio
 template <typename T> class OSSOut : public OSS
 {
 public:
-  OSSOut(const std::string &device, const int &frag = defaultFrag);
+  OSSOut(const std::string &name, const std::string &device,
+         const int &frag = defaultFrag);
 
   virtual void fetch();
   virtual void process();

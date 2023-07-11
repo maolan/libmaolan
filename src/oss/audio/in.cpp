@@ -8,8 +8,8 @@ using namespace maolan::audio;
 
 
 template <class T>
-OSSIn<T>::OSSIn(const std::string &device, const int &frag)
-    : OSS(device, frag, sizeof(T))
+OSSIn<T>::OSSIn(const std::string &name, const std::string &device, const int &frag)
+    : OSS{name, device, frag, sizeof(T)}
 {
   _type = "AudioOSSIn";
 }
