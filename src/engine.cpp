@@ -80,7 +80,11 @@ void Engine::init(const int &threads)
 void Engine::quit()
 {
   IO::quit();
-  delete _scheduler;
+  if (_scheduler != nullptr)
+  {
+    delete _scheduler;
+    _scheduler = nullptr;
+  }
   _workers.clear();
 #ifdef LV2_ENABLED
   plugin::lv2::Plugin::destroyWorld();
@@ -229,5 +233,9 @@ void Engine::play()
 void Engine::stop()
 {
   IO::stop();
-  delete _scheduler;
+  if (_scheduler != nullptr)
+  {
+    delete _scheduler;
+    _scheduler = nullptr;
+  }
 }
