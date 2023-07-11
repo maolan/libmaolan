@@ -19,7 +19,7 @@ It assumes you have 4 cores and you want `Release` build. If you're developing, 
 
 Development/Debug
 ```
-cmake .. -DCMAKE_BUILD_TYPE=Release -DCMAKE_EXPORT_COMPILE_COMMANDS=On
+cmake .. -DCMAKE_BUILD_TYPE=Debug -DCMAKE_EXPORT_COMPILE_COMMANDS=On
 ```
 
 Building and executing tests can be done with:
