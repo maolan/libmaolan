@@ -3,8 +3,8 @@
 #include <thread>
 #include <unistd.h>
 #ifdef __FreeBSD__
-#include <sys/types.h>
 #include <sys/rtprio.h>
+#include <sys/types.h>
 #endif
 
 #include "maolan/audio/clip.hpp"
@@ -31,12 +31,12 @@ scheduler::Poll *Engine::_scheduler;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
-    "AudioOSSOut",
+    "AudioOSSIn", "AudioOSSOut",
 #endif
     "AudioTrack"};
 static std::vector<std::string> midiNames = {
 #ifdef OSS_ENABLED
-    "MidiOSSOut",
+    "MidiOSSIn", "MidiOSSOut",
 #endif
     "MidiTrack"};
 
@@ -80,6 +80,7 @@ void Engine::init(const int &threads)
 void Engine::quit()
 {
   IO::quit();
+  delete _scheduler;
   _workers.clear();
 #ifdef LV2_ENABLED
   plugin::lv2::Plugin::destroyWorld();
@@ -220,8 +221,8 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
 
 void Engine::play()
 {
-  _scheduler = new scheduler::Poll();
   IO::play();
+  _scheduler = new scheduler::Poll();
 }
 
 
