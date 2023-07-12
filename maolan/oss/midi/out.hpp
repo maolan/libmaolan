@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 
-#include "maolan/midi/input.hpp"
 #include "maolan/oss/midi/base.hpp"
 
 

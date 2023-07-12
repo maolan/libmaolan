@@ -2,6 +2,7 @@
 #include <unistd.h>
 
 #include "maolan/midi/event.hpp"
+#include "maolan/midi/input.hpp"
 #include "maolan/oss/midi/out.hpp"
 
 using namespace maolan::midi;

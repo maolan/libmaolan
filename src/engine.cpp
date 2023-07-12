@@ -77,21 +77,6 @@ void Engine::init(const int &threads)
 }
 
 
-void Engine::quit()
-{
-  IO::quit();
-  if (_scheduler != nullptr)
-  {
-    delete _scheduler;
-    _scheduler = nullptr;
-  }
-  _workers.clear();
-#ifdef LV2_ENABLED
-  plugin::lv2::Plugin::destroyWorld();
-#endif
-}
-
-
 nlohmann::json Engine::json()
 {
   nlohmann::json data;
@@ -238,4 +223,19 @@ void Engine::stop()
     delete _scheduler;
     _scheduler = nullptr;
   }
+}
+
+
+void Engine::quit()
+{
+  IO::quit();
+  if (_scheduler != nullptr)
+  {
+    delete _scheduler;
+    _scheduler = nullptr;
+  }
+  _workers.clear();
+#ifdef LV2_ENABLED
+  plugin::lv2::Plugin::destroyWorld();
+#endif
 }
