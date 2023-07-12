@@ -16,7 +16,7 @@ public:
   virtual void process();
   virtual void setup();
   virtual nlohmann::json json();
-  virtual Buffer pull(const std::size_t &channel);
+  virtual Buffer pull();
 
   void mute(const bool &value = true);
   void arm(const bool &value = true);
@@ -26,13 +26,13 @@ public:
   Clip *clips();
 
 protected:
-  bool muted;
-  bool armed;
-  bool soloed;
+  bool _muted;
+  bool _armed;
+  bool _soloed;
   std::size_t _channel;
-  midi::Clip *first;
+  midi::Clip *_first;
   midi::Clip *_current;
-  midi::Clip *last;
-  midi::Clip *recording;
+  midi::Clip *_last;
+  midi::Clip *_recording;
 };
 } // namespace maolan::midi

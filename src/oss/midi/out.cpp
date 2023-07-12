@@ -21,7 +21,7 @@ OSSOut::OSSOut(const std::string &name, const std::string &device)
 void OSSOut::fetch()
 {
   OSS::fetch();
-  _data = _inputs[0]->pull();
+  _data = _input->pull();
 }
 
 

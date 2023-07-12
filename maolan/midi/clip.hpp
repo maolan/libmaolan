@@ -51,7 +51,7 @@ protected:
   Buffer data;
   Buffer last;
   Buffer current;
-  File file;
+  File _file;
   Track *_parent;
   Clip *_next;
   Clip *_previous;

@@ -31,7 +31,7 @@ Clip::Clip(const std::string &name, Track *parent)
   , _start{0}
   , _end{100000000}
   , _name{name}
-  , file(name)
+  , _file{name}
   , _parent{parent}
   , _next{nullptr}
   , _previous{nullptr}
@@ -43,7 +43,6 @@ Clip::Clip(const std::string &name, Track *parent)
     parent->add(this);
   }
   clips.push_back(this);
-  _outputs.resize(1);
 }
 
 
@@ -54,7 +53,7 @@ Clip::Clip(const std::string &name, const std::size_t &start,
   , _start{start}
   , _end{end}
   , _name{name}
-  , file{name}
+  , _file{name}
   , _parent{parent}
   , _next{nullptr}
   , _previous{nullptr}
@@ -65,7 +64,6 @@ Clip::Clip(const std::string &name, const std::size_t &start,
   {
     parent->add(this);
   }
-  _outputs.resize(1);
 }
 
 
@@ -83,7 +81,7 @@ Clip::~Clip()
 
 void Clip::process()
 {
-  _outputs[0] = nullptr;
+  _output = nullptr;
   if (data == nullptr || current == nullptr)
   {
     return;
@@ -102,9 +100,9 @@ void Clip::process()
     Buffer buffer = std::make_shared<BufferData>();
     *buffer = *current;
     buffer->next = nullptr;
-    if (_outputs[0] == nullptr)
+    if (_output == nullptr)
     {
-      _outputs[0] = buffer;
+      _output = buffer;
       last = buffer;
     }
     else
@@ -123,10 +121,10 @@ void Clip::load()
   last = nullptr;
   try
   {
-    file.readHeaders();
+    _file.readHeaders();
     while (true)
     {
-      Buffer chunk = file.read();
+      Buffer chunk = _file.read();
       if (chunk->type == Event::META)
       {
         if (chunk->meta == 0x2f)
@@ -153,7 +151,7 @@ void Clip::load()
   {
     std::cerr << "Error loading file " << _name << ": ";
     std::cerr << e.what() << '\n';
-    std::cerr << "Read bytes so far: " << file.tellg() << "\n\n";
+    std::cerr << "Read bytes so far: " << _file.tellg() << "\n\n";
   }
 }
 
@@ -242,7 +240,7 @@ void Clip::endSample(const std::size_t &end)
 }
 
 
-void Clip::save() { file.save(data); }
+void Clip::save() { _file.save(data); }
 void Clip::start(const std::size_t &s) { _start = s; }
 void Clip::end(const std::size_t &e) { _end = e; }
 const std::size_t &Clip::start() const { return _start; }

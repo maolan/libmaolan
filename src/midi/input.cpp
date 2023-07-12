@@ -6,9 +6,9 @@
 using namespace maolan::midi;
 
 
-void Input::connect(IO *to, const std::size_t &ch)
+void Input::connect(IO *to)
 {
-  _connections.push_back(new Connection(to, ch));
+  _connections.push_back(to);
 }
 
 
@@ -75,7 +75,7 @@ nlohmann::json Input::json(const std::string &name)
       continue;
     }
     auto data = R"({})"_json;
-    data["name"] = connection->get()->name();
+    data["name"] = connection->name();
     result.push_back(data);
   }
   if (result.size() > 0)

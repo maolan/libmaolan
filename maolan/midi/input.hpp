@@ -2,7 +2,7 @@
 #include <vector>
 
 #include "maolan/midi/buffer.hpp"
-#include "maolan/midi/connection.hpp"
+#include "maolan/midi/io.hpp"
 
 
 namespace maolan::midi
@@ -12,13 +12,13 @@ class Input
 public:
   void fetch();
   void process();
-  void connect(IO *to, const std::size_t &ch = 0);
+  void connect(IO *to);
   Buffer pull();
   virtual nlohmann::json json(const std::string &name);
   std::size_t conns();
 
 protected:
-  std::vector<midi::Connection *> _connections;
+  std::vector<midi::IO *> _connections;
   Buffer _output;
 };
 } // namespace maolan::midi

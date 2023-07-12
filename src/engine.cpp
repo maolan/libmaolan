@@ -215,7 +215,7 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
       else if (fromio->type().substr(0, 4) == "MIDI" &&
                toio->type().substr(0, 4) == "MIDI")
       {
-        ((midi::IO *)fromio)->connect(((midi::IO *)toio), fromch, toch);
+        ((midi::IO *)fromio)->connect((midi::IO *)toio);
       }
     }
   }

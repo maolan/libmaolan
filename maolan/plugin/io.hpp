@@ -20,7 +20,6 @@ public:
                             const std::string &direction = "out") = 0;
   virtual void fetch();
   void connect(midi::IO *to);
-  void connect(midi::IO *to, std::size_t inCh, std::size_t outCh);
   void connect(audio::IO *to);
   void connect(audio::IO *to, std::size_t inCh, std::size_t outCh);
 

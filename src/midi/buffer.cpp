@@ -1,4 +1,5 @@
 #include <iostream>
+
 #include "maolan/midi/buffer.hpp"
 #include "maolan/midi/event.hpp"
 
@@ -11,6 +12,7 @@ BufferData::~BufferData()
   if (data != nullptr)
   {
     delete[] data;
+    data = nullptr;
   }
 }
 

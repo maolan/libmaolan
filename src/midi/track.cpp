@@ -7,12 +7,11 @@ using namespace maolan::midi;
 
 
 Track::Track(const std::string &name, const std::size_t &channel)
-    : IO(name, true), muted{false}, armed{false}, soloed{false},
-      _channel{channel}, first{nullptr}, _current{nullptr}, last{nullptr}
+    : IO{name, true}, _muted{false}, _armed{false}, _soloed{false},
+      _channel{channel}, _first{nullptr}, _current{nullptr}, _last{nullptr}
 {
   _type = "MIDITrack";
-  _outputs.resize(1);
-  _inputs.push_back(new Input());
+  _input = new Input();
 }
 
 
@@ -29,22 +28,19 @@ void Track::process()
 {
   if (_current == nullptr)
   {
-    _outputs[0] = nullptr;
+    _output = nullptr;
     return;
   }
-  if (armed)
+  if (_armed)
   {
-    for (std::size_t i = 0; i < _inputs.size() && i < _outputs.size(); ++i)
-    {
-      _outputs[i] = _inputs[i]->pull();
-    }
+    _output = _input->pull();
     // recording->write(buffer);
   }
-  else if (!muted && _playHead >= _current->startSample())
+  else if (!_muted && _playHead >= _current->startSample())
   {
     _current->process();
-    _outputs[0] = _current->pull(0);
-    for (auto buffer = _outputs[0]; buffer != nullptr; buffer = buffer->next)
+    _output = _current->pull();
+    for (auto buffer = _output; buffer != nullptr; buffer = buffer->next)
     {
       buffer->channel = _channel;
     }
@@ -54,31 +50,31 @@ void Track::process()
 
 void Track::setup()
 {
-  if (armed && recording == nullptr)
+  if (_armed && _recording == nullptr)
   {
-    recording = new midi::Clip("/tmp/clip.mid", this);
-    recording->startSample(_playHead);
-    recording->endSample(_playHead + Config::audioBufferSize);
-    _current = recording;
-    first = _current;
-    last = _current;
+    _recording = new midi::Clip("/tmp/clip.mid", this);
+    _recording->startSample(_playHead);
+    _recording->endSample(_playHead + Config::audioBufferSize);
+    _current = _recording;
+    _first = _current;
+    _last = _current;
     _current->setup();
   }
-  else if (first == nullptr)
+  else if (_first == nullptr)
   {
     _current = nullptr;
   }
-  else if (_playHead < first->startSample())
+  else if (_playHead < _first->startSample())
   {
     _current = nullptr;
   }
-  else if (!armed && _playHead > last->endSample())
+  else if (!_armed && _playHead > _last->endSample())
   {
     _current = nullptr;
   }
   else
   {
-    for (auto clip = last; clip != nullptr; clip = clip->previous())
+    for (auto clip = _last; clip != nullptr; clip = clip->previous())
     {
       if (clip->startSample() <= _playHead && _playHead < clip->endSample())
       {
@@ -93,14 +89,14 @@ void Track::setup()
 
 void Track::add(Clip *clip)
 {
-  if (first == nullptr)
+  if (_first == nullptr)
   {
-    first = clip;
-    last = clip;
+    _first = clip;
+    _last = clip;
   }
   else
   {
-    for (auto cl = first; cl != nullptr; cl = cl->next())
+    for (auto cl = _first; cl != nullptr; cl = cl->next())
     {
       if (clip->start() < cl->start())
       {
@@ -110,11 +106,11 @@ void Track::add(Clip *clip)
         cl->previous(clip);
         if (clip->previous() == nullptr)
         {
-          first = clip;
+          _first = clip;
         }
         if (clip->next() == nullptr)
         {
-          last->next(clip);
+          _last->next(clip);
         }
         break;
       }
@@ -125,11 +121,11 @@ void Track::add(Clip *clip)
 
 void Track::remove(Clip *clip)
 {
-  if (first == nullptr)
+  if (_first == nullptr)
   {
     return;
   }
-  for (auto cl = first; cl != nullptr; cl = cl->next())
+  for (auto cl = _first; cl != nullptr; cl = cl->next())
   {
     if (cl == clip)
     {
@@ -145,17 +141,17 @@ void Track::remove(Clip *clip)
       {
         _current = nullptr;
       }
-      if (cl == recording)
+      if (cl == _recording)
       {
-        recording = nullptr;
+        _recording = nullptr;
       }
-      if (cl == first)
+      if (cl == _first)
       {
-        first = cl->next();
+        _first = cl->next();
       }
-      if (cl == last)
+      if (cl == _last)
       {
-        last = cl->previous();
+        _last = cl->previous();
       }
       cl->parent(nullptr);
       return;
@@ -164,13 +160,13 @@ void Track::remove(Clip *clip)
 }
 
 
-Buffer Track::pull(const std::size_t &ch)
+Buffer Track::pull()
 {
-  if (muted)
+  if (_muted)
   {
     return nullptr;
   }
-  return _outputs[ch];
+  return _output;
 }
 
 
@@ -186,7 +182,7 @@ nlohmann::json Track::json()
 }
 
 
-Clip *Track::clips() { return first; }
-void Track::mute(const bool &value) { muted = value; }
-void Track::arm(const bool &value) { armed = value; }
-void Track::solo(const bool &value) { soloed = value; }
+Clip *Track::clips() { return _first; }
+void Track::mute(const bool &value) { _muted = value; }
+void Track::arm(const bool &value) { _armed = value; }
+void Track::solo(const bool &value) { _soloed = value; }
