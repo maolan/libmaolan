@@ -1,185 +1,148 @@
+/*
+
+https://www.linuxjournal.com/article/6735
+
+This example opens the default PCM device, sets
+some parameters, and then displays the value
+of most of the hardware parameters. It does not
+perform any sound playback or recording.
+
+*/
+
+/* Use the newer ALSA API */
+#define ALSA_PCM_NEW_HW_PARAMS_API
+
+/* All of the ALSA library API is defined
+ * in this header */
 #include <alsa/asoundlib.h>
-#include <stdio.h>
+#include <iostream>
 
-// source: http://www.saunalahti.fi/~s7l/blog/2005/08/21/Full%20Duplex%20ALSA
-
-int restarting;
-
-int nchannels = 1;
-int buffer_size = 512;
-int sample_rate = 44100;
-int bits = 16;
-
-char *snd_device_in = "plughw:0,0";
-char *snd_device_out = "plughw:0,0";
-snd_pcm_t *playback_handle;
-snd_pcm_t *capture_handle;
-
-int configure_alsa_audio(snd_pcm_t *device, int channels)
-{
-  snd_pcm_hw_params_t *hw_params;
-  int err;
-  unsigned int tmp;
+int main() {
+  int rc;
+  snd_pcm_t *handle;
+  snd_pcm_hw_params_t *params;
+  unsigned int val, val2;
+  int dir;
   snd_pcm_uframes_t frames;
-  int fragments = 2;
+  snd_pcm_format_t format;
 
-  /* allocate memory for hardware parameter structure */
-  if ((err = snd_pcm_hw_params_malloc(&hw_params)) < 0)
-  {
-    fprintf(stderr, "cannot allocate parameter structure (%s)\n",
-            snd_strerror(err));
-    return 1;
-  }
-  /* fill structure from current audio parameters */
-  if ((err = snd_pcm_hw_params_any(device, hw_params)) < 0)
-  {
-    fprintf(stderr, "cannot initialize parameter structure (%s)\n",
-            snd_strerror(err));
-    return 1;
-  }
-
-  /* set access type, sample rate, sample format, channels */
-  if ((err = snd_pcm_hw_params_set_access(device, hw_params,
-                                          SND_PCM_ACCESS_RW_INTERLEAVED)) < 0)
-  {
-    fprintf(stderr, "cannot set access type: %s\n", snd_strerror(err));
-    return 1;
-  }
-  // bits = 16
-  if ((err = snd_pcm_hw_params_set_format(device, hw_params,
-                                          SND_PCM_FORMAT_S16_LE)) < 0)
-  {
-    fprintf(stderr, "cannot set sample format: %s\n", snd_strerror(err));
-    return 1;
-  }
-  tmp = sample_rate;
-  if ((err = snd_pcm_hw_params_set_rate_near(device, hw_params, &tmp, 0)) < 0)
-  {
-    fprintf(stderr, "cannot set sample rate: %s\n", snd_strerror(err));
-    return 1;
-  }
-  if (tmp != sample_rate)
-  {
-    fprintf(stderr,
-            "Could not set requested sample rate, asked for %d got %d\n",
-            sample_rate, tmp);
-    sample_rate = tmp;
-  }
-  if ((err = snd_pcm_hw_params_set_channels(device, hw_params, channels)) < 0)
-  {
-    fprintf(stderr, "cannot set channel count: %s\n", snd_strerror(err));
-    return 1;
-  }
-
-  int frame_size = channels * (bits / 8);
-  frames = buffer_size / frame_size * fragments;
-  if ((err = snd_pcm_hw_params_set_buffer_size_near(device, hw_params,
-                                                    &frames)) < 0)
-  {
-    fprintf(stderr, "Error setting buffer_size %d frames: %s\n", frames,
-            snd_strerror(err));
-    return 1;
-  }
-  if (buffer_size != frames * frame_size / fragments)
-  {
-    fprintf(stderr,
-            "Could not set requested buffer size, asked for %d got %d\n",
-            buffer_size, frames * frame_size / fragments);
-    buffer_size = frames * frame_size / fragments;
-  }
-
-  if ((err = snd_pcm_hw_params(device, hw_params)) < 0)
-  {
-    fprintf(stderr, "Error setting HW params: %s\n", snd_strerror(err));
-    return 1;
-  }
-  return 0;
-}
-
-int main(int argc, char **argv)
-{
-
-  int err;
-
-  if ((err = snd_pcm_open(&playback_handle, snd_device_out,
-                          SND_PCM_STREAM_PLAYBACK, 0)) < 0)
-  {
-    fprintf(stderr, "cannot open output audio device %s: %s\n", snd_device_out,
-            snd_strerror(err));
+  /* Open PCM device for playback. */
+  rc = snd_pcm_open(&handle, "default", SND_PCM_STREAM_PLAYBACK, 0);
+  if (rc < 0) {
+    fprintf(stderr, "unable to open pcm device: %s\n", snd_strerror(rc));
     exit(1);
   }
 
-  if ((err = snd_pcm_open(&capture_handle, snd_device_in,
-                          SND_PCM_STREAM_CAPTURE, 0)) < 0)
-  {
-    fprintf(stderr, "cannot open input audio device %s: %s\n", snd_device_in,
-            snd_strerror(err));
+  /* Allocate a hardware parameters object. */
+  snd_pcm_hw_params_alloca(&params);
+
+  /* Fill it in with default values. */
+  snd_pcm_hw_params_any(handle, params);
+
+  /* Set the desired hardware parameters. */
+
+  /* Interleaved mode */
+  snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_RW_INTERLEAVED);
+
+  /* Signed 32-bit little-endian format */
+  snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S32_BE);
+
+  /* Two channels (stereo) */
+  snd_pcm_hw_params_set_channels(handle, params, 2);
+
+  /* 48000 bits/second sampling rate */
+  val = 48000;
+  snd_pcm_hw_params_set_rate_near(handle, params, &val, &dir);
+
+  frames = 32;
+  rc = snd_pcm_hw_params_set_period_size_near(handle, params, &frames, &dir);
+  std::cout << "rc = " << rc << std::endl;
+
+  /* Write the parameters to the driver */
+  rc = snd_pcm_hw_params(handle, params);
+  if (rc < 0) {
+    fprintf(stderr, "unable to set hw parameters: %s\n", snd_strerror(rc));
     exit(1);
   }
 
-  configure_alsa_audio(/*snd_device_out*/ playback_handle, nchannels);
-  configure_alsa_audio(/*snd_device_in*/ capture_handle, nchannels);
+  /* Display information about the PCM interface */
 
-  restarting = 1;
+  printf("PCM handle name = '%s'\n", snd_pcm_name(handle));
+  printf("PCM state = %s\n", snd_pcm_state_name(snd_pcm_state(handle)));
 
-  int frames, inframes, outframes, frame_size;
+  snd_pcm_hw_params_get_access(params, (snd_pcm_access_t *) &val);
+  printf("access type = %s\n", snd_pcm_access_name((snd_pcm_access_t)val));
 
-  while (/*! exit_program*/ true)
-  {
-    frame_size = nchannels * (bits / 8);
-    frames = buffer_size / frame_size;
+  snd_pcm_hw_params_get_format(params, &format);
+  printf("format = '%s' (%s)\n",
+    snd_pcm_format_name((snd_pcm_format_t)val),
+    snd_pcm_format_description(
+                             (snd_pcm_format_t)val));
 
-    const int MIN_BUFFER_SIZE = 1024;
-    const int MAX_BUFFERS = 10;
+  snd_pcm_hw_params_get_subformat(params, (snd_pcm_subformat_t *)&val);
+  printf("subformat = '%s' (%s)\n",
+    snd_pcm_subformat_name((snd_pcm_subformat_t)val),
+    snd_pcm_subformat_description((snd_pcm_subformat_t)val)
+  );
 
-    char rdbuf[MIN_BUFFER_SIZE * MAX_BUFFERS]; /* receive buffer */
-    if (restarting)
-    {
-      restarting = 0;
-      /* drop any output we might got and stop */
-      snd_pcm_drop(capture_handle);
-      snd_pcm_drop(playback_handle);
-      /* prepare for use */
-      snd_pcm_prepare(capture_handle);
-      snd_pcm_prepare(playback_handle);
+  snd_pcm_hw_params_get_channels(params, &val);
+  printf("channels = %d\n", val);
 
-      int fragments = 2;
+  snd_pcm_hw_params_get_rate(params, &val, &dir);
+  printf("rate = %d bps\n", val);
 
+  snd_pcm_hw_params_get_period_time(params, &val, &dir);
+  printf("period time = %d us\n", val);
 
-      /* fill the whole output buffer */
-      for (int i = 0; i < fragments; i += 1)
-        snd_pcm_writei(playback_handle, rdbuf, frames);
-    }
+  snd_pcm_hw_params_get_period_size(params, &frames, &dir);
+  printf("period size = %d frames\n", (int)frames);
 
-    while ((inframes = snd_pcm_readi(capture_handle, rdbuf, frames)) < 0)
-    {
-      if (inframes == -EAGAIN)
-        continue;
-      // by the way, writing to terminal emulator is costly if you use
-      // bad emulators like gnome-terminal, so don't do this.
-      fprintf(stderr, "Input buffer overrun\n");
-      restarting = 1;
-      snd_pcm_prepare(capture_handle);
-    }
-    if (inframes != frames)
-      fprintf(stderr, "Short read from capture device: %d, expecting %d\n",
-              inframes, frames);
+  snd_pcm_hw_params_get_buffer_time(params, &val, &dir);
+  printf("buffer time = %d us\n", val);
 
-    /* now processes the frames */
-    // do_something(rdbuf, inframes);
+  snd_pcm_hw_params_get_periods(params, &val, &dir);
+  printf("periods per buffer = %d frames\n", val);
 
-    while ((outframes = snd_pcm_writei(playback_handle, rdbuf, inframes)) < 0)
-    {
-      if (outframes == -EAGAIN)
-        continue;
-      fprintf(stderr, "Output buffer underrun\n");
-      restarting = 1;
-      snd_pcm_prepare(playback_handle);
-    }
-    if (outframes != inframes)
-      fprintf(stderr, "Short write to playback device: %d, expecting %d\n",
-              outframes, frames);
-  }
+  snd_pcm_hw_params_get_rate_numden(params, &val, &val2);
+  printf("exact rate = %d/%d bps\n", val, val2);
+
+  val = snd_pcm_hw_params_get_sbits(params);
+  printf("significant bits = %d\n", val);
+
+  val = snd_pcm_hw_params_is_batch(params);
+  printf("is batch = %d\n", val);
+
+  val = snd_pcm_hw_params_is_block_transfer(params);
+  printf("is block transfer = %d\n", val);
+
+  val = snd_pcm_hw_params_is_double(params);
+  printf("is double = %d\n", val);
+
+  val = snd_pcm_hw_params_is_half_duplex(params);
+  printf("is half duplex = %d\n", val);
+
+  val = snd_pcm_hw_params_is_joint_duplex(params);
+  printf("is joint duplex = %d\n", val);
+
+  val = snd_pcm_hw_params_can_overrange(params);
+  printf("can overrange = %d\n", val);
+
+  val = snd_pcm_hw_params_can_mmap_sample_resolution(params);
+  printf("can mmap = %d\n", val);
+
+  val = snd_pcm_hw_params_can_pause(params);
+  printf("can pause = %d\n", val);
+
+  val = snd_pcm_hw_params_can_resume(params);
+  printf("can resume = %d\n", val);
+
+  val = snd_pcm_hw_params_can_sync_start(params);
+  printf("can sync start = %d\n", val);
+
+  snd_pcm_hw_params_get_buffer_size(params, (snd_pcm_uframes_t *) &val);
+  printf("buffer size = %d frames\n", val);
+
+  snd_pcm_close(handle);
 
   return 0;
 }

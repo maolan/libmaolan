@@ -62,4 +62,4 @@ void OSSIn::readhw()
 
 
 void OSSIn::process() {}
-Buffer OSSIn::pull(const std::size_t &) { return _data; }
+Buffer OSSIn::pull() { return _data; }

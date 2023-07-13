@@ -13,6 +13,6 @@ public:
   virtual void setup();
   virtual void readhw();
   virtual void process();
-  virtual Buffer pull(const std::size_t &channel);
+  virtual Buffer pull();
 };
 } // namespace maolan::midi
