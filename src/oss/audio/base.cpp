@@ -35,25 +35,16 @@ static int size2frag(int x)
 
 
 OSS::OSS(const std::string &name, const std::string &device, const int &frag, const int &sampleSize)
-    : HW{name, device}
+  : HW{name, device}
 {
 
   int error = 0;
   int tmp;
   _frag = frag;
   _sampleSize = sampleSize;
-  if (_sampleSize == 4)
-  {
-    _format = AFMT_S32_NE;
-  }
-  else if (_sampleSize == 2)
-  {
-    _format = AFMT_S16_NE;
-  }
-  else if (_sampleSize == 1)
-  {
-    _format = AFMT_S8;
-  }
+  if (_sampleSize == 4) { _format = AFMT_S32_NE; }
+  else if (_sampleSize == 2) { _format = AFMT_S16_NE; }
+  else if (_sampleSize == 1) { _format = AFMT_S8; }
   else
   {
     std::stringstream s;
@@ -103,10 +94,7 @@ OSS::OSS(const std::string &name, const std::string &device, const int &frag, co
     checkError(error, "SNDCTL_DSP_SPEED");
 
     int minFrag = size2frag(_sampleSize * channels());
-    if (_frag < minFrag)
-    {
-      _frag = minFrag;
-    }
+    if (_frag < minFrag) { _frag = minFrag; }
     tmp = _frag;
     error = ioctl(_fd, SNDCTL_DSP_SETFRAGMENT, &tmp);
     checkError(error, "SNDCTL_DSP_SETFRAGMENT");

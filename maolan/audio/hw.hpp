@@ -23,4 +23,4 @@ protected:
   int _fd;
   std::string _device;
 };
-} // namespace maolan
+} // namespace maolan::audio
