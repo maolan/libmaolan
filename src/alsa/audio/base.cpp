@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include "maolan/alsa/audio/base.hpp"
+#include "maolan/audio/input.hpp"
 
 
 using namespace maolan::audio;
@@ -51,9 +52,13 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
 
   snd_pcm_hw_params_get_channels(_params, &val);
   snd_pcm_hw_params_set_channels(_handle, _params, val);
+  _outputs.resize(val);
+  for (int i = 0; i < val; ++i)
+  {
+    _inputs.push_back(new Input());
+  }
 
-  /* 48000 bits/second sampling rate */
-  val = 48000;
+  val = Config::samplerate;
   snd_pcm_hw_params_set_rate_near(_handle, _params, &val, &dir);
 
   /* Set period size to 32 _frames. */

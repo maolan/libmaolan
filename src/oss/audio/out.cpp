@@ -29,7 +29,7 @@ template <typename T> void OSSOut<T>::fetch()
 }
 
 
-template <typename T> void OSSOut<T>::convertToRaw()
+template <typename T> void OSSOut<T>::process()
 {
   T *samples = (T *)_bytes;
   auto chs = OSS::channels();
@@ -60,12 +60,6 @@ template <typename T> void OSSOut<T>::convertToRaw()
       }
     }
   }
-}
-
-
-template <typename T> void OSSOut<T>::process()
-{
-  convertToRaw();
 }
 
 

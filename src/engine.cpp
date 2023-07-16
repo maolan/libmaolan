@@ -19,6 +19,11 @@
 #include "maolan/oss/audio/out.hpp"
 #endif
 
+#ifdef ALSA_ENABLED
+// #include "maolan/alsa/audio/in.hpp"
+#include "maolan/alsa/audio/out.hpp"
+#endif
+
 #ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
 #endif
@@ -172,6 +177,40 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
         new maolan::audio::OSSIn<int8_t>(io["name"], io["device"]);
       }
     }
+#endif
+#ifdef ALSA_ENABLED
+    else if (io["type"] == "AudioALSAOut")
+    {
+      auto bits = io["bits"];
+      if (bits == 32)
+      {
+        new maolan::audio::ALSAOut<int32_t>(io["name"], io["device"]);
+      }
+      else if (bits == 16)
+      {
+        new maolan::audio::ALSAOut<int16_t>(io["name"], io["device"]);
+      }
+      else if (bits == 8)
+      {
+        new maolan::audio::ALSAOut<int8_t>(io["name"], io["device"]);
+      }
+    }
+    // else if (io["type"] == "AudioALSAIn")
+    // {
+    //   auto bits = io["bits"];
+    //   if (bits == 32)
+    //   {
+    //     new maolan::audio::ALSAIn<int32_t>(io["name"], io["device"]);
+    //   }
+    //   else if (bits == 16)
+    //   {
+    //     new maolan::audio::ALSAIn<int16_t>(io["name"], io["device"]);
+    //   }
+    //   else if (bits == 8)
+    //   {
+    //     new maolan::audio::ALSAIn<int8_t>(io["name"], io["device"]);
+    //   }
+    // }
 #endif
   }
   for (const auto &c : result["connections"])
