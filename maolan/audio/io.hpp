@@ -23,7 +23,7 @@ public:
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
   void connect(audio::IO *to);
-  void connect(audio::IO *to, std::size_t inch, std::size_t outch);
+  void connect(audio::IO *to, size_t inch, size_t outch);
 
 protected:
   std::vector<audio::Buffer> _outputs;

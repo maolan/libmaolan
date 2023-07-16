@@ -73,11 +73,11 @@ void IO::connect(IO *to)
 }
 
 
-void IO::connect(IO *to, std::size_t inCh, std::size_t outCh)
+void IO::connect(IO *to, size_t inch, size_t outch)
 {
-  if (inCh < _inputs.size())
+  if (inch < _inputs.size())
   {
-    _inputs[inCh]->connect(to, outCh);
+    _inputs[inch]->connect(to, outch);
   }
 }
 
@@ -87,17 +87,13 @@ void IO::fetch()
   for (auto &input : _inputs)
   {
     input->fetch();
-    input->pull();
   }
 }
 
 
 void IO::process()
 {
-  for (auto &input : _inputs)
-  {
-    input->process();
-  }
+  for (auto &input : _inputs) { input->process(); }
 }
 
 

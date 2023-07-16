@@ -32,7 +32,7 @@
 using namespace maolan;
 
 
-scheduler::Poll *Engine::_scheduler = nullptr;
+scheduler::KQueue *Engine::_scheduler = nullptr;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
@@ -250,7 +250,8 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
 void Engine::play()
 {
   IO::play();
-  _scheduler = new scheduler::Poll();
+  // _scheduler = new scheduler::Poll();
+  _scheduler = new scheduler::KQueue();
 }
 
 

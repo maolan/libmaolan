@@ -13,7 +13,7 @@ void Input::connect(audio::IO *to, const std::size_t &ch)
 
 void Input::fetch()
 {
-  std::vector<Buffer> channels(_connections.size());
+  std::vector<Buffer> channels{_connections.size()};
   bool empty = true;
   for (std::size_t i = 0; i < _connections.size(); ++i)
   {

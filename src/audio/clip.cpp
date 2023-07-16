@@ -1,5 +1,3 @@
-#include <iostream>
-
 #include "maolan/audio/clip.hpp"
 #include "maolan/audio/track.hpp"
 #include "maolan/config.hpp"

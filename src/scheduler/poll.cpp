@@ -74,13 +74,15 @@ maolan::IO *Poll::wait()
 void Poll::_process()
 {
   size_t pindex = 0;
+  const auto &audiohw = audio::HW::all();
+
   while (IO::playing() && !IO::quitting())
   {
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
     ++pindex;
-    if (pindex >= pfds.size())
+    if (pindex >= audiohw.size())
     {
       pindex = 0;
       IO::tick();

@@ -63,8 +63,7 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   val = Config::samplerate;
   snd_pcm_hw_params_set_rate_near(_handle, _params, &val, &dir);
 
-  /* Set period size to 32 _frames. */
-  _frames = 32;
+  _frames = 4096;
   snd_pcm_hw_params_set_period_size_near(_handle, _params, &_frames, &dir);
 
   /* Write the parameters to the driver */
@@ -79,6 +78,9 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   snd_pcm_hw_params_get_period_size(_params, &_frames, &dir);
   size = _frames * _sampleSize * channels();
   _bytes = new int8_t[size];
+  Config::audioBufferSize = _frames;
+  std::cout << Config::audioBufferSize << std::endl;
+
 
   snd_pcm_poll_descriptors(_handle, &pfd, 1);
   _fd = pfd.fd;

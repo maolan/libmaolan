@@ -112,6 +112,7 @@ OSS::OSS(const std::string &name, const std::string &device, const int &sampleSi
   _sampleCount = _bufferInfo.bytes / _sampleSize;
   Config::audioBufferSize = _sampleCount / channels();
   _bytes = new int8_t[_bufferInfo.bytes];
+  std::cout << Config::audioBufferSize << std::endl;
 }
 
 

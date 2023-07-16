@@ -1,3 +1,4 @@
+#include <iostream>
 #include "maolan/alsa/audio/out.hpp"
 #include "maolan/audio/input.hpp"
 #include "maolan/constants.hpp"
@@ -40,7 +41,7 @@ template <typename T> void ALSAOut<T>::process()
     }
     else
     {
-      for (std::size_t i = 0; i < Config::audioBufferSize; ++i)
+      for (size_t i = 0; i < Config::audioBufferSize; ++i)
       {
         auto &sample = buffer->data()[i];
         if (sample <= -1.0)
