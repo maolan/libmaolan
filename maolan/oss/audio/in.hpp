@@ -1,9 +1,8 @@
 #pragma once
-#include "maolan/oss/audio/base.hpp"
 #include <string>
 
+#include "maolan/oss/audio/base.hpp"
 
-struct pollfd;
 
 namespace maolan::audio
 {

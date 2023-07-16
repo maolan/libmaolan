@@ -16,6 +16,7 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   int dir;
   size_t size;
   unsigned int val;
+  struct pollfd pfd;
 
   // TODO: handle little endian
   if (_sampleSize == 4) { _format = SND_PCM_FORMAT_S32_BE; }
@@ -75,6 +76,9 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
 
   /* Use a buffer large enough to hold one period */
   snd_pcm_hw_params_get_period_size(_params, &_frames, &dir);
-  size = _frames * _sampleSize * 2;
+  size = _frames * _sampleSize * channels();
   _bytes = new int8_t[size];
+
+  snd_pcm_poll_descriptors(_handle, &pfd, 1);
+  _fd = pfd.fd;
 }
