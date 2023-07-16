@@ -51,7 +51,8 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   /* Signed 16-bit little-endian format */
   snd_pcm_hw_params_set_format(_handle, _params, _format);
 
-  snd_pcm_hw_params_get_channels(_params, &val);
+  // snd_pcm_hw_params_get_channels(_params, &val);
+  val = 2;
   snd_pcm_hw_params_set_channels(_handle, _params, val);
   _outputs.resize(val);
   for (int i = 0; i < val; ++i)
@@ -82,3 +83,24 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   snd_pcm_poll_descriptors(_handle, &pfd, 1);
   _fd = pfd.fd;
 }
+
+
+nlohmann::json ALSA::json()
+{
+  auto data = IO::json();
+  data["bits"] = _sampleSize * 8;
+  data["samplerate"] = Config::samplerate;
+  return data;
+}
+
+
+ALSA::~ALSA()
+{
+  snd_pcm_drain(_handle);
+  snd_pcm_close(_handle);
+  delete _bytes;
+
+}
+
+
+size_t ALSA::channels() const { return _outputs.size(); }

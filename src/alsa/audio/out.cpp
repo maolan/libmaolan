@@ -9,7 +9,9 @@ using namespace maolan::audio;
 template <typename T>
 ALSAOut<T>::ALSAOut(const std::string &name, const std::string &device)
   : ALSA{name, device, SND_PCM_STREAM_PLAYBACK, sizeof(T)}
-{}
+{
+  _type = "AudioALSAOut";
+}
 
 
 template <typename T> void ALSAOut<T>::fetch()
@@ -17,7 +19,7 @@ template <typename T> void ALSAOut<T>::fetch()
   ALSA::fetch();
   for (size_t i = 0; i < ALSA::channels(); ++i)
   {
-    ALSA::_outputs[i] = _inputs[i]->pull();
+    _outputs[i] = _inputs[i]->pull();
   }
 }
 

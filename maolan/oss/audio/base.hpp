@@ -10,14 +10,13 @@
 
 namespace maolan::audio
 {
-class OSS : public maolan::audio::HW
+class OSS : public HW
 {
 public:
-  OSS(const std::string &name, const std::string &device,
-      const int &fragSize = defaultFrag, const int &sampleSize = 4);
+  OSS(const std::string &name, const std::string &device, const int &sampleSize, const int &fragSize = defaultFrag);
   ~OSS();
 
-  virtual std::size_t channels() const;
+  virtual size_t channels() const;
   virtual nlohmann::json json();
 
 protected:

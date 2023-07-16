@@ -34,7 +34,7 @@ static int size2frag(int x)
 }
 
 
-OSS::OSS(const std::string &name, const std::string &device, const int &frag, const int &sampleSize)
+OSS::OSS(const std::string &name, const std::string &device, const int &sampleSize, const int &frag)
   : HW{name, device}
 {
 
@@ -124,5 +124,11 @@ nlohmann::json OSS::json()
 }
 
 
-OSS::~OSS() { close(_fd); }
+OSS::~OSS()
+{
+  close(_fd);
+  delete _bytes;
+}
+
+
 size_t OSS::channels() const { return _outputs.size(); }

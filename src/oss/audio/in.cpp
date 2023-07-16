@@ -9,7 +9,7 @@ using namespace maolan::audio;
 
 template <class T>
 OSSIn<T>::OSSIn(const std::string &name, const std::string &device, const int &frag)
-    : OSS{name, device, frag, sizeof(T)}
+  : OSS{name, device, sizeof(T), frag}
 {
   _type = "AudioOSSIn";
 }

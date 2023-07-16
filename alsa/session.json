@@ -1,0 +1,49 @@
+{
+  "connections": [
+    {
+      "channel": 0,
+      "name": "ALSA Out",
+      "to": [
+        {
+          "channel": 0,
+          "name": "play"
+        }
+      ]
+    },
+    {
+      "channel": 1,
+      "name": "ALSA Out",
+      "to": [
+        {
+          "channel": 1,
+          "name": "play"
+        }
+      ]
+    }
+  ],
+  "io": [
+    {
+      "channels": 2,
+      "clips": [
+        {
+          "channels": 2,
+          "end": 10000000,
+          "name": "audio/stereo.wav",
+          "offset": 0,
+          "start": 0,
+          "type": "AudioClip"
+        }
+      ],
+      "name": "play",
+      "type": "AudioTrack"
+    },
+    {
+      "bits": 32,
+      "channels": 2,
+      "name": "ALSA Out",
+      "device": "default",
+      "samplerate": 48000,
+      "type": "AudioALSAOut"
+    }
+  ]
+}

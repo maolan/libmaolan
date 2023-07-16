@@ -1,15 +1,20 @@
 #pragma once
 #include <alsa/asoundlib.h>
+#include <nlohmann/json.hpp>
 
 #include "maolan/audio/hw.hpp"
 
 
 namespace maolan::audio
 {
-class ALSA : public maolan::audio::HW
+class ALSA : public HW
 {
 public:
-  ALSA(const std::string &name, const std::string &device, const snd_pcm_stream_t &stream, const size_t &sampleSize = 4);
+  ALSA(const std::string &name, const std::string &device, const snd_pcm_stream_t &stream, const size_t &sampleSize);
+  ~ALSA();
+
+  virtual size_t channels() const;
+  virtual nlohmann::json json();
 
 protected:
   snd_pcm_t *_handle;

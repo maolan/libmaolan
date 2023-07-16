@@ -32,7 +32,7 @@
 using namespace maolan;
 
 
-scheduler::Poll *Engine::_scheduler;
+scheduler::Poll *Engine::_scheduler = nullptr;
 std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
