@@ -19,8 +19,8 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   struct pollfd pfd;
 
   // TODO: handle little endian
-  if (_sampleSize == 4) { _format = SND_PCM_FORMAT_S32_BE; }
-  else if (_sampleSize == 2) { _format = SND_PCM_FORMAT_S16_BE; }
+  if (_sampleSize == 4) { _format = SND_PCM_FORMAT_S32_LE; }
+  else if (_sampleSize == 2) { _format = SND_PCM_FORMAT_S16_LE; }
   else if (_sampleSize == 1) { _format = SND_PCM_FORMAT_S8; }
   else
   {

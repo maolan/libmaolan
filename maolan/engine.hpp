@@ -3,8 +3,7 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 
-// #include "maolan/scheduler/poll.hpp"
-#include "maolan/scheduler/kqueue.hpp"
+#include "maolan/scheduler/poll.hpp"
 #include "maolan/worker.hpp"
 
 
@@ -23,6 +22,6 @@ public:
 
 protected:
   static std::vector<Worker *> _workers;
-  static scheduler::KQueue *_scheduler;
+  static scheduler::Poll *_scheduler;
 };
 } // namespace maolan

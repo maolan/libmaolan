@@ -45,7 +45,7 @@ int main() {
   snd_pcm_hw_params_set_access(handle, params, SND_PCM_ACCESS_RW_INTERLEAVED);
 
   /* Signed 32-bit little-endian format */
-  snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S32_BE);
+  snd_pcm_hw_params_set_format(handle, params, SND_PCM_FORMAT_S32_LE);
 
   /* Two channels (stereo) */
   snd_pcm_hw_params_set_channels(handle, params, 2);

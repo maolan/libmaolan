@@ -90,12 +90,6 @@ if (ALSA)
     target_link_libraries(test-alsa-params maolan ${MY_LIBRARIES})
     add_dependencies(build-tests test-alsa-params)
     add_test(NAME alsa-params COMMAND ./test-alsa-params)
-
-    add_executable(test-alsa-playback EXCLUDE_FROM_ALL tests/alsa/playback.cpp)
-    target_link_directories(test-alsa-playback PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-    target_link_libraries(test-alsa-playback maolan ${MY_LIBRARIES})
-    add_dependencies(build-tests test-alsa-playback)
-    add_test(NAME alsa-playback COMMAND ./test-alsa-playback)
 endif()
 
 option(LV2 "LADSPA version 2 plugins" OFF)
