@@ -102,6 +102,7 @@ if (ALSA)
     add_test(NAME alsa-load-save COMMAND ./test-load-save ${CMAKE_CURRENT_SOURCE_DIR}/data/alsa)
 endif()
 
+
 option(LV2 "LADSPA version 2 plugins" OFF)
 if (LV2)
     add_compile_definitions(LV2_ENABLED)
@@ -114,6 +115,8 @@ if (LV2)
     set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${LILV_INCLUDE_DIRS})
     set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${LILV_LIBRARY_DIRS})
     set(MY_LIBRARIES ${MY_LIBRARIES} ${LILV_LIBRARIES})
+
+    set(LV2_DEPS "lv2 lilv-0")
 
     file(GLOB LV2_SRCS src/plugin/lv2/*.cpp)
     file(GLOB LV2_HEADERS maolan/plugin/lv2/*.h)

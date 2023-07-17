@@ -5,7 +5,7 @@ includedir="${prefix}/include"
 
 Name: libmaolan
 Version: 0.0.1
-Description: Multithreaded DSP C++ library supporting multiple backends
-Requires: lilv-0 sndfile nlohmann_json
+Description: Multithreaded DSP C++ DAW library supporting multiple backends
+Requires: sndfile nlohmann_json @LV2_DEPS@
 Libs: "-L${libdir}" -lmaolan
 Cflags: "-I${includedir}"
