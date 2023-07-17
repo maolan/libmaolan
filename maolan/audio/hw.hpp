@@ -24,4 +24,7 @@ protected:
   int _fd;
   std::string _device;
 };
+
+
+typedef HW * (*audio_t) (const std::string &name, const std::string &device, const size_t &size);
 } // namespace maolan::audio

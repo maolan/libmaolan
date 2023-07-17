@@ -7,5 +7,5 @@ Name: libmaolan
 Version: 0.0.1
 Description: Multithreaded DSP C++ DAW library supporting multiple backends
 Requires: sndfile nlohmann_json @LV2_DEPS@
-Libs: "-L${libdir}" -lmaolan
+Libs: "-L${libdir}" -lmaolan -lsndfile
 Cflags: "-I${includedir}"

@@ -136,7 +136,7 @@ if (BSD)
     file(GLOB KQUEUE_HEADERS maolan/scheduler/kqueue.hpp)
     file(GLOB KQUEUE_SRCS src/scheduler/kqueue.cpp)
     set(SRCS ${SRCS} ${KQUEUE_SRCS})
-    install(FILES ${KQUEUE_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/schedulers)
+    install(FILES ${KQUEUE_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/scheduler)
     set(MY_HEADERS ${MY_HEADEARS} ${KQUEUE_HEADERS})
 endif()
 

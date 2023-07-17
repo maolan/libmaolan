@@ -24,4 +24,7 @@ protected:
   int _fd;
   std::string _device;
 };
+
+
+typedef HW * (*midi_t) (const std::string &name, const std::string &device);
 } // namespace maolan::midi
