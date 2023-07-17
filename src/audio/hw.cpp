@@ -17,4 +17,5 @@ HW::HW(const std::string &name, const std::string &device)
 
 HW::~HW() { (void)std::remove(_all.begin(), _all.end(), this); }
 int HW::fd() { return _fd; }
+std::string HW::device() { return _device; }
 const std::vector<HW *> &HW::all() { return _all; }

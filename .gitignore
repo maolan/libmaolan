@@ -1,4 +1,3 @@
 .cache
-build/
-maolancli
 compile_commands.json
+*.core

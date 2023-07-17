@@ -13,9 +13,10 @@ public:
   HW(const std::string &name, const std::string &device);
   virtual ~HW();
 
-  static const std::vector<HW *> &all();
+  static const std::vector<HW *> & all();
 
   int fd();
+  std::string device();
 
 protected:
   static std::vector<HW *> _all;

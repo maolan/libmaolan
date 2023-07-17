@@ -16,6 +16,7 @@ public:
   static const std::vector<HW *> & all();
 
   int fd();
+  std::string device();
 
 protected:
   static std::vector<HW *> _all;
