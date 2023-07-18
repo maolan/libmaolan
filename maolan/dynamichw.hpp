@@ -7,10 +7,28 @@
 
 namespace maolan
 {
+class Audio
+{
+  public:
+    audio::audio_t in;
+    audio::audio_t out;
+};
+
+
+class Midi
+{
+  public:
+    midi::midi_t in;
+    midi::midi_t out;
+};
+
+
 class DynamicHW
 {
   public:
-    std::map<std::string, audio::audio_t> audio;
-    std::map<std::string, midi::midi_t> midi;
+    DynamicHW(const std::string &lib);
+
+    Audio audio;
+    Midi midi;
 };
 }
