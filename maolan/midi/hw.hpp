@@ -27,4 +27,5 @@ protected:
 
 
 typedef HW * (*midi_t) (const std::string &name, const std::string &device);
+typedef std::vector<HW *> * (*list_t) ();
 } // namespace maolan::midi

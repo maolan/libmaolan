@@ -24,6 +24,11 @@
 #include "maolan/alsa/audio/out.hpp"
 #endif
 
+#ifdef SNDIO_ENABLED
+#include "maolan/sndio/audio/in.hpp"
+#include "maolan/sndio/audio/out.hpp"
+#endif
+
 #ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
 #endif
@@ -37,6 +42,12 @@ std::vector<Worker *> Engine::_workers;
 static std::vector<std::string> audioNames = {
 #ifdef OSS_ENABLED
     "AudioOSSIn", "AudioOSSOut",
+#endif
+#ifdef ALSA_ENABLED
+    "AudioALSAIn", "AudioALSAOut",
+#endif
+#ifdef SNDIO_ENABLED
+    "AudioSNDIOIn", "AudioSNDIOOut",
 #endif
     "AudioTrack"};
 static std::vector<std::string> midiNames = {
@@ -209,6 +220,40 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
       else if (bits == 8)
       {
         new maolan::audio::ALSAIn<int8_t>(io["name"], io["device"]);
+      }
+    }
+#endif
+#ifdef SNDIO_ENABLED
+    else if (io["type"] == "AudioSNDIOOut")
+    {
+      auto bits = io["bits"];
+      if (bits == 32)
+      {
+        new maolan::audio::SNDIOOut<int32_t>(io["name"], io["device"]);
+      }
+      else if (bits == 16)
+      {
+        new maolan::audio::SNDIOOut<int16_t>(io["name"], io["device"]);
+      }
+      else if (bits == 8)
+      {
+        new maolan::audio::SNDIOOut<int8_t>(io["name"], io["device"]);
+      }
+    }
+    else if (io["type"] == "AudioSNDIOIn")
+    {
+      auto bits = io["bits"];
+      if (bits == 32)
+      {
+        new maolan::audio::SNDIOIn<int32_t>(io["name"], io["device"]);
+      }
+      else if (bits == 16)
+      {
+        new maolan::audio::SNDIOIn<int16_t>(io["name"], io["device"]);
+      }
+      else if (bits == 8)
+      {
+        new maolan::audio::SNDIOIn<int8_t>(io["name"], io["device"]);
       }
     }
 #endif

@@ -79,7 +79,6 @@ ALSA::ALSA(const std::string &name, const std::string &device, const snd_pcm_str
   size = _frames * _sampleSize * channels();
   _bytes = new int8_t[size];
   Config::audioBufferSize = _frames;
-  std::cout << Config::audioBufferSize << std::endl;
 
 
   snd_pcm_poll_descriptors(_handle, &pfd, 1);
