@@ -18,5 +18,4 @@ DynamicHW::DynamicHW(const std::string &lib)
   midi.out = (midi::midi_t)dlsym(handle, "createMidiOut");
   midi.in = (midi::midi_t)dlsym(handle, "createMidiIn");
   midi.list = (midi::list_t)dlsym(handle, "listMidi");
-
 }

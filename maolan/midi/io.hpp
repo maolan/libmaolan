@@ -11,6 +11,8 @@ class IO : public maolan::IO
 public:
   IO(const std::string &name = "", const bool &reg = false);
 
+  virtual void fetch();
+  virtual void process();
   virtual midi::Buffer pull();
   virtual nlohmann::json connections();
   void connect(midi::IO *to);

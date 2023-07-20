@@ -15,11 +15,11 @@ int main(int argc, char **argv)
     std::cerr << "Usage: " << argv[0] << " <session dir>" << std::endl;
     return 1;
   }
+  maolan::Engine::init();
   if (maolan::Engine::load(argv[1]) == nullptr)
   {
     return 1;
   }
-  maolan::Engine::init();
 
   std::cerr << "Playing ...";
   maolan::Engine::play();

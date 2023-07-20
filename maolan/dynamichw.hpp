@@ -32,5 +32,8 @@ class DynamicHW
 
     Audio audio;
     Midi midi;
+
+  protected:
+    static std::map<std::string, DynamicHW *> _backends;
 };
 }

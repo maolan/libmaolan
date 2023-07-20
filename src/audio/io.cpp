@@ -84,10 +84,7 @@ void IO::connect(IO *to, size_t inch, size_t outch)
 
 void IO::fetch()
 {
-  for (auto &input : _inputs)
-  {
-    input->fetch();
-  }
+  for (auto &input : _inputs) { input->fetch(); }
 }
 
 

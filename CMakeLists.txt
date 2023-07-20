@@ -26,6 +26,8 @@ set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 enable_testing()
 add_custom_target(build-tests)
 
+add_compile_definitions(PREFIX="${CMAKE_INSTALL_PREFIX}")
+
 find_package(PkgConfig REQUIRED)
 
 pkg_check_modules(SNDFILE REQUIRED sndfile)
@@ -42,6 +44,11 @@ add_executable(test-playback EXCLUDE_FROM_ALL tests/playback.cpp)
 target_link_directories(test-playback PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
 target_link_libraries(test-playback maolan ${MY_LIBRARIES})
 add_dependencies(build-tests test-playback)
+
+add_executable(test-load EXCLUDE_FROM_ALL tests/load.cpp)
+target_link_directories(test-load PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
+target_link_libraries(test-load maolan ${MY_LIBRARIES})
+add_dependencies(build-tests test-load)
 
 add_executable(test-load-save EXCLUDE_FROM_ALL tests/engine/load-save.cpp)
 target_link_directories(test-load-save PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})

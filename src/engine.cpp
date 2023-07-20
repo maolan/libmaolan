@@ -13,11 +13,7 @@
 #include "maolan/io.hpp"
 #include "maolan/midi/clip.hpp"
 #include "maolan/midi/track.hpp"
-
-#ifdef OSS_ENABLED
-#include "maolan/oss/audio/in.hpp"
-#include "maolan/oss/audio/out.hpp"
-#endif
+#include "maolan/backends.hpp"
 
 #ifdef ALSA_ENABLED
 #include "maolan/alsa/audio/in.hpp"
@@ -39,27 +35,12 @@ using namespace maolan;
 
 scheduler::Poll *Engine::_scheduler = nullptr;
 std::vector<Worker *> Engine::_workers;
-static std::vector<std::string> audioNames = {
-#ifdef OSS_ENABLED
-    "AudioOSSIn", "AudioOSSOut",
-#endif
-#ifdef ALSA_ENABLED
-    "AudioALSAIn", "AudioALSAOut",
-#endif
-#ifdef SNDIO_ENABLED
-    "AudioSNDIOIn", "AudioSNDIOOut",
-#endif
-    "AudioTrack"};
-static std::vector<std::string> midiNames = {
-#ifdef OSS_ENABLED
-    "MidiOSSIn", "MidiOSSOut",
-#endif
-    "MidiTrack"};
 
 
 void Engine::init(const int &threads)
 {
   int rc;
+
 #ifdef __FreeBSD__
   struct rtprio rtp;
   rtp.type = RTP_PRIO_REALTIME;
@@ -71,6 +52,7 @@ void Engine::init(const int &threads)
     std::cerr << strerror(errno) << std::endl;
   }
 #endif
+
   if (threads != 0)
   {
     int maxWorkers = std::thread::hardware_concurrency();
@@ -86,7 +68,7 @@ void Engine::init(const int &threads)
       _workers[i] = new Worker();
     }
   }
-  IO::initall();
+  Backends::load();
 #ifdef LV2_ENABLED
   plugin::lv2::Plugin::allocate();
 #endif
@@ -135,6 +117,11 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
   Config::root = path;
   chdir(Config::root.string().data());
   std::ifstream session{"session.json"};
+  if (!session)
+  {
+    std::cerr << "No session.json in " << path << std::endl;
+    return nullptr;
+  }
   auto result = nlohmann::json::parse(session);
   for (const auto &io : result["io"])
   {
@@ -155,108 +142,48 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
         new maolan::midi::Clip(clipio["name"], track);
       }
     }
-#ifdef OSS_ENABLED
     else if (io["type"] == "AudioOSSOut")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::OSSOut<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::OSSOut<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::OSSOut<int8_t>(io["name"], io["device"]);
-      }
+      size_t bits = io["bits"];
+      auto *oss = Backends::find("oss");
+      if (!oss) { std::cerr << "No OSS backend found!" << std::endl; }
+      else { oss->audio.out(io["name"], io["device"], bits / 8); }
     }
     else if (io["type"] == "AudioOSSIn")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::OSSIn<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::OSSIn<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::OSSIn<int8_t>(io["name"], io["device"]);
-      }
+      auto *oss = Backends::find("oss");
+      size_t bits = io["bits"];
+      if (!oss) { std::cerr << "No OSS backend found!" << std::endl; }
+      else { oss->audio.in(io["name"], io["device"], bits / 8); }
     }
-#endif
-#ifdef ALSA_ENABLED
     else if (io["type"] == "AudioALSAOut")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::ALSAOut<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::ALSAOut<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::ALSAOut<int8_t>(io["name"], io["device"]);
-      }
+      size_t bits = io["bits"];
+      auto *alsa = Backends::find("alsa");
+      if (!alsa) { std::cerr << "No ALSA backend found!" << std::endl; }
+      else { alsa->audio.out(io["name"], io["device"], bits / 8); }
     }
     else if (io["type"] == "AudioALSAIn")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::ALSAIn<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::ALSAIn<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::ALSAIn<int8_t>(io["name"], io["device"]);
-      }
+      size_t bits = io["bits"];
+      auto *alsa = Backends::find("alsa");
+      if (!alsa) { std::cerr << "No ALSA backend found!" << std::endl; }
+      else { alsa->audio.in(io["name"], io["device"], bits / 8); }
     }
-#endif
-#ifdef SNDIO_ENABLED
     else if (io["type"] == "AudioSNDIOOut")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::SNDIOOut<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::SNDIOOut<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::SNDIOOut<int8_t>(io["name"], io["device"]);
-      }
+      size_t bits = io["bits"];
+      auto *sndio = Backends::find("sndio");
+      if (!sndio) { std::cerr << "No SNDIO backend found!" << std::endl; }
+      else { sndio->audio.out(io["name"], io["device"], bits / 8); }
     }
     else if (io["type"] == "AudioSNDIOIn")
     {
-      auto bits = io["bits"];
-      if (bits == 32)
-      {
-        new maolan::audio::SNDIOIn<int32_t>(io["name"], io["device"]);
-      }
-      else if (bits == 16)
-      {
-        new maolan::audio::SNDIOIn<int16_t>(io["name"], io["device"]);
-      }
-      else if (bits == 8)
-      {
-        new maolan::audio::SNDIOIn<int8_t>(io["name"], io["device"]);
-      }
+      size_t bits = io["bits"];
+      auto *sndio = Backends::find("sndio");
+      if (!sndio) { std::cerr << "No SNDIO backend found!" << std::endl; }
+      else { sndio->audio.in(io["name"], io["device"], bits / 8); }
     }
-#endif
   }
   for (const auto &c : result["connections"])
   {
@@ -288,6 +215,7 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
       }
     }
   }
+  IO::initall();
   return result;
 }
 
