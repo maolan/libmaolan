@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.10)
-project(maolan VERSION 0.0.1 DESCRIPTION "Low level Maolan library")
+project(maolan VERSION 0.0.1 DESCRIPTION "Maolan core library")
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
@@ -25,7 +25,6 @@ set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 
 enable_testing()
 add_custom_target(build-tests)
-
 add_compile_definitions(PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 find_package(PkgConfig REQUIRED)
@@ -44,70 +43,9 @@ add_executable(test-playback EXCLUDE_FROM_ALL tests/playback.cpp)
 target_link_directories(test-playback PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
 target_link_libraries(test-playback maolan ${MY_LIBRARIES})
 add_dependencies(build-tests test-playback)
-
-add_executable(test-load EXCLUDE_FROM_ALL tests/load.cpp)
-target_link_directories(test-load PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-target_link_libraries(test-load maolan ${MY_LIBRARIES})
-add_dependencies(build-tests test-load)
-
-add_executable(test-load-save EXCLUDE_FROM_ALL tests/engine/load-save.cpp)
-target_link_directories(test-load-save PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-target_link_libraries(test-load-save maolan ${MY_LIBRARIES})
-add_dependencies(build-tests test-load-save)
-
-option(OSS "Open Sound System" OFF)
-if (OSS)
-    add_compile_definitions(OSS_ENABLED)
-    file(GLOB OSS_HEADERS maolan/oss/*.hpp)
-    file(GLOB OSS_SRCS src/oss/*.cpp)
-    file(GLOB OSS_AUDIO_HEADERS maolan/oss/audio/*.hpp)
-    file(GLOB OSS_AUDIO_SRCS src/oss/audio/*.cpp)
-    file(GLOB OSS_MIDI_HEADERS maolan/oss/midi/*.hpp)
-    file(GLOB OSS_MIDI_SRCS src/oss/midi/*.cpp)
-    set(SRCS ${SRCS} ${OSS_SRCS} ${OSS_AUDIO_SRCS} ${OSS_MIDI_SRCS})
-    install(FILES ${OSS_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/oss)
-    install(FILES ${OSS_AUDIO_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/oss/audio)
-    install(FILES ${OSS_MIDI_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/oss/midi)
-    set(MY_HEADERS ${MY_HEADEARS} ${OSS_HEADERS} ${OSS_AUDIO_HEADERS} ${OSS_MIDI_HEADERS})
-
-    add_executable(test-oss-midi EXCLUDE_FROM_ALL tests/oss/midi.cpp)
-    target_link_directories(test-oss-midi PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-    target_link_libraries(test-oss-midi maolan ${MY_LIBRARIES})
-    add_dependencies(build-tests test-oss-midi)
-    add_test(NAME oss-midi COMMAND ./test-oss-midi /dev/umidi)
-
-    add_test(NAME oss COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/oss)
-    add_test(NAME oss-load-save COMMAND ./test-load-save ${CMAKE_CURRENT_SOURCE_DIR}/data/oss)
-endif()
-
-option(ALSA "Advance Linux Sound Architecture" OFF)
-if (ALSA)
-    add_compile_definitions(ALSA_ENABLED)
-    pkg_check_modules(ALSA REQUIRED alsa)
-    set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${ALSA_INCLUDE_DIRS})
-    set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${ALSA_LIBRARY_DIRS})
-    set(MY_LIBRARIES ${MY_LIBRARIES} ${ALSA_LIBRARIES})
-    file(GLOB ALSA_HEADERS maolan/alsa/*.hpp)
-    file(GLOB ALSA_SRCS src/alsa/*.cpp)
-    file(GLOB ALSA_AUDIO_HEADERS maolan/alsa/audio/*.hpp)
-    file(GLOB ALSA_AUDIO_SRCS src/alsa/audio/*.cpp)
-    file(GLOB ALSA_MIDI_HEADERS maolan/alsa/midi/*.hpp)
-    file(GLOB ALSA_MIDI_SRCS src/alsa/midi/*.cpp)
-    set(SRCS ${SRCS} ${ALSA_SRCS} ${ALSA_AUDIO_SRCS} ${ALSA_MIDI_SRCS})
-    install(FILES ${ALSA_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/alsa)
-    install(FILES ${ALSA_AUDIO_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/alsa/audio)
-    install(FILES ${ALSA_MIDI_HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/alsa/midi)
-    set(MY_HEADERS ${MY_HEADEARS} ${ALSA_HEADERS} ${ALSA_AUDIO_HEADERS} ${ALSA_MIDI_HEADERS})
-
-    add_executable(test-alsa-params EXCLUDE_FROM_ALL tests/alsa/params.cpp)
-    target_link_directories(test-alsa-params PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-    target_link_libraries(test-alsa-params maolan ${MY_LIBRARIES})
-    add_dependencies(build-tests test-alsa-params)
-    add_test(NAME alsa-params COMMAND ./test-alsa-params)
-
-    add_test(NAME alsa COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/alsa)
-    add_test(NAME alsa-load-save COMMAND ./test-load-save ${CMAKE_CURRENT_SOURCE_DIR}/data/alsa)
-endif()
+add_test(NAME oss COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/oss)
+add_test(NAME alsa COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/alsa)
+add_test(NAME sndio COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/sndio)
 
 option(SNDIO "SNDIO from OpenBSD" OFF)
 if (SNDIO)
@@ -188,37 +126,9 @@ endif()
 
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_INSTALL_PREFIX}/include ${MY_INCLUDE_DIRS})
 link_directories(${CMAKE_INSTALL_PREFIX}/lib ${MY_LIBRARY_DIRS})
-add_compile_options(-Wall)
+add_compile_options(-Wall -Werror)
 
-
-option(BUILD_SHARED "Build shared library (libmaolan.so)" ON)
-if (BUILD_SHARED)
-    add_library(
-        maolan
-        SHARED
-        ${SRCS} ${MY_HEADERS}
-    )
-    add_dependencies(build-tests maolan)
-    target_link_libraries(maolan ${MY_LIBRARIES})
-    install(TARGETS maolan LIBRARY DESTINATION lib)
-endif()
-
-option(BUILD_STATIC "Build static library (libmaolan.a)" OFF)
-if (BUILD_STATIC)
-    add_library(
-        maolan-static
-        STATIC
-        ${SRCS} ${MY_HEADERS}
-    )
-    add_dependencies(build-tests maolan-static)
-    if (NOT CMAKE_SYSTEM_NAME STREQUAL "Windows")
-        set_target_properties(maolan-static PROPERTIES OUTPUT_NAME maolan)
-    endif()
-    target_link_libraries(maolan-static ${MY_LIBRARIES})
-    install(TARGETS maolan-static)
-endif()
-
-
-if (NOT BUILD_SHARED AND NOT BUILD_STATIC)
-    message(FATAL_ERROR "You have to build at least one: SHARED or STATIC library")
-endif()
+add_library(maolan SHARED ${SRCS} ${MY_HEADERS})
+add_dependencies(build-tests maolan)
+target_link_libraries(maolan ${MY_LIBRARIES})
+install(TARGETS maolan LIBRARY DESTINATION lib)
