@@ -16,7 +16,7 @@ public:
   void channel(const std::size_t &ch);
 
 protected:
-  audio::IO *to;
+  IO *to;
   std::size_t _channel;
 };
 } // namespace maolan::audio

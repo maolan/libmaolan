@@ -18,6 +18,7 @@ public:
 
   virtual void fetch();
   virtual void process();
+  virtual bool leaf();
   virtual std::size_t channels() const;
   virtual Buffer pull(const std::size_t &channel = 0);
   virtual nlohmann::json json();

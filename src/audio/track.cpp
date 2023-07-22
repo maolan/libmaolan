@@ -16,7 +16,7 @@ using namespace maolan::audio;
 std::vector<Track *> Track::_all;
 
 
-std::string random_string(const std::size_t &size)
+std::string random_string(const size_t &size)
 {
   std::string str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
   std::random_device rd;
@@ -38,20 +38,14 @@ Track::Track(const std::string &name, const std::size_t &ch)
 void Track::fetch()
 {
   IO::fetch();
-  if (_current != nullptr)
-  {
-    _current->fetch();
-  }
+  if (_current != nullptr) { _current->fetch(); }
 }
 
 
 void Track::process()
 {
   IO::process();
-  if (_current != nullptr)
-  {
-    _current->process();
-  }
+  if (_current != nullptr) { _current->process(); }
   auto const chs = channels();
   auto frame = new Frame(chs, 0, 0);
   if (_armed)
@@ -61,12 +55,7 @@ void Track::process()
       frame->audio[channel] = _inputs[channel]->pull();
     }
     _recording->write(frame);
-    if (!_muted)
-    {
-      _outputs = frame->audio;
-    }
-
-
+    if (!_muted) { _outputs = frame->audio; }
     delete frame;
   }
   else if (!_muted && _current != nullptr && _playHead >= _current->start())
@@ -77,7 +66,6 @@ void Track::process()
     }
     auto &result = frame;
     // TODO: process plugins
-
     _outputs = result->audio;
     delete result;
   }
@@ -96,18 +84,9 @@ void Track::setup()
     _last = _current;
     _current->setup();
   }
-  else if (_first == nullptr)
-  {
-    _current = nullptr;
-  }
-  else if (_playHead < _first->start())
-  {
-    _current = nullptr;
-  }
-  else if (!_armed && _playHead > _last->end())
-  {
-    _current = nullptr;
-  }
+  else if (_first == nullptr) { _current = nullptr; }
+  else if (_playHead < _first->start()) { _current = nullptr; }
+  else if (!_armed && _playHead > _last->end()) { _current = nullptr; }
   else
   {
     for (auto clip = _last; clip != nullptr; clip = clip->previous())
@@ -154,14 +133,8 @@ void Track::add(Clip *clip)
         clip->previous(cl->previous());
         cl->previous()->next(clip);
         cl->previous(clip);
-        if (clip->previous() == nullptr)
-        {
-          _first = clip;
-        }
-        if (clip->next() == nullptr)
-        {
-          _last->next(clip);
-        }
+        if (clip->previous() == nullptr) { _first = clip; }
+        if (clip->next() == nullptr) { _last->next(clip); }
         break;
       }
     }
@@ -171,38 +144,17 @@ void Track::add(Clip *clip)
 
 void Track::remove(Clip *clip)
 {
-  if (_first == nullptr)
-  {
-    return;
-  }
+  if (_first == nullptr) { return; }
   for (auto cl = _first; cl != nullptr; cl = cl->next())
   {
     if (cl == clip)
     {
-      if (cl->next() != nullptr)
-      {
-        cl->next()->previous(cl->previous());
-      }
-      if (cl->previous() != nullptr)
-      {
-        cl->previous()->next(cl->next());
-      }
-      if (cl == _current)
-      {
-        _current = nullptr;
-      }
-      if (cl == _recording)
-      {
-        _recording = nullptr;
-      }
-      if (cl == _first)
-      {
-        _first = cl->next();
-      }
-      if (cl == _last)
-      {
-        _last = cl->previous();
-      }
+      if (cl->next() != nullptr) { cl->next()->previous(cl->previous()); }
+      if (cl->previous() != nullptr) { cl->previous()->next(cl->next()); }
+      if (cl == _current) { _current = nullptr; }
+      if (cl == _recording) { _recording = nullptr; }
+      if (cl == _first) { _first = cl->next(); }
+      if (cl == _last) { _last = cl->previous(); }
       cl->parent(nullptr);
       return;
     }
@@ -230,10 +182,7 @@ void Track::add(plugin::lv2::Plugin *plugin) { _plugins.push_back(plugin); }
 
 Buffer Track::pull(const std::size_t &channel)
 {
-  if (_muted)
-  {
-    return nullptr;
-  }
+  if (_muted) { return nullptr; }
   return IO::pull(channel);
 }
 
@@ -259,7 +208,7 @@ void Track::init()
 }
 
 
-std::size_t Track::channels() const { return IO::channels(); }
+size_t Track::channels() const { return IO::channels(); }
 bool Track::mute() { return _muted; }
 bool Track::arm() { return _armed; }
 bool Track::solo() { return _soloed; }

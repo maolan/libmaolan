@@ -11,16 +11,6 @@
       ]
     },
     {
-      "channel": 0,
-      "name": "Midi Track",
-      "to": [
-        {
-          "channel": 0,
-          "name": "Midi Track 2"
-        }
-      ]
-    },
-    {
       "channel": 1,
       "name": "OSS Out",
       "to": [
@@ -32,26 +22,6 @@
     }
   ],
   "io": [
-    {
-      "clips": [
-        {
-          "name": "Midi Clip",
-          "type": "MIDIClip"
-        }
-      ],
-      "name": "Midi Track",
-      "type": "MIDITrack"
-    },
-    {
-      "clips": [
-        {
-          "name": "Midi Clip",
-          "type": "MIDIClip"
-        }
-      ],
-      "name": "Midi Track 2",
-      "type": "MIDITrack"
-    },
     {
       "channels": 2,
       "clips": [
@@ -65,6 +35,21 @@
         }
       ],
       "name": "play",
+      "type": "AudioTrack"
+    },
+    {
+      "channels": 2,
+      "clips": [
+        {
+          "channels": 2,
+          "end": 10000000,
+          "name": "audio/stereo.wav",
+          "offset": 0,
+          "start": 0,
+          "type": "AudioClip"
+        }
+      ],
+      "name": "play2",
       "type": "AudioTrack"
     },
     {

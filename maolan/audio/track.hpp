@@ -12,7 +12,7 @@ namespace maolan::audio
 class Track : public IO
 {
 public:
-  Track(const std::string &name, const std::size_t &channel);
+  Track(const std::string &name, const size_t &channel);
   virtual ~Track();
 
   static std::vector<Track *> _all;
@@ -22,8 +22,8 @@ public:
   virtual void fetch();
   virtual void process();
   virtual nlohmann::json json();
-  virtual std::size_t channels() const;
-  virtual Buffer pull(const std::size_t &channel = 0);
+  virtual size_t channels() const;
+  virtual Buffer pull(const size_t &channel = 0);
 
   bool mute();
   bool arm();

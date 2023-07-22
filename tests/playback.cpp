@@ -16,10 +16,7 @@ int main(int argc, char **argv)
     return 1;
   }
   maolan::Engine::init();
-  if (maolan::Engine::load(argv[1]) == nullptr)
-  {
-    return 1;
-  }
+  if (maolan::Engine::load(argv[1]) == nullptr) { return 1; }
 
   std::cerr << "Playing ...";
   maolan::Engine::play();

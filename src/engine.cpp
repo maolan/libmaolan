@@ -15,16 +15,6 @@
 #include "maolan/midi/track.hpp"
 #include "maolan/backends.hpp"
 
-#ifdef ALSA_ENABLED
-#include "maolan/alsa/audio/in.hpp"
-#include "maolan/alsa/audio/out.hpp"
-#endif
-
-#ifdef SNDIO_ENABLED
-#include "maolan/sndio/audio/in.hpp"
-#include "maolan/sndio/audio/out.hpp"
-#endif
-
 #ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
 #endif
@@ -100,9 +90,8 @@ void Engine::save()
 {
   midi::Clip::saveAll();
   auto data = Engine::json();
-  // std::ofstream session{"session.json"};
-  // session << data.dump(2) << '\n';
-  std::cout << data.dump(2) << '\n';
+  std::ofstream session{"session.json"};
+  session << data.dump(2) << '\n';
 }
 
 
@@ -216,6 +205,7 @@ nlohmann::json Engine::load(const std::filesystem::path &path)
     }
   }
   IO::initall();
+  IO::reorder();
   return result;
 }
 

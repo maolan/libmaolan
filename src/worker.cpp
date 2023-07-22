@@ -14,10 +14,7 @@ void Worker::_process()
   while (true)
   {
     auto task = IO::task();
-    if (task == nullptr)
-    {
-      break;
-    }
+    if (task == nullptr) { break; }
     task->work();
   }
 }

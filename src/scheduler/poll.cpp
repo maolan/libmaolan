@@ -43,27 +43,18 @@ Poll::Poll()
 maolan::IO *Poll::wait()
 {
   int ret = poll(pfds.data(), pfds.size(), -1);
-  if (ret == -1)
-  {
-    return nullptr;
-  }
+  if (ret == -1) { return nullptr; }
   for (const auto &pfd : pfds)
   {
     if (pfd.revents != 0)
     {
       for (const auto &hw : audio::HW::all())
       {
-        if (hw->fd() == pfd.fd)
-        {
-          return hw;
-        }
+        if (hw->fd() == pfd.fd) { return hw; }
       }
       for (const auto &hw : midi::HW::all())
       {
-        if (hw->fd() == pfd.fd)
-        {
-          return hw;
-        }
+        if (hw->fd() == pfd.fd) { return hw; }
       }
     }
   }
@@ -81,11 +72,14 @@ void Poll::_process()
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
-    ++pindex;
-    if (pindex >= audiohw.size())
+    if (std::find(audiohw.begin(), audiohw.end(), hwio) != audiohw.end())
     {
-      pindex = 0;
-      IO::tick();
+      ++pindex;
+      if (pindex >= audiohw.size())
+      {
+        pindex = 0;
+        IO::tick();
+      }
     }
   }
 }

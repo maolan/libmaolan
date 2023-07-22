@@ -94,4 +94,14 @@ void IO::process()
 }
 
 
+bool IO::leaf()
+{
+  for (const auto &input : _inputs)
+  {
+    if (!input->leaf()) { return false; }
+  }
+  return true;
+}
+
+
 std::size_t IO::channels() const { return _outputs.size(); }
