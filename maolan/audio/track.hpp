@@ -15,8 +15,6 @@ public:
   Track(const std::string &name, const size_t &channel);
   virtual ~Track();
 
-  static std::vector<Track *> _all;
-
   virtual void init();
   virtual void setup();
   virtual void fetch();

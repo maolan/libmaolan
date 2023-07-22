@@ -7,7 +7,7 @@ using namespace maolan;
 bool IO::_rec = false;
 bool IO::_playing = false;
 bool IO::_quit = false;
-std::size_t IO::_playHead = 0;
+std::atomic_size_t IO::_playHead = 0;
 std::atomic_size_t IO::_index{0};
 std::atomic_size_t IO::_line{0};
 std::mutex IO::_m;

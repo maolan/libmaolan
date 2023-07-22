@@ -13,9 +13,6 @@
 using namespace maolan::audio;
 
 
-std::vector<Track *> Track::_all;
-
-
 std::string random_string(const size_t &size)
 {
   std::string str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
@@ -31,7 +28,6 @@ Track::Track(const std::string &name, const std::size_t &ch)
       _first{nullptr}, _current{nullptr}, _last{nullptr}
 {
   _type = "AudioTrack";
-  _all.push_back(this);
 }
 
 
