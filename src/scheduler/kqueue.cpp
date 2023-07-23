@@ -90,11 +90,14 @@ void KQueue::_process()
     auto *hwio = wait();
     hwio->readhw();
     hwio->writehw();
-    ++pindex;
-    if (pindex >= audiohw.size())
+    if (std::find(audiohw.begin(), audiohw.end(), hwio) != audiohw.end())
     {
-      pindex = 0;
-      IO::tick();
+      ++pindex;
+      if (pindex >= audiohw.size())
+      {
+        pindex = 0;
+        IO::tick();
+      }
     }
   }
 }

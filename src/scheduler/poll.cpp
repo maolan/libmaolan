@@ -42,7 +42,7 @@ Poll::Poll()
 
 maolan::IO *Poll::wait()
 {
-  int ret = poll(pfds.data(), pfds.size(), -1);
+  int ret = poll(pfds.data(), pfds.size(), INFTIM);
   if (ret == -1) { return nullptr; }
   for (const auto &pfd : pfds)
   {
