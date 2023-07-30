@@ -1,19 +1,20 @@
 #pragma once
-#include "maolan/audio/clip.hpp"
-#include "maolan/audio/io.hpp"
+#include <vector>
+
+#include <maolan/audio/clip.hpp>
+#include <maolan/audio/io.hpp>
 
 #ifdef LV2_ENABLED
 #include "maolan/plugin/lv2/plugin.hpp"
 #endif
 
-
-namespace maolan::audio
-{
-class Track : public IO
-{
+namespace maolan::audio {
+class Track : public IO {
 public:
   Track(const std::string &name, const size_t &channel);
   virtual ~Track();
+
+  static std::vector<Track *> all();
 
   virtual void init();
   virtual void setup();
@@ -39,6 +40,8 @@ public:
   Clip *clips();
 
 protected:
+  static std::vector<Track *> _all;
+
   bool _muted;
   bool _armed;
   bool _soloed;

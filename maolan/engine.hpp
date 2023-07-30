@@ -3,14 +3,11 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 
-#include "maolan/scheduler/poll.hpp"
-#include "maolan/worker.hpp"
+#include <maolan/scheduler/poll.hpp>
+#include <maolan/worker.hpp>
 
-
-namespace maolan
-{
-class Engine
-{
+namespace maolan {
+class Engine {
 public:
   static void init(const int &threads = -1);
   static void play();

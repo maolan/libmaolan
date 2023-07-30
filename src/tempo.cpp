@@ -1,14 +1,10 @@
-#include "maolan/tempo.hpp"
-#include "maolan/config.hpp"
-
+#include <maolan/config.hpp>
+#include <maolan/tempo.hpp>
 
 using namespace maolan;
 
-
-Tempo::Tempo(const unsigned &b, const std::size_t &t) : time{t}, bpm{b}
-{
-  if (Config::samplerate != 0 && bpm != 0 && Config::division != 0)
-  {
+Tempo::Tempo(const unsigned &b, const std::size_t &t) : time{t}, bpm{b} {
+  if (Config::samplerate != 0 && bpm != 0 && Config::division != 0) {
     float audio = (float)Config::samplerate * 60.0;
     float midi = (float)bpm * (float)Config::division;
     a2m = audio / midi;

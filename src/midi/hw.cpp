@@ -1,16 +1,11 @@
-#include "maolan/midi/hw.hpp"
-
+#include <maolan/midi/hw.hpp>
 
 using namespace maolan::midi;
 
-
 std::vector<HW *> HW::_all;
 
-
 HW::HW(const std::string &name, const std::string &device)
-  : IO{name}
-  , _device{device}
-{
+    : IO{name}, _device{device} {
   _all.push_back(this);
 }
 HW::~HW() { (void)std::remove(_all.begin(), _all.end(), this); }

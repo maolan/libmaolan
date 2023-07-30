@@ -4,14 +4,11 @@
 #include <string>
 #include <vector>
 
-#include "maolan/audio/io.hpp"
-#include "maolan/frame.hpp"
+#include <maolan/audio/io.hpp>
+#include <maolan/frame.hpp>
 
-
-namespace maolan::audio
-{
-class File : public audio::IO
-{
+namespace maolan::audio {
+class File : public audio::IO {
 public:
   File(const size_t &channels);
   File(const std::filesystem::path &path, const uint64_t &offset = 0);

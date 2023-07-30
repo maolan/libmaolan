@@ -1,62 +1,41 @@
-#include "maolan/midi/input.hpp"
-#include "maolan/config.hpp"
-#include <iostream>
-
+#include <maolan/config.hpp>
+#include <maolan/midi/input.hpp>
 
 using namespace maolan::midi;
 
+void Input::connect(IO *to) { _connections.push_back(to); }
 
-void Input::connect(IO *to)
-{
-  _connections.push_back(to);
-}
-
-
-void Input::fetch()
-{
+void Input::fetch() {
   std::vector<Buffer> channels(_connections.size());
   bool empty = true;
-  for (std::size_t i = 0; i < _connections.size(); ++i)
-  {
+  for (std::size_t i = 0; i < _connections.size(); ++i) {
     const auto element = _connections[i]->pull();
     channels[i] = element;
-    if (element != nullptr)
-    {
+    if (element != nullptr) {
       empty = false;
     }
   }
-  if (empty)
-  {
+  if (empty) {
     _output = nullptr;
-  }
-  else if (channels.size() == 1)
-  {
+  } else if (channels.size() == 1) {
     _output = channels[0];
-  }
-  else
-  {
+  } else {
     _output = nullptr;
     Buffer lastBuffer;
     Buffer chunk;
-    for (auto channel : channels)
-    {
-      if (channel == nullptr)
-      {
+    for (auto channel : channels) {
+      if (channel == nullptr) {
         continue;
       }
-      if (_output == nullptr)
-      {
+      if (_output == nullptr) {
         chunk = std::make_shared<BufferData>();
         _output = chunk;
-      }
-      else
-      {
+      } else {
         chunk = std::make_shared<BufferData>();
       }
       *chunk = *channel;
       chunk->next = nullptr;
-      if (lastBuffer != nullptr)
-      {
+      if (lastBuffer != nullptr) {
         lastBuffer->next = chunk;
       }
       lastBuffer = chunk;
@@ -64,22 +43,17 @@ void Input::fetch()
   }
 }
 
-
-nlohmann::json Input::json(const std::string &name)
-{
+nlohmann::json Input::json(const std::string &name) {
   auto result = R"([])"_json;
-  for (auto connection : _connections)
-  {
-    if (connection == nullptr)
-    {
+  for (auto connection : _connections) {
+    if (connection == nullptr) {
       continue;
     }
     auto data = R"({})"_json;
     data["name"] = connection->name();
     result.push_back(data);
   }
-  if (result.size() > 0)
-  {
+  if (result.size() > 0) {
     auto data = R"({})"_json;
     data["name"] = name;
     data["to"] = result;
@@ -88,7 +62,6 @@ nlohmann::json Input::json(const std::string &name)
   return nullptr;
   return nullptr;
 }
-
 
 Buffer Input::pull() { return _output; }
 void Input::process() {}

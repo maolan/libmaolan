@@ -1,11 +1,8 @@
 #pragma once
-#include "maolan/audio/io.hpp"
+#include <maolan/audio/io.hpp>
 
-
-namespace maolan::audio
-{
-class Connection
-{
+namespace maolan::audio {
+class Connection {
 public:
   Connection(IO *connectTo, const std::size_t &ch);
 

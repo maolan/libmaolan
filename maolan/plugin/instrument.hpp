@@ -1,13 +1,10 @@
 #pragma once
-#include "maolan/audio/track.hpp"
-#include "maolan/midi/track.hpp"
-#include "maolan/plugin/io.hpp"
+#include <maolan/audio/track.hpp>
+#include <maolan/midi/track.hpp>
+#include <maolan/plugin/io.hpp>
 
-
-namespace maolan::plugin
-{
-class Instrument
-{
+namespace maolan::plugin {
+class Instrument {
 public:
   Instrument(const std::string &name, const std::string &type);
 

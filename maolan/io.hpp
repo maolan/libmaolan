@@ -6,16 +6,13 @@
 #include <string>
 #include <vector>
 
-#include "maolan/config.hpp"
+#include <maolan/config.hpp>
 
-namespace maolan
-{
+namespace maolan {
 class IO;
 typedef std::vector<IO *> ios_t;
 
-
-class IO
-{
+class IO {
 public:
   IO(const std::string &argName = "", const bool &reg = false);
   virtual ~IO();

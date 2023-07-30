@@ -1,16 +1,13 @@
 #include <iostream>
 #include <sstream>
-#include "maolan/plugin/instrument.hpp"
 
+#include <maolan/plugin/instrument.hpp>
 
 using namespace maolan::plugin;
 
-
-Instrument::Instrument(const std::string &name, const std::string &type)
-{
+Instrument::Instrument(const std::string &name, const std::string &type) {
 #ifdef LV2_ENABLED
-  if (type == "lv2")
-  {
+  if (type == "lv2") {
     std::stringstream s;
     _plugin = new lv2::Plugin(name);
     s << name << "-audio";
@@ -26,7 +23,6 @@ Instrument::Instrument(const std::string &name, const std::string &type)
 #endif
   std::cerr << "No such plugin type!\n";
 }
-
 
 maolan::audio::Track *Instrument::audio() { return _audio; }
 maolan::midi::Track *Instrument::midi() { return _midi; }

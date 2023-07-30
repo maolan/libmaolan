@@ -1,13 +1,11 @@
 #pragma once
 #include <fstream>
 #include <string>
-#include "maolan/midi/buffer.hpp"
 
+#include <maolan/midi/buffer.hpp>
 
-namespace maolan::midi
-{
-class File
-{
+namespace maolan::midi {
+class File {
 public:
   File(const std::string &path);
   ~File();

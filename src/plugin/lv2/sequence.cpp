@@ -1,25 +1,20 @@
 #include <lv2/lv2plug.in/ns/ext/atom/forge.h>
-#include "maolan/plugin/lv2/sequence.hpp"
 
+#include <maolan/plugin/lv2/sequence.hpp>
 
 using namespace maolan::plugin::lv2;
 
-
-class MIDINoteEvent
-{
+class MIDINoteEvent {
 public:
   LV2_Atom_Event event;
   uint8_t msg[3];
 };
 
-
-static inline LV2_Atom_Event *
-_lv2_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
-                                const LV2_Atom_Event *event)
-{
+static inline LV2_Atom_Event *_lv2_append_event(LV2_Atom_Sequence *seq,
+                                                uint32_t capacity,
+                                                const LV2_Atom_Event *event) {
   const uint32_t total_size = (uint32_t)sizeof(*event) + event->body.size;
-  if (capacity - seq->atom.size < total_size)
-  {
+  if (capacity - seq->atom.size < total_size) {
     return nullptr;
   }
   LV2_Atom_Event *e = lv2_atom_sequence_end(&seq->body, seq->atom.size);
@@ -28,9 +23,7 @@ _lv2_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
   return e;
 }
 
-
-Sequence::Sequence()
-{
+Sequence::Sequence() {
   this->buffer_size = 4096;
   this->buffer = new char[this->buffer_size];
   seq = (LV2_Atom_Sequence *)buffer;
@@ -40,10 +33,8 @@ Sequence::Sequence()
   seq->body.pad = 0;
 }
 
-
 void Sequence::addMidiNote(std::uint64_t pos, std::uint8_t key,
-                           std::int8_t velocity)
-{
+                           std::int8_t velocity) {
   std::uint8_t note_on = 0x90;
 
   MIDINoteEvent ev;
@@ -58,7 +49,6 @@ void Sequence::addMidiNote(std::uint64_t pos, std::uint8_t key,
   LV2_Atom_Event *e = _lv2_append_event(seq, this->buffer_size, &ev.event);
   (void)e;
 }
-
 
 void Sequence::clear() { seq->atom.size = sizeof(LV2_Atom_Sequence_Body); }
 void *Sequence::data() { return buffer; }

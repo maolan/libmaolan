@@ -2,11 +2,8 @@
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <memory>
 
-
-namespace maolan::plugin::lv2
-{
-class Sequence
-{
+namespace maolan::plugin::lv2 {
+class Sequence {
 public:
   Sequence();
   void clear();

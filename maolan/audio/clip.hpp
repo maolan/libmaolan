@@ -2,16 +2,13 @@
 #include <filesystem>
 #include <nlohmann/json.hpp>
 
-#include "maolan/audio/file.hpp"
-#include "maolan/audio/io.hpp"
-#include "maolan/frame.hpp"
+#include <maolan/audio/file.hpp>
+#include <maolan/audio/io.hpp>
+#include <maolan/frame.hpp>
 
-
-namespace maolan::audio
-{
+namespace maolan::audio {
 class Track;
-class Clip : public audio::IO
-{
+class Clip : public audio::IO {
 public:
   Clip(const std::filesystem::path &path, Track *parent = nullptr,
        const std::size_t &start = 0, const std::size_t &end = 0,

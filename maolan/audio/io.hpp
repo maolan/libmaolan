@@ -2,19 +2,15 @@
 #include <nlohmann/json.hpp>
 #include <vector>
 
-#include "maolan/audio/buffer.hpp"
-#include "maolan/config.hpp"
-#include "maolan/io.hpp"
+#include <maolan/audio/buffer.hpp>
+#include <maolan/config.hpp>
+#include <maolan/io.hpp>
 
-
-namespace maolan::audio
-{
+namespace maolan::audio {
 class Input;
-class IO : public maolan::IO
-{
+class IO : public maolan::IO {
 public:
   IO(const std::string &name, const bool &reg = true, const size_t &outs = 0);
-
 
   virtual void fetch();
   virtual void process();

@@ -1,13 +1,11 @@
 #pragma once
-#include "maolan/audio/buffer.hpp"
-#include "maolan/midi/buffer.hpp"
 #include <vector>
 
+#include <maolan/audio/buffer.hpp>
+#include <maolan/midi/buffer.hpp>
 
-namespace maolan
-{
-class Frame
-{
+namespace maolan {
+class Frame {
 public:
   Frame(const std::size_t &audioSize, const std::size_t &midiSize,
         const std::size_t &controlSize);

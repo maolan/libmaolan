@@ -1,13 +1,10 @@
 #pragma once
 #include <thread>
 
-#include "maolan/io.hpp"
+#include <maolan/io.hpp>
 
-
-namespace maolan::scheduler
-{
-class KQueue
-{
+namespace maolan::scheduler {
+class KQueue {
 public:
   KQueue();
   ~KQueue();
@@ -18,5 +15,4 @@ protected:
   std::thread _thread;
   void _process();
 };
-} // namespace maolan
-
+} // namespace maolan::scheduler

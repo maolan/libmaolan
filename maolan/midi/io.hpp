@@ -1,13 +1,10 @@
 #pragma once
-#include "maolan/io.hpp"
-#include "maolan/midi/buffer.hpp"
+#include <maolan/io.hpp>
+#include <maolan/midi/buffer.hpp>
 
-
-namespace maolan::midi
-{
+namespace maolan::midi {
 class Input;
-class IO : public maolan::IO
-{
+class IO : public maolan::IO {
 public:
   IO(const std::string &name = "", const bool &reg = false);
 
@@ -19,6 +16,6 @@ public:
 
 protected:
   midi::Buffer _output;
-  midi::Input * _input;
+  midi::Input *_input;
 };
 } // namespace maolan::midi

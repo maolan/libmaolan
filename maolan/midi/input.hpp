@@ -1,14 +1,11 @@
 #pragma once
 #include <vector>
 
-#include "maolan/midi/buffer.hpp"
-#include "maolan/midi/io.hpp"
+#include <maolan/midi/buffer.hpp>
+#include <maolan/midi/io.hpp>
 
-
-namespace maolan::midi
-{
-class Input
-{
+namespace maolan::midi {
+class Input {
 public:
   void fetch();
   void process();

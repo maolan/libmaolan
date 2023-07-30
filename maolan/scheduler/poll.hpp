@@ -1,13 +1,10 @@
 #pragma once
 #include <thread>
 
-#include "maolan/io.hpp"
+#include <maolan/io.hpp>
 
-
-namespace maolan::scheduler
-{
-class Poll
-{
+namespace maolan::scheduler {
+class Poll {
 public:
   Poll();
   ~Poll();
@@ -18,5 +15,4 @@ protected:
   std::thread _thread;
   void _process();
 };
-} // namespace maolan
-
+} // namespace maolan::scheduler

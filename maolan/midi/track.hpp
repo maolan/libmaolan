@@ -1,16 +1,16 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "maolan/midi/clip.hpp"
-#include "maolan/midi/io.hpp"
+#include <maolan/midi/clip.hpp>
+#include <maolan/midi/io.hpp>
 
-
-namespace maolan::midi
-{
-class Track : public midi::IO
-{
+namespace maolan::midi {
+class Track : public midi::IO {
 public:
   Track(const std::string &name, const std::size_t &channel);
+  ~Track();
+
+  static std::vector<Track *> all();
 
   virtual void fetch();
   virtual void process();
@@ -26,6 +26,8 @@ public:
   Clip *clips();
 
 protected:
+  static std::vector<Track *> _all;
+
   bool _muted;
   bool _armed;
   bool _soloed;

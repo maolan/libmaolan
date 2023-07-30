@@ -2,18 +2,15 @@
 #include <string>
 #include <vector>
 
-#include "maolan/midi/io.hpp"
+#include <maolan/midi/io.hpp>
 
-
-namespace maolan::midi
-{
-class HW : public IO
-{
+namespace maolan::midi {
+class HW : public IO {
 public:
   HW(const std::string &name, const std::string &device);
   virtual ~HW();
 
-  static const std::vector<HW *> & all();
+  static const std::vector<HW *> &all();
 
   int fd();
   std::string device();
@@ -25,7 +22,6 @@ protected:
   std::string _device;
 };
 
-
-typedef HW * (*midi_t) (const std::string &name, const std::string &device);
-typedef std::vector<HW *> * (*list_t) ();
+typedef HW *(*midi_t)(const std::string &name, const std::string &device);
+typedef std::vector<HW *> *(*list_t)();
 } // namespace maolan::midi

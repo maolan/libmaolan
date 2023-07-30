@@ -4,13 +4,10 @@
 #include <string>
 #include <vector>
 
-#include "maolan/tempo.hpp"
+#include <maolan/tempo.hpp>
 
-
-namespace maolan
-{
-class Config
-{
+namespace maolan {
+class Config {
 public:
   static size_t audioBufferSize;
   static unsigned samplerate;

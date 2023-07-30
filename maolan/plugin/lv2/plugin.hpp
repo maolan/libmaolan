@@ -3,35 +3,28 @@
 #include <string>
 #include <vector>
 
-#include "maolan/audio/buffer.hpp"
-#include "maolan/frame.hpp"
-#include "maolan/plugin/io.hpp"
-#include "maolan/plugin/lv2/info.hpp"
-#include "maolan/plugin/lv2/port.hpp"
+#include <maolan/audio/buffer.hpp>
+#include <maolan/frame.hpp>
+#include <maolan/plugin/io.hpp>
+#include <maolan/plugin/lv2/info.hpp>
+#include <maolan/plugin/lv2/port.hpp>
 
-
-namespace maolan::plugin::lv2
-{
-class Author
-{
+namespace maolan::plugin::lv2 {
+class Author {
 public:
   std::string name;
   std::string homepage;
   std::string email;
 };
 
-
-class Ports
-{
+class Ports {
 public:
   std::vector<PluginPort *> audio;
   std::vector<PluginPort *> control;
   std::vector<PluginPort *> midi;
 };
 
-
-class Plugin : public plugin::IO
-{
+class Plugin : public plugin::IO {
 public:
   Plugin(const std::string &argUri);
   ~Plugin();

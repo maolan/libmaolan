@@ -2,14 +2,11 @@
 #include <string>
 #include <vector>
 
-#include "maolan/audio/buffer.hpp"
-#include "maolan/audio/connection.hpp"
+#include <maolan/audio/buffer.hpp>
+#include <maolan/audio/connection.hpp>
 
-
-namespace maolan::audio
-{
-class Input
-{
+namespace maolan::audio {
+class Input {
 public:
   bool leaf();
   void fetch();

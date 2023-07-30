@@ -1,18 +1,15 @@
 #pragma once
 #include <nlohmann/json.hpp>
 
-#include "maolan/audio/buffer.hpp"
-#include "maolan/audio/input.hpp"
-#include "maolan/audio/io.hpp"
-#include "maolan/midi/buffer.hpp"
-#include "maolan/midi/input.hpp"
-#include "maolan/midi/io.hpp"
+#include <maolan/audio/buffer.hpp>
+#include <maolan/audio/input.hpp>
+#include <maolan/audio/io.hpp>
+#include <maolan/midi/buffer.hpp>
+#include <maolan/midi/input.hpp>
+#include <maolan/midi/io.hpp>
 
-
-namespace maolan::plugin
-{
-class IO : public audio::IO, public midi::IO
-{
+namespace maolan::plugin {
+class IO : public audio::IO, public midi::IO {
 public:
   IO(const std::string &name = "", const bool &reg = false);
 

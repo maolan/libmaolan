@@ -2,15 +2,11 @@
 #include <memory>
 #include <vector>
 
-
-namespace maolan::midi
-{
+namespace maolan::midi {
 class BufferData;
 typedef std::shared_ptr<BufferData> Buffer;
 
-
-class BufferData
-{
+class BufferData {
 public:
   ~BufferData();
 

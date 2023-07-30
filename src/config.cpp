@@ -1,8 +1,6 @@
 #include <maolan/config.hpp>
 
-
 using namespace maolan;
-
 
 std::size_t Config::audioBufferSize = 0;
 unsigned Config::samplerate = 48000;

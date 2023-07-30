@@ -1,47 +1,32 @@
-#include "maolan/audio/input.hpp"
-#include "maolan/config.hpp"
-
+#include <maolan/audio/input.hpp>
+#include <maolan/config.hpp>
 
 using namespace maolan::audio;
 
-
-void Input::connect(audio::IO *to, const size_t &ch)
-{
+void Input::connect(audio::IO *to, const size_t &ch) {
   _connections.push_back(new Connection(to, ch));
 }
 
-
-void Input::fetch()
-{
+void Input::fetch() {
   std::vector<Buffer> channels{_connections.size()};
   bool empty = true;
-  for (size_t i = 0; i < _connections.size(); ++i)
-  {
+  for (size_t i = 0; i < _connections.size(); ++i) {
     const auto element = _connections[i]->pull();
     channels[i] = element;
-    if (element != nullptr)
-    {
+    if (element != nullptr) {
       empty = false;
     }
   }
-  if (empty)
-  {
+  if (empty) {
     _output = nullptr;
-  }
-  else if (channels.size() == 1)
-  {
+  } else if (channels.size() == 1) {
     _output = channels[0];
-  }
-  else
-  {
+  } else {
     const auto result = std::make_shared<BufferData>(Config::audioBufferSize);
-    for (size_t i = 0; i < Config::audioBufferSize; ++i)
-    {
+    for (size_t i = 0; i < Config::audioBufferSize; ++i) {
       float sum = 0;
-      for (auto channel : channels)
-      {
-        if (channel == nullptr)
-        {
+      for (auto channel : channels) {
+        if (channel == nullptr) {
           continue;
         }
         sum += channel->data()[i];
@@ -52,14 +37,10 @@ void Input::fetch()
   }
 }
 
-
-nlohmann::json Input::json(const std::string &name, const size_t &channel)
-{
+nlohmann::json Input::json(const std::string &name, const size_t &channel) {
   auto result = R"([])"_json;
-  for (auto connection : _connections)
-  {
-    if (connection == nullptr)
-    {
+  for (auto connection : _connections) {
+    if (connection == nullptr) {
       continue;
     }
     auto data = R"({})"_json;
@@ -67,8 +48,7 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel)
     data["channel"] = connection->channel();
     result.push_back(data);
   }
-  if (result.size() > 0)
-  {
+  if (result.size() > 0) {
     auto data = R"({})"_json;
     data["name"] = name;
     data["channel"] = channel;
@@ -78,18 +58,18 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel)
   return nullptr;
 }
 
-
-bool Input::leaf()
-{
-  if (_connections.size() == 0) { return true; }
-  for (const auto &conn : _connections)
-  {
+bool Input::leaf() {
+  if (_connections.size() == 0) {
+    return true;
+  }
+  for (const auto &conn : _connections) {
     auto *io = conn->get();
-    if (!IO::ordered(io)) { return false; }
+    if (!IO::ordered(io)) {
+      return false;
+    }
   }
   return true;
 }
-
 
 Buffer Input::pull() { return _output; }
 void Input::process() {}

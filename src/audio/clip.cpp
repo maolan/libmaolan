@@ -1,67 +1,49 @@
-#include "maolan/audio/clip.hpp"
-#include "maolan/audio/track.hpp"
-#include "maolan/config.hpp"
-
+#include <maolan/audio/clip.hpp>
+#include <maolan/audio/track.hpp>
+#include <maolan/config.hpp>
 
 using namespace maolan::audio;
-
 
 Clip::Clip(const std::filesystem::path &path, Track *parent,
            const std::size_t &start, const std::size_t &end,
            const std::size_t &offset)
     : IO{path, false, 0}, _offset{offset}, _start{start}, _end{end},
-      file{path, offset}, _parent{parent}, _next{nullptr}, _previous{nullptr}
-{
+      file{path, offset}, _parent{parent}, _next{nullptr}, _previous{nullptr} {
   _type = "AudioClip";
-  if (parent)
-  {
+  if (parent) {
     parent->add(this);
   }
 }
 
-
-Clip::~Clip()
-{
-  if (_parent)
-  {
+Clip::~Clip() {
+  if (_parent) {
     _parent->remove(this);
   }
 }
 
-
-Buffer Clip::pull(const std::size_t &channel)
-{
-  if (_playHead >= _start)
-  {
+Buffer Clip::pull(const std::size_t &channel) {
+  if (_playHead >= _start) {
     return file.pull(channel);
   }
   return nullptr;
 }
 
-
-void Clip::parent(maolan::IO *p)
-{
-  if (_parent)
-  {
+void Clip::parent(maolan::IO *p) {
+  if (_parent) {
     _parent->remove(this);
   }
   _parent = (Track *)p;
-  if (_parent)
-  {
+  if (_parent) {
     _parent->add(this);
   }
 }
 
-
-void Clip::write(const Frame &fr)
-{
+void Clip::write(const Frame &fr) {
   file.write(fr);
   _end += Config::audioBufferSize;
 }
 
-
-nlohmann::json Clip::json()
-{
+nlohmann::json Clip::json() {
   auto data = IO::json();
   data["offset"] = _offset;
   data["start"] = _start;
@@ -69,15 +51,11 @@ nlohmann::json Clip::json()
   return data;
 }
 
-
-void Clip::fetch()
-{
-  if (_playHead >= _start)
-  {
+void Clip::fetch() {
+  if (_playHead >= _start) {
     file.fetch();
   }
 }
-
 
 void Clip::init() { file.init(); }
 void Clip::write(const Frame *const fr) { write(*fr); }

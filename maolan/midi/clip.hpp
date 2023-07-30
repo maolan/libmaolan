@@ -1,15 +1,13 @@
 #pragma once
 #include <string>
-#include "maolan/midi/buffer.hpp"
-#include "maolan/midi/file.hpp"
-#include "maolan/midi/io.hpp"
 
+#include <maolan/midi/buffer.hpp>
+#include <maolan/midi/file.hpp>
+#include <maolan/midi/io.hpp>
 
-namespace maolan::midi
-{
+namespace maolan::midi {
 class Track;
-class Clip : public IO
-{
+class Clip : public IO {
 public:
   Clip(const std::string &name, Track *parent);
   Clip(const std::string &name, const std::size_t &start,

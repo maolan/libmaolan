@@ -1,30 +1,21 @@
 #pragma once
 #include <lilv/lilv.h>
-#include <string>
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
-#include "maolan/audio/buffer.hpp"
-#include "maolan/midi/buffer.hpp"
+#include <string>
 
+#include <maolan/audio/buffer.hpp>
+#include <maolan/midi/buffer.hpp>
 
-namespace maolan::plugin::lv2
-{
-enum class PluginPortDirection
-{
-  input,
-  output
-};
+namespace maolan::plugin::lv2 {
+enum class PluginPortDirection { input, output };
 
-
-enum class PluginPortType
-{
+enum class PluginPortType {
   audio,
   control,
   midi,
 };
 
-
-class PluginPort
-{
+class PluginPort {
 public:
   PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin, const LilvPort *p,
              const float &minimum, const float &maximum,

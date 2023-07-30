@@ -1,10 +1,7 @@
 #pragma once
 
-
-namespace maolan::midi
-{
-class Event
-{
+namespace maolan::midi {
+class Event {
 public:
   static unsigned const NOTE_MASK = 0xF0;
   static unsigned const NOTE_ON = 0x90;

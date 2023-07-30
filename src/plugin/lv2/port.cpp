@@ -1,35 +1,29 @@
-#include "maolan/plugin/lv2/port.hpp"
-#include "maolan/config.hpp"
-#include "maolan/io.hpp"
 #include <iostream>
 #include <lv2/lv2plug.in/ns/ext/atom/atom.h>
 #include <lv2/lv2plug.in/ns/ext/atom/forge.h>
 #include <lv2/lv2plug.in/ns/ext/midi/midi.h>
 
+#include <maolan/config.hpp>
+#include <maolan/io.hpp>
+#include <maolan/plugin/lv2/port.hpp>
 
 using namespace maolan::plugin::lv2;
 
-
 static std::uint32_t uid = 0;
-struct Message
-{
+struct Message {
   std::uint8_t *buf;
   LV2_Atom atom;
 };
 
-struct MIDINoteEvent
-{
+struct MIDINoteEvent {
   LV2_Atom_Event event;
   uint8_t *msg;
 };
 
-
-static uint32_t _map(void *data, const char *)
-{
+static uint32_t _map(void *data, const char *) {
   auto urid = (std::uint32_t *)data;
   return ++(*urid);
 }
-
 
 LilvNode *PluginPort::lv2_AtomPort = nullptr;
 LilvNode *PluginPort::lv2_AudioPort = nullptr;
@@ -41,7 +35,6 @@ LilvNode *PluginPort::lv2_MidiEvent = nullptr;
 LilvNode *PluginPort::lv2_OutputPort = nullptr;
 LilvNode *PluginPort::lv2_ConnectionOptional = nullptr;
 LV2_URID_Map PluginPort::map = {.handle = &uid, .map = _map};
-
 
 // static inline LV2_Atom_Event *
 // _lv2_atom_sequence_append_event(LV2_Atom_Sequence *seq, uint32_t capacity,
@@ -59,16 +52,13 @@ LV2_URID_Map PluginPort::map = {.handle = &uid, .map = _map};
 // return e;
 // }
 
-
 PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
                        const LilvPort *p, const float &argMinimum,
                        const float &argMaximum, const float &argDefault,
                        const uint32_t &argIndex)
     : _minimum{argMinimum}, _maximum{argMaximum}, _default{argDefault},
-      _index{argIndex}, seq{nullptr}
-{
-  if (lv2_AtomPort == nullptr)
-  {
+      _index{argIndex}, seq{nullptr} {
+  if (lv2_AtomPort == nullptr) {
     lv2_AtomPort = lilv_new_uri(world, LILV_URI_ATOM_PORT);
     lv2_AudioPort = lilv_new_uri(world, LILV_URI_AUDIO_PORT);
     lv2_ControlPort = lilv_new_uri(world, LILV_URI_CONTROL_PORT);
@@ -81,27 +71,18 @@ PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
   }
   rawPort = (LilvPort *)p;
 
-  if (lilv_port_is_a(rawPlugin, rawPort, lv2_InputPort))
-  {
+  if (lilv_port_is_a(rawPlugin, rawPort, lv2_InputPort)) {
     _direction = PluginPortDirection::input;
-  }
-  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_OutputPort))
-  {
+  } else if (lilv_port_is_a(rawPlugin, rawPort, lv2_OutputPort)) {
     _direction = PluginPortDirection::output;
   }
 
-  if (lilv_port_is_a(rawPlugin, rawPort, lv2_AudioPort))
-  {
+  if (lilv_port_is_a(rawPlugin, rawPort, lv2_AudioPort)) {
     _type = PluginPortType::audio;
-  }
-  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_ControlPort))
-  {
+  } else if (lilv_port_is_a(rawPlugin, rawPort, lv2_ControlPort)) {
     _type = PluginPortType::control;
-  }
-  else if (lilv_port_is_a(rawPlugin, rawPort, lv2_AtomPort))
-  {
-    if (lilv_port_supports_event(rawPlugin, rawPort, lv2_MidiEvent))
-    {
+  } else if (lilv_port_is_a(rawPlugin, rawPort, lv2_AtomPort)) {
+    if (lilv_port_supports_event(rawPlugin, rawPort, lv2_MidiEvent)) {
       _type = PluginPortType::midi;
     }
   }
@@ -112,9 +93,7 @@ PluginPort::PluginPort(LilvWorld *world, const LilvPlugin *rawPlugin,
   _name = lilv_node_as_string(sym);
 }
 
-
-void PluginPort::print() const
-{
+void PluginPort::print() const {
   std::cout << "Port " << _name << '\n';
   std::cout << "\tIndex: " << _index << '\n';
   std::cout << "\tSymbol: " << _symbol << '\n';
@@ -123,18 +102,13 @@ void PluginPort::print() const
   std::cout << "\tDefault: " << _default << '\n';
 }
 
-
 PluginPortType PluginPort::type() { return _type; }
 
-
-void PluginPort::buffer(LilvInstance *instance, const audio::Buffer buf)
-{
+void PluginPort::buffer(LilvInstance *instance, const audio::Buffer buf) {
   lilv_instance_connect_port(instance, _index, buf->data());
 }
 
-
-void PluginPort::buffer(LilvInstance *instance, const midi::Buffer buf)
-{
+void PluginPort::buffer(LilvInstance *instance, const midi::Buffer buf) {
   seq = new LV2_Atom_Sequence;
   seq->atom.size = sizeof(LV2_Atom_Sequence_Body);
   seq->atom.type = map.map(map.handle, LV2_ATOM__Sequence);
@@ -151,12 +125,9 @@ void PluginPort::buffer(LilvInstance *instance, const midi::Buffer buf)
   lilv_instance_connect_port(instance, _index, seq);
 }
 
-
-void PluginPort::buffer(LilvInstance *instance, const float &control)
-{
+void PluginPort::buffer(LilvInstance *instance, const float &control) {
   lilv_instance_connect_port(instance, _index, (void *)&control);
 }
-
 
 PluginPortDirection PluginPort::direction() { return _direction; }
 PluginPort::~PluginPort() {}

@@ -2,18 +2,15 @@
 #include <string>
 #include <vector>
 
-#include "maolan/audio/io.hpp"
+#include <maolan/audio/io.hpp>
 
-
-namespace maolan::audio
-{
-class HW : public IO
-{
+namespace maolan::audio {
+class HW : public IO {
 public:
   HW(const std::string &name, const std::string &device);
   virtual ~HW();
 
-  static const std::vector<HW *> & all();
+  static const std::vector<HW *> &all();
 
   int fd();
   std::string device();
@@ -25,7 +22,7 @@ protected:
   std::string _device;
 };
 
-
-typedef HW * (*audio_t) (const std::string &name, const std::string &device, const size_t &size);
-typedef std::vector<HW *> * (*list_t) ();
+typedef HW *(*audio_t)(const std::string &name, const std::string &device,
+                       const size_t &size);
+typedef std::vector<HW *> *(*list_t)();
 } // namespace maolan::audio
