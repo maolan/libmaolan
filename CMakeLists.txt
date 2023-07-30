@@ -5,6 +5,9 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 set(CMAKE_SHARED_LINKER_FLAGS "-pthread")
 include(GNUInstallDirs)
+include(CTest)
+add_custom_target(build-tests)
+add_compile_definitions(PREFIX="${CMAKE_INSTALL_PREFIX}")
 
 file(GLOB SRCS src/*.cpp src/audio/*.cpp src/midi/*.cpp src/plugin/*.cpp src/scheduler/poll.cpp )
 file(GLOB HEADERS maolan/*.hpp)
@@ -22,10 +25,8 @@ set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
 file(GLOB HEADERS maolan/scheduler/poll.hpp)
 install(FILES ${HEADERS} DESTINATION ${CMAKE_INSTALL_PREFIX}/include/maolan/scheduler)
 set(MY_HEADERS ${MY_HEADEARS} ${HEADERS})
-
-enable_testing()
-add_custom_target(build-tests)
-add_compile_definitions(PREFIX="${CMAKE_INSTALL_PREFIX}")
+file(GLOB DATA data/*)
+install(DIRECTORY ${DATA} DESTINATION ${CMAKE_INSTALL_PREFIX}/share/maolan)
 
 find_package(PkgConfig REQUIRED)
 
@@ -38,15 +39,6 @@ pkg_check_modules(NLOHMANN REQUIRED nlohmann_json)
 set(MY_INCLUDE_DIRS ${MY_INCLUDE_DIRS} ${NLOHMANN_INCLUDE_DIRS})
 set(MY_LIBRARY_DIRS ${MY_LIBRARY_DIRS} ${NLOHMANN_LIBRARY_DIRS})
 set(MY_LIBRARIES ${MY_LIBRARIES} ${NLOHMANN_LIBRARIES})
-
-add_executable(test-playback EXCLUDE_FROM_ALL tests/playback.cpp)
-target_link_directories(test-playback PUBLIC ${CMAKE_CURRENT_BINARY_DIR} ${MY_LIBRARY_DIRS})
-target_link_libraries(test-playback maolan ${MY_LIBRARIES})
-add_dependencies(build-tests test-playback)
-add_test(NAME oss COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/oss)
-add_test(NAME alsa COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/alsa)
-add_test(NAME sndio COMMAND ./test-playback ${CMAKE_CURRENT_SOURCE_DIR}/data/sndio)
-
 
 option(LV2 "LADSPA version 2 plugins" OFF)
 if (LV2)
