@@ -5,6 +5,7 @@
 
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/input.hpp>
+#include <maolan/audio/output.hpp>
 #include <maolan/audio/io.hpp>
 #include <maolan/audio/track.hpp>
 #include <maolan/config.hpp>
@@ -48,7 +49,9 @@ void Track::process() {
     }
     _recording->write(frame);
     if (!_muted) {
-      _outputs = frame->audio;
+      for(int i = 0; i < frame->audio.size(); ++i) {
+        _outputs[i]->buffer(frame->audio[i]);
+      }
     }
     delete frame;
   } else if (!_muted && _current != nullptr && _playHead >= _current->start()) {
@@ -57,7 +60,9 @@ void Track::process() {
     }
     auto &result = frame;
     // TODO: process plugins
-    _outputs = result->audio;
+    for(int i = 0; i < result->audio.size(); ++i) {
+      _outputs[i]->buffer(result->audio[i]);
+    }
     delete result;
   }
 }

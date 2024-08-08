@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include <maolan/audio/input.hpp>
+#include <maolan/audio/output.hpp>
 #include <maolan/audio/io.hpp>
 #include <maolan/config.hpp>
 
@@ -19,7 +20,7 @@ IO::IO(const std::string &name, const bool &reg, const size_t &chs)
 
 Buffer IO::pull(const std::size_t &channel) {
   if (channels() > channel) {
-    return _outputs[channel];
+    return _outputs[channel]->buffer();
   }
   std::cerr << _type << ' ' << _name << " has " << channels();
   std::cerr << " channels and channel " << channel + 1 << " requested!\n";
@@ -56,6 +57,7 @@ void IO::connect(IO *to) {
 void IO::connect(IO *to, size_t inch, size_t outch) {
   if (inch < _inputs.size()) {
     _inputs[inch]->connect(to, outch);
+    to->backref(this, inch, outch);
   }
 }
 

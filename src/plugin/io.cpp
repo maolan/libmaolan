@@ -1,4 +1,5 @@
 #include <maolan/plugin/io.hpp>
+#include <maolan/audio/output.hpp>
 
 using namespace maolan::plugin;
 
@@ -7,7 +8,7 @@ IO::IO(const std::string &name, const bool &reg)
 
 maolan::audio::Buffer IO::audio(const std::size_t &channel) {
   if (channel < audio::IO::_outputs.size()) {
-    return audio::IO::_outputs[channel];
+    return audio::IO::_outputs[channel]->buffer();
   }
   return nullptr;
 }

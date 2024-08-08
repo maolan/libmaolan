@@ -2,6 +2,7 @@
 #include <iostream>
 
 #include <maolan/audio/file.hpp>
+#include <maolan/audio/output.hpp>
 #include <maolan/config.hpp>
 
 using namespace maolan::audio;
@@ -42,9 +43,9 @@ void File::split() {
   }
   const auto chs = channels();
   for (std::size_t channel = 0; channel < chs; ++channel) {
-    _outputs[channel] = std::make_shared<BufferData>(Config::audioBufferSize);
+    _outputs[channel] = new Output();
     for (std::size_t i = 0; i < Config::audioBufferSize; ++i) {
-      _outputs[channel]->data()[i] = frame[i * chs + channel];
+      _outputs[channel]->buffer()->data()[i] = frame[i * chs + channel];
     }
   }
 }

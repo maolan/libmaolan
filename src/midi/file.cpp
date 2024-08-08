@@ -74,7 +74,7 @@ static std::uint32_t readVarLen(std::fstream &file) {
 }
 
 static std::uint32_t bigEndianInt(std::fstream &file, int size) {
-  std::uint8_t rawData[size];
+  std::uint8_t *rawData = new std::uint8_t[size];
   int shift;
   std::uint32_t result = 0;
   file.read((char *)rawData, size);
@@ -82,6 +82,7 @@ static std::uint32_t bigEndianInt(std::fstream &file, int size) {
     shift = (size - 1 - i) * 8;
     result |= rawData[i] << shift;
   }
+  delete [] rawData;
   return result;
 }
 
@@ -143,28 +144,33 @@ Buffer File::read() {
 
 void File::readHeaders() {
   int size = 4;
-  char rawData[size + 1];
+  char *rawData = new char[size + 1];
 
   // MThd
   file.read(rawData, size);
   rawData[size] = '\0';
   if (std::strncmp(rawData, "MThd", size) != 0) {
+    delete [] rawData;
     throw std::invalid_argument("Not a MIDI file!");
   }
   headerLength = bigEndianInt(file, 4);
   if (!file.good()) {
+    delete [] rawData;
     throw std::invalid_argument("Error reading header length!");
   }
   format = bigEndianInt(file, 2);
   if (!file.good()) {
+    delete [] rawData;
     throw std::invalid_argument("Error reading format from header!");
   }
   chunks = bigEndianInt(file, 2);
   if (!file.good()) {
+    delete [] rawData;
     throw std::invalid_argument("Error reading chunks from header!");
   }
   division = bigEndianInt(file, 2);
   if (!file.good()) {
+    delete [] rawData;
     throw std::invalid_argument("Error reading division from header!");
   }
   rate = (float)division / (float)Config::division;
@@ -172,12 +178,15 @@ void File::readHeaders() {
   // MTrk
   file.read(rawData, size);
   if (std::strncmp(rawData, "MTrk", size) != 0) {
+    delete [] rawData;
     throw std::invalid_argument("Expected track marker!");
   }
   bigEndianInt(file, 4);
   if (!file.good()) {
+    delete [] rawData;
     throw std::invalid_argument("Error reading track length!");
   }
+  delete [] rawData;
 }
 
 void File::save(Buffer buffer) {
