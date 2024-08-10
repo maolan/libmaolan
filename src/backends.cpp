@@ -2,7 +2,7 @@
 
 using namespace maolan;
 
-static std::vector<std::string> backendNames = {"oss", "alsa", "sndio"};
+static const std::vector<std::string> backendNames = {"oss", "alsa", "sndio"};
 std::map<std::string, DynamicHW *> Backends::_backends;
 
 void Backends::load() {

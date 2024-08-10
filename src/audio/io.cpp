@@ -9,12 +9,11 @@ using namespace maolan::audio;
 
 IO::IO(const std::string &name, const bool &reg, const size_t &chs)
     : maolan::IO(name, reg) {
-  if (chs > 0) {
-    _outputs.resize(chs);
-  }
-  for (size_t i = 0; i < chs; ++i) {
-    auto input = new Input();
-    _inputs.push_back(input);
+  _inputs.resize(chs);
+  _outputs.resize(chs);
+  for (int ch = 0; ch < chs; ++ch) {
+    _inputs[ch] = new Input();
+    _outputs[ch] = new Output();
   }
 }
 
@@ -60,6 +59,8 @@ void IO::connect(IO *to, size_t inch, size_t outch) {
     to->backref(this, inch, outch);
   }
 }
+
+void IO::backref(IO *to, size_t inch, size_t outch) {}
 
 void IO::fetch() {
   for (auto &input : _inputs) {
