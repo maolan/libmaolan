@@ -1,12 +1,11 @@
 #include <algorithm>
-#include <iostream>
 #include <random>
 #include <string>
 
 #include <maolan/audio/clip.hpp>
 #include <maolan/audio/input.hpp>
-#include <maolan/audio/output.hpp>
 #include <maolan/audio/io.hpp>
+#include <maolan/audio/output.hpp>
 #include <maolan/audio/track.hpp>
 #include <maolan/config.hpp>
 
@@ -24,7 +23,8 @@ std::string random_string(const size_t &size) {
 
 Track::Track(const std::string &name, const std::size_t &ch)
     : IO{name, true, ch}, _muted{false}, _armed{false}, _soloed{false},
-      _first{nullptr}, _current{nullptr}, _last{nullptr} {
+      _volume{1.0}, _first{nullptr}, _current{nullptr}, _last{nullptr},
+      _recording{nullptr} {
   _type = "AudioTrack";
   _all.push_back(this);
 }
@@ -49,7 +49,7 @@ void Track::process() {
     }
     _recording->write(frame);
     if (!_muted) {
-      for(int i = 0; i < frame->audio.size(); ++i) {
+      for (int i = 0; i < frame->audio.size(); ++i) {
         _outputs[i]->buffer(frame->audio[i]);
       }
     }
@@ -60,7 +60,7 @@ void Track::process() {
     }
     auto &result = frame;
     // TODO: process plugins
-    for(int i = 0; i < result->audio.size(); ++i) {
+    for (int i = 0; i < result->audio.size(); ++i) {
       _outputs[i]->buffer(result->audio[i]);
     }
     delete result;
@@ -173,7 +173,15 @@ Buffer Track::pull(const std::size_t &channel) {
   if (_muted) {
     return nullptr;
   }
-  return IO::pull(channel);
+  auto b = IO::pull(channel);
+  if (_volume == 1.0) {
+    return b;
+  }
+  auto result = std::make_shared<BufferData>(Config::audioBufferSize);
+  for (size_t i = 0; i < Config::audioBufferSize; ++i) {
+    result->data()[i] = b->data()[i] * _volume;
+  }
+  return result;
 }
 
 nlohmann::json Track::json() {
@@ -191,10 +199,21 @@ void Track::init() {
   }
 }
 
-size_t Track::channels() const { return IO::channels(); }
+void Track::volume(const float &value) {
+  if (value < 0.0) {
+    _volume = 0.0;
+  } else if (value > 1.0) {
+    _volume = 1.0;
+  } else {
+    // TODO: make it logarithmic
+    _volume = value;
+  }
+}
+
 bool Track::mute() { return _muted; }
 bool Track::arm() { return _armed; }
 bool Track::solo() { return _soloed; }
+float Track::volume() { return _volume; }
 void Track::mute(const bool &value) { _muted = value; }
 void Track::arm(const bool &value) { _armed = value; }
 void Track::solo(const bool &value) { _soloed = value; }

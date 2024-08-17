@@ -31,7 +31,7 @@ void IO::work() {
 
 IO *IO::task() {
   std::unique_lock<std::mutex> lk(_m);
-  _cv.wait(lk, IO::check);
+  _cv.wait(lk, check);
   if (_quit) {
     return nullptr;
   }
