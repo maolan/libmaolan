@@ -13,13 +13,15 @@ using namespace maolan::audio;
 
 std::vector<Track *> Track::_all;
 
-std::string random_string(const size_t &size) {
+static std::string random_string(const size_t &size) {
   std::string str("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz");
   std::random_device rd;
   std::mt19937 generator(rd());
   std::shuffle(str.begin(), str.end(), generator);
   return str.substr(0, size);
 }
+
+void Track::sort() { std::sort(_all.begin(), _all.end()); }
 
 Track::Track(const std::string &name, const std::size_t &ch)
     : IO{name, true, ch}, _muted{false}, _armed{false}, _soloed{false},

@@ -11,7 +11,7 @@ void Input::fetch() {
   std::vector<Buffer> channels{_connections.size()};
   bool empty = true;
   for (size_t i = 0; i < _connections.size(); ++i) {
-    const auto element = _connections[i]->pull();
+    const auto element = _connections[i]->to()->pull();
     channels[i] = element;
     if (element != nullptr) {
       empty = false;
@@ -44,7 +44,7 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel) {
       continue;
     }
     auto data = R"({})"_json;
-    data["name"] = connection->get()->name();
+    data["name"] = connection->to()->name();
     data["channel"] = connection->channel();
     result.push_back(data);
   }
@@ -63,7 +63,7 @@ bool Input::leaf() {
     return true;
   }
   for (const auto &conn : _connections) {
-    auto *io = conn->get();
+    auto *io = conn->to();
     if (!IO::ordered(io)) {
       return false;
     }
@@ -74,3 +74,4 @@ bool Input::leaf() {
 Buffer Input::pull() { return _output; }
 void Input::process() {}
 size_t Input::conns() { return _connections.size(); }
+std::vector<Connection *> Input::connections() { return _connections; }

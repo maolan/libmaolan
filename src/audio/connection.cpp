@@ -2,16 +2,12 @@
 
 using namespace maolan::audio;
 
-Connection::Connection(IO *connectTo, const std::size_t &ch) {
-  target(connectTo, ch);
-}
-
-void Connection::target(IO *connectTo, const std::size_t &ch) {
-  to = connectTo;
+void Connection::target(IO *to, const size_t &ch) {
+  _to = to;
   _channel = ch;
 }
 
-Buffer Connection::pull() { return to->pull(_channel); }
-IO *Connection::get() { return to; }
+Connection::Connection(IO *to, const size_t &ch) { target(to, ch); }
+IO *Connection::to() { return _to; }
 std::size_t Connection::channel() { return _channel; }
-void Connection::channel(const std::size_t &ch) { _channel = ch; }
+void Connection::channel(const size_t &ch) { _channel = ch; }

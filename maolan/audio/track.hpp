@@ -15,6 +15,7 @@ public:
   virtual ~Track();
 
   static std::vector<Track *> all();
+  static void sort();
 
   virtual void init();
   virtual void setup();

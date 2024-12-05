@@ -15,9 +15,10 @@ public:
   Buffer pull();
   virtual nlohmann::json json(const std::string &name, const size_t &channel);
   size_t conns();
+  std::vector<Connection *> connections();
 
 protected:
-  std::vector<audio::Connection *> _connections;
+  std::vector<Connection *> _connections;
   Buffer _output;
 };
 } // namespace maolan::audio

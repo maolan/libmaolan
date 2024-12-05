@@ -1,3 +1,4 @@
+#include <iostream>
 #include <maolan/io.hpp>
 
 using namespace maolan;
@@ -8,6 +9,7 @@ bool IO::_quit = false;
 std::atomic_size_t IO::_playHead = 0;
 std::atomic_size_t IO::_index{0};
 std::atomic_size_t IO::_line{0};
+std::atomic_size_t IO::_active{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 ios_t IO::_all;
@@ -24,9 +26,14 @@ IO::~IO() {
 }
 
 void IO::work() {
+  ++_active;
   setup();
   fetch();
   process();
+  --_active;
+  if (_active.load() == 0) {
+    _active.notify_one();
+  }
 }
 
 IO *IO::task() {
@@ -57,12 +64,12 @@ bool IO::check() {
     return false;
   }
   auto &line = _ordered[_line];
-  if (_index >= line.size()) {
+  if (_index == line.size()) {
     ++_line;
     _index = 0;
-    if (_line >= _ordered.size()) {
-      return false;
-    }
+  }
+  if (_line == _ordered.size()) {
+    return false;
   }
   return true;
 }

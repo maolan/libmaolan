@@ -1,11 +1,14 @@
 #include <iostream>
+#include <map>
 
 #include <maolan/audio/input.hpp>
-#include <maolan/audio/output.hpp>
 #include <maolan/audio/io.hpp>
+#include <maolan/audio/output.hpp>
 #include <maolan/config.hpp>
 
 using namespace maolan::audio;
+
+bool IO::operator<(const IO &arg) { return (connected() < arg.connected()); }
 
 IO::IO(const std::string &name, const bool &reg, const size_t &chs)
     : maolan::IO(name, reg) {
@@ -45,6 +48,20 @@ nlohmann::json IO::connections() {
     return nullptr;
   }
   return result;
+}
+
+size_t IO::connected() const {
+  std::map<IO *, bool> tracks;
+  size_t size = 0;
+
+  for (auto const &input : _inputs) {
+    tracks.clear();
+    for (auto const &connection : input->connections()) {
+      tracks[connection->to()] = true;
+    }
+    size += tracks.size();
+  }
+  return size;
 }
 
 void IO::connect(IO *to) {

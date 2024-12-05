@@ -70,6 +70,7 @@ protected:
   static std::vector<ios_t> _ordered;
   static std::atomic_size_t _index;
   static std::atomic_size_t _line;
+  static std::atomic_size_t _active;
 
   std::string _type;
   std::string _name;

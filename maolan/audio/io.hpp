@@ -16,13 +16,15 @@ public:
   virtual void fetch();
   virtual void process();
   virtual bool leaf();
-  virtual std::size_t channels() const;
-  virtual Buffer pull(const std::size_t &channel = 0);
+  virtual size_t channels() const;
+  virtual Buffer pull(const size_t &channel = 0);
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
+  virtual size_t connected() const;
   void connect(audio::IO *to);
   void connect(audio::IO *to, size_t inch, size_t outch);
   void backref(audio::IO *to, size_t inch, size_t outch);
+  bool operator<(const IO &arg);
 
 protected:
   std::vector<Input *> _inputs;
