@@ -29,12 +29,9 @@ public:
   static void initall();
   static IO *find(const std::string &name);
   static const ios_t all();
-  static void reorder();
   static bool playing();
   static bool quitting();
   static void tick();
-  static bool ordered(IO *target);
-  static const std::vector<ios_t> ordered();
 
   virtual void setup();
   virtual void init();
@@ -67,7 +64,6 @@ protected:
   static std::mutex _m;
   static std::condition_variable _cv;
   static ios_t _all;
-  static std::vector<ios_t> _ordered;
   static std::atomic_size_t _index;
   static std::atomic_size_t _line;
   static std::atomic_size_t _active;

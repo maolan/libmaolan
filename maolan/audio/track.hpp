@@ -14,9 +14,6 @@ public:
   Track(const std::string &name, const size_t &channel);
   virtual ~Track();
 
-  static std::vector<Track *> all();
-  static void sort();
-
   virtual void init();
   virtual void setup();
   virtual void fetch();
@@ -42,8 +39,6 @@ public:
   Clip *clips();
 
 protected:
-  static std::vector<Track *> _all;
-
   bool _muted;
   bool _armed;
   bool _soloed;

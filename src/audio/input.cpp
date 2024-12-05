@@ -58,19 +58,6 @@ nlohmann::json Input::json(const std::string &name, const size_t &channel) {
   return nullptr;
 }
 
-bool Input::leaf() {
-  if (_connections.size() == 0) {
-    return true;
-  }
-  for (const auto &conn : _connections) {
-    auto *io = conn->to();
-    if (!IO::ordered(io)) {
-      return false;
-    }
-  }
-  return true;
-}
-
 Buffer Input::pull() { return _output; }
 void Input::process() {}
 size_t Input::conns() { return _connections.size(); }

@@ -13,21 +13,28 @@ class IO : public maolan::IO {
 public:
   IO(const std::string &name, const bool &reg = true, const size_t &outs = 0);
 
+  static void sort();
+  static std::vector<IO *> all();
+
   virtual void fetch();
   virtual void process();
-  virtual bool leaf();
   virtual size_t channels() const;
   virtual Buffer pull(const size_t &channel = 0);
   virtual nlohmann::json json();
   virtual nlohmann::json connections();
   virtual size_t connected() const;
+  virtual bool ready() const;
+  virtual void setup();
   void connect(audio::IO *to);
   void connect(audio::IO *to, size_t inch, size_t outch);
   void backref(audio::IO *to, size_t inch, size_t outch);
   bool operator<(const IO &arg);
 
 protected:
+  static std::vector<IO *> _all;
+
   std::vector<Input *> _inputs;
   std::vector<Output *> _outputs;
+  bool _processed;
 };
 } // namespace maolan::audio

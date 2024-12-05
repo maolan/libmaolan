@@ -179,7 +179,6 @@ nlohmann::json Engine::load(const std::filesystem::path &path) {
     }
   }
   IO::initall();
-  IO::reorder();
   return result;
 }
 

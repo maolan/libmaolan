@@ -8,7 +8,6 @@
 namespace maolan::audio {
 class Input {
 public:
-  bool leaf();
   void fetch();
   void process();
   void connect(IO *to, const size_t &ch = 0);

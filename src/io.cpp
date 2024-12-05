@@ -1,5 +1,6 @@
 #include <iostream>
 #include <maolan/io.hpp>
+#include <maolan/audio/io.hpp>
 
 using namespace maolan;
 
@@ -13,7 +14,6 @@ std::atomic_size_t IO::_active{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 ios_t IO::_all;
-std::vector<ios_t> IO::_ordered;
 
 IO::IO(const std::string &name, const bool &reg) : _name{name}, _data{nullptr} {
   if (reg) {
@@ -42,8 +42,7 @@ IO *IO::task() {
   if (_quit) {
     return nullptr;
   }
-  auto &line = _ordered[_line];
-  auto &result = line[_index];
+  auto &result = _all[_index];
   ++_index;
   lk.unlock();
   _cv.notify_one();
@@ -57,18 +56,10 @@ bool IO::check() {
   if (!_playing) {
     return false;
   }
-  if (_ordered.size() == 0) {
+  if (_all.size() == 0) {
     return false;
   }
-  if (_line >= _ordered.size()) {
-    return false;
-  }
-  auto &line = _ordered[_line];
-  if (_index == line.size()) {
-    ++_line;
-    _index = 0;
-  }
-  if (_line == _ordered.size()) {
+  if (_index >= _all.size()) {
     return false;
   }
   return true;
@@ -122,6 +113,7 @@ bool IO::exists(std::string_view n) {
 }
 
 void IO::initall() {
+  audio::IO::sort();
   for (const auto &io : _all) {
     io->init();
   }
@@ -134,40 +126,6 @@ IO *IO::find(const std::string &name) {
     }
   }
   return nullptr;
-}
-
-void IO::reorder() {
-  bool done;
-
-  _ordered.clear();
-  do {
-    ios_t line;
-
-    done = true;
-    for (const auto &io : _all) {
-      if (ordered(io)) {
-        continue;
-      }
-      if (io->leaf()) {
-        done = false;
-        line.push_back(io);
-      }
-    }
-    if (!done) {
-      _ordered.push_back(line);
-    }
-  } while (!done);
-}
-
-bool IO::ordered(IO *target) {
-  for (const auto &line : _ordered) {
-    for (const auto &io : line) {
-      if (io == target) {
-        return true;
-      }
-    }
-  }
-  return false;
 }
 
 void IO::parent(IO *) {}
@@ -189,7 +147,6 @@ void IO::process() {}
 void IO::readhw() {}
 void IO::writehw() {}
 const ios_t IO::all() { return _all; }
-const std::vector<ios_t> IO::ordered() { return _ordered; }
 bool IO::playing() { return _playing; }
 bool IO::quitting() { return _quit; }
 bool IO::leaf() { return false; }
