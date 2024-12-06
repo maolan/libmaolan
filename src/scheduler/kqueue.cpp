@@ -72,16 +72,16 @@ void KQueue::_process() {
 
   while (IO::playing() && !IO::quitting()) {
     auto *hwio = wait();
-    hwio->readhw();
-    hwio->writehw();
-    if (std::find(audiohw.begin(), audiohw.end(), hwio) != audiohw.end()) {
-      ++pindex;
-      if (pindex >= audiohw.size()) {
-        pindex = 0;
-        IO::tick();
+    if (hwio != nullptr) {
+      hwio->readhw();
+      hwio->writehw();
+      if (std::find(audiohw.begin(), audiohw.end(), hwio) != audiohw.end()) {
+        ++pindex;
+        if (pindex >= audiohw.size()) {
+          pindex = 0;
+          IO::tick();
+        }
       }
     }
   }
 }
-
-KQueue::~KQueue() { _thread.join(); }

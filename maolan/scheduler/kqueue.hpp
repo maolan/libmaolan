@@ -2,17 +2,16 @@
 #include <thread>
 
 #include <maolan/io.hpp>
+#include <maolan/scheduler/base.hpp>
 
 namespace maolan::scheduler {
-class KQueue {
+class KQueue : BaseScheduler {
 public:
   KQueue();
-  ~KQueue();
 
   static IO *wait();
 
 protected:
-  std::thread _thread;
   void _process();
 };
 } // namespace maolan::scheduler
