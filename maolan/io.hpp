@@ -10,7 +10,7 @@
 
 namespace maolan {
 class IO;
-typedef std::vector<IO *> ios_t;
+typedef std::vector<IO *> io_t;
 
 class IO {
 public:
@@ -28,7 +28,7 @@ public:
   static Config *devices();
   static void initall();
   static IO *find(const std::string &name);
-  static const ios_t all();
+  static const io_t all();
   static bool playing();
   static bool quitting();
   static void tick();
@@ -42,7 +42,6 @@ public:
   virtual nlohmann::json connections();
   virtual void readhw();
   virtual void writehw();
-  virtual bool leaf();
 
   void work();
   void type(const std::string &);
@@ -63,7 +62,7 @@ protected:
   static std::atomic_size_t _playHead;
   static std::mutex _m;
   static std::condition_variable _cv;
-  static ios_t _all;
+  static io_t _all;
   static std::atomic_size_t _index;
   static std::atomic_size_t _line;
   static std::atomic_size_t _active;
@@ -71,5 +70,6 @@ protected:
   std::string _type;
   std::string _name;
   void *_data;
+  bool _processed;
 };
 } // namespace maolan

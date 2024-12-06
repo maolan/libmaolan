@@ -13,7 +13,7 @@ std::atomic_size_t IO::_line{0};
 std::atomic_size_t IO::_active{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
-ios_t IO::_all;
+io_t IO::_all;
 
 IO::IO(const std::string &name, const bool &reg) : _name{name}, _data{nullptr} {
   if (reg) {
@@ -146,7 +146,6 @@ void IO::fetch() {}
 void IO::process() {}
 void IO::readhw() {}
 void IO::writehw() {}
-const ios_t IO::all() { return _all; }
+const io_t IO::all() { return _all; }
 bool IO::playing() { return _playing; }
 bool IO::quitting() { return _quit; }
-bool IO::leaf() { return false; }
