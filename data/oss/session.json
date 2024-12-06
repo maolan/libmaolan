@@ -38,21 +38,6 @@
       "type": "AudioTrack"
     },
     {
-      "channels": 2,
-      "clips": [
-        {
-          "channels": 2,
-          "end": 10000000,
-          "name": "audio/stereo.wav",
-          "offset": 0,
-          "start": 0,
-          "type": "AudioClip"
-        }
-      ],
-      "name": "play2",
-      "type": "AudioTrack"
-    },
-    {
       "bits": 32,
       "channels": 2,
       "name": "OSS Out",
