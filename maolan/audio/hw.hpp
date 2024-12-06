@@ -22,7 +22,6 @@ protected:
   std::string _device;
 };
 
-typedef HW *(*audio_t)(const std::string &name, const std::string &device,
-                       const size_t &size);
+typedef HW *(*audio_t)(const std::string &name, const std::string &device);
 typedef std::vector<HW *> *(*list_t)();
 } // namespace maolan::audio

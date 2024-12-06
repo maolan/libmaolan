@@ -56,6 +56,14 @@ void Engine::init(const int &threads) {
 #endif
 }
 
+void Engine::setup()
+{
+  for (const auto &io : IO::all())
+  {
+    io->setup();
+  }
+}
+
 nlohmann::json Engine::json() {
   nlohmann::json data;
   data["io"] = nlohmann::json::array();
@@ -106,52 +114,46 @@ nlohmann::json Engine::load(const std::filesystem::path &path) {
         new maolan::midi::Clip(clipio["name"], track);
       }
     } else if (io["type"] == "AudioOSSOut") {
-      size_t bits = io["bits"];
       auto *oss = Backends::find("oss");
       if (!oss) {
         std::cerr << "No OSS backend found!" << std::endl;
       } else {
-        oss->audio.out(io["name"], io["device"], bits / 8);
+        oss->audio.out(io["name"], io["device"]);
       }
     } else if (io["type"] == "AudioOSSIn") {
       auto *oss = Backends::find("oss");
-      size_t bits = io["bits"];
       if (!oss) {
         std::cerr << "No OSS backend found!" << std::endl;
       } else {
-        oss->audio.in(io["name"], io["device"], bits / 8);
+        oss->audio.in(io["name"], io["device"]);
       }
     } else if (io["type"] == "AudioALSAOut") {
-      size_t bits = io["bits"];
       auto *alsa = Backends::find("alsa");
       if (!alsa) {
         std::cerr << "No ALSA backend found!" << std::endl;
       } else {
-        alsa->audio.out(io["name"], io["device"], bits / 8);
+        alsa->audio.out(io["name"], io["device"]);
       }
     } else if (io["type"] == "AudioALSAIn") {
-      size_t bits = io["bits"];
       auto *alsa = Backends::find("alsa");
       if (!alsa) {
         std::cerr << "No ALSA backend found!" << std::endl;
       } else {
-        alsa->audio.in(io["name"], io["device"], bits / 8);
+        alsa->audio.in(io["name"], io["device"]);
       }
     } else if (io["type"] == "AudioSNDIOOut") {
-      size_t bits = io["bits"];
       auto *sndio = Backends::find("sndio");
       if (!sndio) {
         std::cerr << "No SNDIO backend found!" << std::endl;
       } else {
-        sndio->audio.out(io["name"], io["device"], bits / 8);
+        sndio->audio.out(io["name"], io["device"]);
       }
     } else if (io["type"] == "AudioSNDIOIn") {
-      size_t bits = io["bits"];
       auto *sndio = Backends::find("sndio");
       if (!sndio) {
         std::cerr << "No SNDIO backend found!" << std::endl;
       } else {
-        sndio->audio.in(io["name"], io["device"], bits / 8);
+        sndio->audio.in(io["name"], io["device"]);
       }
     }
   }
