@@ -8,7 +8,7 @@
 
 using namespace maolan::audio;
 
-std::vector<IO*> IO::_all;
+std::vector<IO *> IO::_all;
 
 bool IO::operator<(const IO &arg) { return (connected() < arg.connected()); }
 void IO::sort() { std::sort(_all.begin(), _all.end()); }
@@ -80,7 +80,11 @@ void IO::connect(IO *to, size_t inch, size_t outch) {
   }
 }
 
-void IO::backref(IO *to, size_t inch, size_t outch) {}
+void IO::backref(IO *to, size_t inch, size_t outch) {
+  if (outch < _outputs.size()) {
+    _outputs[inch]->connect(to, outch);
+  }
+}
 
 void IO::fetch() {
   for (auto &input : _inputs) {
@@ -92,7 +96,6 @@ void IO::process() {
   for (auto &input : _inputs) {
     input->process();
   }
-  _processed = true;
 }
 
 bool IO::ready() const {
@@ -108,7 +111,5 @@ bool IO::ready() const {
   }
   return true;
 }
-
-void IO::setup() { _processed = false; }
 
 std::size_t IO::channels() const { return _outputs.size(); }

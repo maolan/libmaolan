@@ -1,15 +1,14 @@
 #include <iostream>
-#include <maolan/io.hpp>
 #include <maolan/audio/io.hpp>
+#include <maolan/io.hpp>
 
 using namespace maolan;
 
-bool IO::_rec = false;
-bool IO::_playing = false;
-bool IO::_quit = false;
-std::atomic_size_t IO::_playHead = 0;
+bool IO::_rec{false};
+bool IO::_playing{false};
+bool IO::_quit{false};
+std::atomic_size_t IO::_playHead{0};
 std::atomic_size_t IO::_index{0};
-std::atomic_size_t IO::_line{0};
 std::atomic_size_t IO::_active{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
@@ -30,10 +29,8 @@ void IO::work() {
   setup();
   fetch();
   process();
+  processed(true);
   --_active;
-  if (_active.load() == 0) {
-    _active.notify_one();
-  }
 }
 
 IO *IO::task() {
@@ -67,7 +64,6 @@ bool IO::check() {
 
 void IO::tick() {
   _index = 0;
-  _line = 0;
   _playHead += Config::audioBufferSize;
   if (Config::tempoIndex + 1 < Config::tempos.size()) {
     auto tempo = Config::tempos[Config::tempoIndex];
@@ -94,6 +90,19 @@ void IO::stop() {
 void IO::quit() {
   _quit = true;
   _cv.notify_all();
+}
+
+bool IO::allready() {
+  for (const auto &io : _all) {
+    if (!io->ready()) {
+      return false;
+    }
+  }
+  return true;
+}
+
+void IO::drain() {
+  while (!allready()) {}
 }
 
 nlohmann::json IO::json() {
@@ -149,3 +158,6 @@ void IO::writehw() {}
 const io_t IO::all() { return _all; }
 bool IO::playing() { return _playing; }
 bool IO::quitting() { return _quit; }
+bool IO::processed() const { return _processed; }
+void IO::processed(const bool &p) { _processed = p; }
+bool IO::ready() const { return _processed; }

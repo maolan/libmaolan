@@ -14,9 +14,9 @@ public:
   static void quit();
   static void save();
   static void stop();
-  static void setup();
   static nlohmann::json json();
   static nlohmann::json load(const std::filesystem::path &path);
+  static void iosetup();
 
 protected:
   static std::vector<Worker *> _workers;

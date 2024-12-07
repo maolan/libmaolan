@@ -1,6 +1,7 @@
 #include <poll.h>
 
 #include <maolan/audio/hw.hpp>
+#include <maolan/engine.hpp>
 #include <maolan/midi/hw.hpp>
 #include <maolan/scheduler/poll.hpp>
 
@@ -62,15 +63,15 @@ void Poll::_process() {
   while (IO::playing() && !IO::quitting()) {
     auto *hwio = wait();
     if (hwio != nullptr) {
+      ++pindex;
+      if (pindex >= audiohw.size()) {
+        pindex = 0;
+        IO::drain();
+        IO::tick();
+        Engine::iosetup();
+      }
       hwio->readhw();
       hwio->writehw();
-      if (std::find(audiohw.begin(), audiohw.end(), hwio) != audiohw.end()) {
-        ++pindex;
-        if (pindex >= audiohw.size()) {
-          pindex = 0;
-          IO::tick();
-        }
-      }
     }
   }
 }

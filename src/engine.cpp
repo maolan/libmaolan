@@ -56,11 +56,10 @@ void Engine::init(const int &threads) {
 #endif
 }
 
-void Engine::setup()
-{
-  for (const auto &io : IO::all())
-  {
+void Engine::iosetup() {
+  for (const auto &io : IO::all()) {
     io->setup();
+    io->processed(false);
   }
 }
 

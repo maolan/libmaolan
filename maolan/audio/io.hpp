@@ -24,7 +24,6 @@ public:
   virtual nlohmann::json connections();
   virtual size_t connected() const;
   virtual bool ready() const;
-  virtual void setup();
   void connect(audio::IO *to);
   void connect(audio::IO *to, size_t inch, size_t outch);
   void backref(audio::IO *to, size_t inch, size_t outch);
@@ -35,6 +34,5 @@ protected:
 
   std::vector<Input *> _inputs;
   std::vector<Output *> _outputs;
-  bool _processed;
 };
 } // namespace maolan::audio

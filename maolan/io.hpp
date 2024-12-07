@@ -32,6 +32,7 @@ public:
   static bool playing();
   static bool quitting();
   static void tick();
+  static void drain();
 
   virtual void setup();
   virtual void init();
@@ -42,6 +43,9 @@ public:
   virtual nlohmann::json connections();
   virtual void readhw();
   virtual void writehw();
+  virtual bool processed() const;
+  virtual void processed(const bool &p);
+  virtual bool ready() const;
 
   void work();
   void type(const std::string &);
@@ -55,6 +59,7 @@ public:
 
 protected:
   static bool check();
+  static bool allready();
 
   static bool _rec;
   static bool _playing;
