@@ -20,14 +20,14 @@ public:
   std::streampos tellg();
 
 protected:
-  std::fstream file;
-  midi::Buffer last;
-  float rate;
-  std::uint16_t chunks;
-  std::uint16_t division;
-  std::uint16_t format;
-  std::uint32_t headerLength;
-  std::uint32_t length;
+  std::fstream _file;
+  midi::Buffer _last;
+  float _rate;
+  std::uint16_t _chunks;
+  std::uint16_t _division;
+  std::uint16_t _format;
+  std::uint32_t _headerLength;
+  std::uint32_t _length;
   std::string _name;
   std::string _type;
 };

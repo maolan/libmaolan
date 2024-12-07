@@ -82,7 +82,7 @@ static std::uint32_t bigEndianInt(std::fstream &file, int size) {
     shift = (size - 1 - i) * 8;
     result |= rawData[i] << shift;
   }
-  delete [] rawData;
+  delete[] rawData;
   return result;
 }
 
@@ -94,30 +94,28 @@ static void readMetaEvent(std::fstream &file, Buffer chunk) {
 }
 
 File::File(const std::string &path)
-    : file{path, std::ios::in | std::ios::binary} {
+    : _file{path, std::ios::in | std::ios::binary} {
   _name = path;
   _type = "MIDIFile";
-  file >> std::noskipws;
+  _file >> std::noskipws;
 }
-
-File::~File() { file.close(); }
 
 Buffer File::read() {
   Buffer chunk = std::make_shared<BufferData>();
-  chunk->time = readVarLen(file) / rate;
-  if (last != nullptr) {
-    chunk->time += last->time;
+  chunk->time = readVarLen(_file) / _rate;
+  if (_last != nullptr) {
+    chunk->time += _last->time;
   }
-  if (!file.good()) {
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading event time!");
   }
-  file >> chunk->type;
-  if (!file.good()) {
+  _file >> chunk->type;
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading event type!");
   }
   if (chunk->type == Event::META) {
-    readMetaEvent(file, chunk);
-    if (!file.good()) {
+    readMetaEvent(_file, chunk);
+    if (!_file.good()) {
       throw std::invalid_argument("Error reading meta event!");
     }
   } else {
@@ -125,68 +123,60 @@ Buffer File::read() {
     switch (chunk->type) {
     case Event::NOTE_ON:
     case Event::NOTE_OFF:
-      file >> chunk->note >> chunk->velocity;
-      if (!file.good()) {
+      _file >> chunk->note >> chunk->velocity;
+      if (!_file.good()) {
         throw std::invalid_argument("Error reading note event!");
       }
       break;
     case Event::CONTROLER_ON:
-      file >> chunk->controller >> chunk->value;
-      if (!file.good()) {
+      _file >> chunk->controller >> chunk->value;
+      if (!_file.good()) {
         throw std::invalid_argument("Error reading controller event!");
       }
       break;
     }
   }
-  last = chunk;
+  _last = chunk;
   return chunk;
 }
 
 void File::readHeaders() {
-  int size = 4;
-  char *rawData = new char[size + 1];
+  std::vector<char> rawData;
+  rawData.resize(5);
 
   // MThd
-  file.read(rawData, size);
-  rawData[size] = '\0';
-  if (std::strncmp(rawData, "MThd", size) != 0) {
-    delete [] rawData;
+  _file.read(rawData.data(), 4);
+  rawData[rawData.size() - 1] = '\0';
+  if (std::strncmp(rawData.data(), "MThd", 4) != 0) {
     throw std::invalid_argument("Not a MIDI file!");
   }
-  headerLength = bigEndianInt(file, 4);
-  if (!file.good()) {
-    delete [] rawData;
+  _headerLength = bigEndianInt(_file, 4);
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading header length!");
   }
-  format = bigEndianInt(file, 2);
-  if (!file.good()) {
-    delete [] rawData;
+  _format = bigEndianInt(_file, 2);
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading format from header!");
   }
-  chunks = bigEndianInt(file, 2);
-  if (!file.good()) {
-    delete [] rawData;
+  _chunks = bigEndianInt(_file, 2);
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading chunks from header!");
   }
-  division = bigEndianInt(file, 2);
-  if (!file.good()) {
-    delete [] rawData;
+  _division = bigEndianInt(_file, 2);
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading division from header!");
   }
-  rate = (float)division / (float)Config::division;
+  _rate = (float)_division / (float)Config::division;
 
   // MTrk
-  file.read(rawData, size);
-  if (std::strncmp(rawData, "MTrk", size) != 0) {
-    delete [] rawData;
+  _file.read(rawData.data(), 4);
+  if (std::strncmp(rawData.data(), "MTrk", 4) != 0) {
     throw std::invalid_argument("Expected track marker!");
   }
-  bigEndianInt(file, 4);
-  if (!file.good()) {
-    delete [] rawData;
+  bigEndianInt(_file, 4);
+  if (!_file.good()) {
     throw std::invalid_argument("Error reading track length!");
   }
-  delete [] rawData;
 }
 
 void File::save(Buffer buffer) {
@@ -199,8 +189,8 @@ void File::save(Buffer buffer) {
   outfile.open("/tmp/clip.mid",
                std::ios::out | std::ios::trunc | std::ios::binary);
   outfile << "MThd";
-  write(outfile, headerLength);
-  write(outfile, format);
+  write(outfile, _headerLength);
+  write(outfile, _format);
   write(outfile, (std::uint16_t)1);
   write(outfile, Config::division);
   outfile << "MTrk";
@@ -245,8 +235,9 @@ void File::save(Buffer buffer) {
   outfile.close();
 }
 
-bool File::eof() { return file.eof(); }
-bool File::good() { return file.good(); }
-std::streampos File::tellg() { return file.tellg(); }
+bool File::eof() { return _file.eof(); }
+bool File::good() { return _file.good(); }
+std::streampos File::tellg() { return _file.tellg(); }
 void File::fetch() {}
 void File::process() {}
+File::~File() { _file.close(); }
