@@ -67,6 +67,7 @@ protected:
   static bool _playing;
   static bool _quit;
   static std::atomic_size_t _playHead;
+  static std::atomic_bool _all_processed;
   static std::mutex _m;
   static std::condition_variable _cv;
   static io_t _all;

@@ -9,6 +9,7 @@ bool IO::_playing{false};
 bool IO::_quit{false};
 std::atomic_size_t IO::_playHead{0};
 std::atomic_size_t IO::_active{0};
+std::atomic_bool IO::_all_processed{false};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 io_t IO::_all;
@@ -59,11 +60,17 @@ bool IO::check() {
   if (_all.size() == 0) {
     return false;
   }
+  bool more_work = false;
   for (ioindex = 0; ioindex < _all.size(); ++ioindex) {
     auto &io = _all[ioindex];
+    more_work |= !io->processed();
     if (io->ready() && !io->processed()) {
       return true;
     }
+  }
+  if (!more_work) {
+    _all_processed = true;
+    _all_processed.notify_one();
   }
   return false;
 }
@@ -79,7 +86,6 @@ void IO::tick() {
     }
   }
   for (const auto &io : IO::all()) {
-    io->setup();
     io->processed(false);
   }
   _cv.notify_all();
@@ -98,6 +104,8 @@ void IO::stop() {
 
 void IO::quit() {
   _quit = true;
+  _all_processed = true;
+  _all_processed.notify_one();
   _cv.notify_all();
 }
 
@@ -111,8 +119,10 @@ bool IO::allready() {
 }
 
 void IO::drain() {
-  while (!allready()) {
+  if (_all_processed) {
+    return;
   }
+  _all_processed.wait(true);
 }
 
 nlohmann::json IO::json() {
