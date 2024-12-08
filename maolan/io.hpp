@@ -46,6 +46,8 @@ public:
   virtual bool processed() const;
   virtual void processed(const bool &p);
   virtual bool ready() const;
+  virtual bool processing() const;
+  virtual void processing(const bool &p);
 
   void work();
   void type(const std::string &);
@@ -68,13 +70,12 @@ protected:
   static std::mutex _m;
   static std::condition_variable _cv;
   static io_t _all;
-  static std::atomic_size_t _index;
-  static std::atomic_size_t _line;
   static std::atomic_size_t _active;
 
   std::string _type;
   std::string _name;
   void *_data;
   bool _processed;
+  bool _processing;
 };
 } // namespace maolan

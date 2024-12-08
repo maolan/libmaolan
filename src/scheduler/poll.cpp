@@ -68,7 +68,6 @@ void Poll::_process() {
         pindex = 0;
         IO::drain();
         IO::tick();
-        Engine::iosetup();
       }
       hwio->readhw();
       hwio->writehw();

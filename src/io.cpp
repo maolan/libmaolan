@@ -8,11 +8,11 @@ bool IO::_rec{false};
 bool IO::_playing{false};
 bool IO::_quit{false};
 std::atomic_size_t IO::_playHead{0};
-std::atomic_size_t IO::_index{0};
 std::atomic_size_t IO::_active{0};
 std::mutex IO::_m;
 std::condition_variable IO::_cv;
 io_t IO::_all;
+size_t ioindex{0};
 
 IO::IO(const std::string &name, const bool &reg) : _name{name}, _data{nullptr} {
   if (reg) {
@@ -30,6 +30,7 @@ void IO::work() {
   fetch();
   process();
   processed(true);
+  processing(false);
   --_active;
 }
 
@@ -39,10 +40,12 @@ IO *IO::task() {
   if (_quit) {
     return nullptr;
   }
-  auto &result = _all[_index];
-  ++_index;
+  auto &result = _all[ioindex];
+  result->processing(true);
   lk.unlock();
-  _cv.notify_one();
+  if (!_quit) {
+    _cv.notify_one();
+  }
   return result;
 }
 
@@ -56,14 +59,16 @@ bool IO::check() {
   if (_all.size() == 0) {
     return false;
   }
-  if (_index >= _all.size()) {
-    return false;
+  for (ioindex = 0; ioindex < _all.size(); ++ioindex) {
+    auto &io = _all[ioindex];
+    if (io->ready() && !io->processed()) {
+      return true;
+    }
   }
-  return true;
+  return false;
 }
 
 void IO::tick() {
-  _index = 0;
   _playHead += Config::audioBufferSize;
   if (Config::tempoIndex + 1 < Config::tempos.size()) {
     auto tempo = Config::tempos[Config::tempoIndex];
@@ -72,6 +77,10 @@ void IO::tick() {
       ++Config::tempoIndex;
       tempo = Config::tempos[Config::tempoIndex];
     }
+  }
+  for (const auto &io : IO::all()) {
+    io->setup();
+    io->processed(false);
   }
   _cv.notify_all();
 }
@@ -102,7 +111,8 @@ bool IO::allready() {
 }
 
 void IO::drain() {
-  while (!allready()) {}
+  while (!allready()) {
+  }
 }
 
 nlohmann::json IO::json() {
@@ -160,4 +170,6 @@ bool IO::playing() { return _playing; }
 bool IO::quitting() { return _quit; }
 bool IO::processed() const { return _processed; }
 void IO::processed(const bool &p) { _processed = p; }
-bool IO::ready() const { return _processed; }
+bool IO::ready() const { return _processed && !_processing; }
+bool IO::processing() const { return _processing; }
+void IO::processing(const bool &p) { _processing = p; }

@@ -56,13 +56,6 @@ void Engine::init(const int &threads) {
 #endif
 }
 
-void Engine::iosetup() {
-  for (const auto &io : IO::all()) {
-    io->setup();
-    io->processed(false);
-  }
-}
-
 nlohmann::json Engine::json() {
   nlohmann::json data;
   data["io"] = nlohmann::json::array();
@@ -198,6 +191,7 @@ void Engine::stop() {
 
 void Engine::quit() {
   IO::quit();
+  IO::drain();
   if (_scheduler != nullptr) {
     delete _scheduler;
     _scheduler = nullptr;

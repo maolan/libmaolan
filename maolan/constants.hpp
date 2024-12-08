@@ -8,6 +8,6 @@ const float floatMaxInt = static_cast<float>(maxInt);
 const float floatMinInt = static_cast<float>(minInt);
 
 namespace audio {
-const int defaultFrag = 10;
+const int defaultFrag = 16;
 } // namespace audio
 } // namespace maolan

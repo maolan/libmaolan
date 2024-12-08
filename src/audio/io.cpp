@@ -25,7 +25,11 @@ IO::IO(const std::string &name, const bool &reg, const size_t &chs)
 
 Buffer IO::pull(const std::size_t &channel) {
   if (channels() > channel) {
-    return _outputs[channel]->buffer();
+    auto &out = _outputs[channel];
+    if (out == nullptr) {
+      return nullptr;
+    }
+    return out->buffer();
   }
   std::cerr << _type << ' ' << _name << " has " << channels();
   std::cerr << " channels and channel " << channel + 1 << " requested!\n";
@@ -99,6 +103,9 @@ void IO::process() {
 }
 
 bool IO::ready() const {
+  if (_processing) {
+    return false;
+  }
   if (_processed) {
     return true;
   }
