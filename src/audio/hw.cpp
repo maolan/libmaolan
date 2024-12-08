@@ -4,8 +4,9 @@ using namespace maolan::audio;
 
 std::vector<HW *> HW::_all;
 
-HW::HW(const std::string &name, const std::string &device)
-    : IO{name}, _device{device} {
+HW::HW(const std::string &name, const std::string &device,
+       const bool &direction)
+    : IO{name}, _device{device}, _direction{direction} {
   _all.push_back(this);
 }
 
